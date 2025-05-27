@@ -1,20 +1,11 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Navbar from './components/Navbar'
-import Home from './pages/Home'
+// src/App.jsx
+import React from 'react';
+import AppRoutes from './routes/AppRoutes';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <>
-      <Navbar />
-
-
-    </>
-  )
+    <div className="App">
+      <AppRoutes />
+    </div>
+  );
 }
-
-export default App
