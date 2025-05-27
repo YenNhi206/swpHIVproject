@@ -1,37 +1,34 @@
-// src/pages/HomePage.jsx
-import { Link } from 'react-router-dom';
+
+import React from "react";
 
 export default function HomePage() {
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-200 flex flex-col items-center justify-center px-4">
-            <div className="max-w-2xl text-center bg-white p-10 rounded-xl shadow-lg">
-                <h1 className="text-4xl font-extrabold text-blue-600 mb-4">
-                    Hệ thống điều trị HIV
-                </h1>
-                <p className="text-gray-700 text-lg mb-6">
-                    Chào mừng bạn đến với hệ thống hỗ trợ điều trị HIV và quản lý dịch vụ y tế.
-                    Hệ thống giúp kết nối bệnh nhân, bác sĩ và trung tâm y tế một cách hiệu quả.
-                </p>
+  return (
+    <div className="p-6 space-y-6">
+      <section>
+        <h2 className="text-2xl font-bold text-red-600">Giới thiệu cơ sở y tế</h2>
+        <p className="mt-2 text-gray-700">
+          Cơ sở y tế chuyên điều trị HIV với đội ngũ bác sĩ giàu kinh nghiệm và trang thiết bị hiện đại.
+        </p>
+      </section>
 
-                <div className="flex justify-center gap-4">
-                    <Link
-                        to="/login"
-                        className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                    >
-                        Đăng nhập
-                    </Link>
-                    <Link
-                        to="/signup"
-                        className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-                    >
-                        Đăng ký
-                    </Link>
-                </div>
-            </div>
+      <section>
+        <h2 className="text-xl font-semibold text-red-600">Tài liệu giáo dục và giảm kỳ thị</h2>
+        <ul className="list-disc list-inside mt-2 text-gray-700">
+          <li>Kiến thức cơ bản về HIV và điều trị ARV</li>
+          <li>Làm thế nào để sống chung với HIV một cách khỏe mạnh</li>
+          <li>Phá bỏ kỳ thị và hiểu đúng về HIV</li>
+        </ul>
+      </section>
 
-            <footer className="mt-12 text-sm text-gray-500">
-                &copy; 2025 HIV Treatment System - Nhóm 2
-            </footer>
+      <section>
+        <h2 className="text-xl font-semibold text-red-600">Blog chia sẻ kinh nghiệm</h2>
+        <div className="mt-2 text-gray-700">
+          <p>✔️ Câu chuyện vượt qua kỳ thị</p>
+          <p>✔️ Kinh nghiệm điều trị hiệu quả</p>
+          <p>✔️ Lời khuyên từ chuyên gia</p>
         </div>
-    );
+      </section>
+    </div>
+  );
 }
+
