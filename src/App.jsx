@@ -20,6 +20,10 @@ import PatientDashboard from "./features/dashboard/PatientDashboard";
 
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
+import ResultPage from "./features/treatments/ResultPage";
+
+import UserDetail from "./features/users/UserDetail";
+import UserList from "./features/users/UserList";
 
 export default function App() {
   return (
@@ -27,6 +31,30 @@ export default function App() {
       <Routes>
         
         {/* Các route sử dụng MainLayout */}
+        <Route path="/users"
+          element={
+            <MainLayout>
+               <UserList/>
+            </MainLayout>
+            }
+            />
+
+
+        <Route path="/users/:id"
+          element={
+            <MainLayout>
+               <UserDetail/>
+            </MainLayout>
+            }
+            />
+
+         <Route path="/treatment-results"
+          element={
+            <MainLayout>
+               <ResultPage/>
+            </MainLayout>
+            }
+            />
 
          <Route path="/treatment"
           element={
