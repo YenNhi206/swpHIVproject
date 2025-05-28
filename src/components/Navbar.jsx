@@ -25,7 +25,7 @@ export default function Navbar() {
             <Link to="/appointments" className="hover:underline">
               Đặt hẹn
             </Link>
-            <Link to="/results" className="hover:underline">
+            <Link to="/treatment-results" className="hover:underline">
               Kết quả
             </Link>
 
