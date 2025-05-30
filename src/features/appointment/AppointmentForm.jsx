@@ -24,7 +24,7 @@ export default function AppointmentForm() {
     const doctors = ['Dr. Nguyễn Văn A', 'Dr. Trần Thị B', 'Dr. Phạm Văn C'];
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded">
+        <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded mt-40">
             <h2 className="text-xl font-bold mb-4 text-red-600">Đặt lịch hẹn mới</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
