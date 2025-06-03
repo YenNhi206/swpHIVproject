@@ -20,6 +20,7 @@ import PatientDashboard from "./features/dashboard/PatientDashboard";
 
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
+import ResultPage from "./features/treatments/ResultPage";
 
 export default function App() {
   return (
