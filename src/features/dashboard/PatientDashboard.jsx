@@ -5,7 +5,7 @@ export default function PatientDashboard() {
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-bold text-red-600">Trang chính bệnh nhân</h1>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* 1. Lịch sử khám */}
         <DashboardCard
@@ -18,14 +18,14 @@ export default function PatientDashboard() {
         <DashboardCard
           title="Kết quả xét nghiệm"
           description="Theo dõi CD4, tải lượng HIV, phác đồ ARV được sử dụng."
-          to="/results"
+          to="/treatment-results"
         />
 
         {/* 3. Đặt lịch khám mới */}
         <DashboardCard
           title="Đặt lịch khám"
           description="Chọn ngày, bác sĩ và yêu cầu khám, có thể ẩn danh."
-          to="/appointment"
+          to="/appointments"
         />
 
         {/* 4. Nhắc lịch uống thuốc & tái khám */}
@@ -46,7 +46,7 @@ export default function PatientDashboard() {
         <DashboardCard
           title="Hồ sơ cá nhân"
           description="Xem và cập nhật thông tin cá nhân."
-          to="/profile"
+          to="/users"
         />
       </div>
     </div>

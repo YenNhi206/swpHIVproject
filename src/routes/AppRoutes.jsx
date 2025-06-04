@@ -7,6 +7,8 @@ import NotFoundPage from '../pages/NotFoundPage';
 import AppointmentForm from '../features/appointment/AppointmentForm';
 import DoctorAppointmentList from '../features/appointment/DoctorAppointments';
 import UserAppointmentList from '../features/appointment/UserAppointments';
+import PatientProfile from '../features/users/PatientProfile';
+import AnonymousAppointmentForm from '../features/appointment/AnonymousAppointmentForm';
 
 export default function AppRoutes() {
     return (
@@ -16,9 +18,11 @@ export default function AppRoutes() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
                 <Route path="*" element={<NotFoundPage />} />
-                <Route path="/appointments" element={<AppointmentForm />} />
+                <Route path="/appointment" element={<AppointmentForm />} />
+                <Route path="/appointment/anonymous" element={<AnonymousAppointmentForm />} />
                 <Route path="/doctorappointments" element={<DoctorAppointmentList />} />
                 <Route path="/userappointments" element={<UserAppointmentList />} />
+                <Route path="/users" element={<PatientProfile />} />
 
             </Routes>
         </BrowserRouter>
