@@ -18,6 +18,8 @@ import AdminDashboard from "./features/dashboard/AdminDashboard";
 import DoctorDashboard from "./features/dashboard/DoctorDashboard";
 import PatientDashboard from "./features/dashboard/PatientDashboard";
 
+import Support from "./features/patientdashboard/Support";
+
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
 import ResultPage from "./features/treatments/ResultPage";
@@ -85,6 +87,16 @@ export default function App() {
             </MainLayout>
           }
         />
+
+        <Route
+          path="/support"
+          element={
+            <MainLayout>
+              <Support />
+            </MainLayout>
+          }
+        />
+
         <Route path="/admin"
           element={
             <MainLayout>
