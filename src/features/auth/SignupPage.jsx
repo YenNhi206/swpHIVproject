@@ -1,5 +1,7 @@
 
 import React, { useState } from "react";
+import { Link } from "react-router-dom"; // Thêm import này
+
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -165,6 +167,13 @@ export default function SignupPage() {
           >
             Đăng ký
           </button>
+           {/* Thêm phần này sau nút đăng ký */}
+        <p className="mt-4 text-center text-gray-600">
+          Đã có tài khoản?{" "}
+          <Link to="/login" className="text-red-600 hover:text-red-700 font-medium">
+            Đăng nhập
+          </Link>
+        </p>
         </form>
       </div>
     </div>

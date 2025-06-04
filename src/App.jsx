@@ -20,52 +20,85 @@ import PatientDashboard from "./features/dashboard/PatientDashboard";
 
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
+import ResultPage from "./features/treatments/ResultPage";
+
+import AppointmentForm from "./features/appointment/AppointmentForm";
+import DoctorAppointmentList from "./features/appointment/DoctorAppointments";
+import UserAppointmentList from "./features/appointment/UserAppointments";
+
+import UserDetail from "./features/users/UserDetail";
+import UserList from "./features/users/UserList";
+
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        
+
         {/* Các route sử dụng MainLayout */}
-
-         <Route path="/treatment"
+        <Route path="/users"
           element={
             <MainLayout>
-               <TreatmentList/>
+              <UserList />
             </MainLayout>
-            }
-            />
+          }
+        />
 
-         <Route path="/treatment/:id"
+
+        <Route path="/users/:id"
           element={
             <MainLayout>
-               <TreatmentDetail/>
+              <UserDetail />
             </MainLayout>
-            }
-            />
+          }
+        />
 
-
-         <Route path="/patient"
+        <Route path="/treatment-results"
           element={
             <MainLayout>
-               <PatientDashboard />
+              <ResultPage />
             </MainLayout>
-            }
-            />
-         <Route path="/admin"
+          }
+        />
+
+        <Route path="/treatment"
           element={
             <MainLayout>
-               <AdminDashboard />
+              <TreatmentList />
             </MainLayout>
-            }
-            />
-          <Route path="/doctor" element={
-             <MainLayout>
+          }
+        />
 
-                 <DoctorDashboard />
-             </MainLayout>
-             } 
-             />
+        <Route path="/treatment/:id"
+          element={
+            <MainLayout>
+              <TreatmentDetail />
+            </MainLayout>
+          }
+        />
+
+
+        <Route path="/patient"
+          element={
+            <MainLayout>
+              <PatientDashboard />
+            </MainLayout>
+          }
+        />
+        <Route path="/admin"
+          element={
+            <MainLayout>
+              <AdminDashboard />
+            </MainLayout>
+          }
+        />
+        <Route path="/doctor" element={
+          <MainLayout>
+
+            <DoctorDashboard />
+          </MainLayout>
+        }
+        />
         <Route
           path="/"
           element={
@@ -82,12 +115,12 @@ export default function App() {
             </MainLayout>
           }
         />
-       
-       
+
+
 
         {/* Các route sử dụng AuthLayout */}
         <Route
-          path="/login"element={
+          path="/login" element={
             <AuthLayout>
               <LoginPage />
             </AuthLayout>
@@ -98,6 +131,31 @@ export default function App() {
           element={
             <AuthLayout>
               <SignupPage />
+            </AuthLayout>
+          }
+        />
+
+        <Route
+          path="/appointments"
+          element={
+            <AuthLayout>
+              <AppointmentForm />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/doctorappointments"
+          element={
+            <AuthLayout>
+              <DoctorAppointmentList />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/userappointments"
+          element={
+            <AuthLayout>
+              <UserAppointmentList />
             </AuthLayout>
           }
         />
