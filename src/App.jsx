@@ -25,9 +25,9 @@ import ResultPage from "./features/treatments/ResultPage";
 import AppointmentForm from "./features/appointment/AppointmentForm";
 import DoctorAppointmentList from "./features/appointment/DoctorAppointments";
 import UserAppointmentList from "./features/appointment/UserAppointments";
+import PatientProfile from "./features/users/PatientProfile";
 
-import UserDetail from "./features/users/UserDetail";
-import UserList from "./features/users/UserList";
+
 
 
 export default function App() {
@@ -36,19 +36,12 @@ export default function App() {
       <Routes>
 
         {/* Các route sử dụng MainLayout */}
+
+
         <Route path="/users"
           element={
             <MainLayout>
-              <UserList />
-            </MainLayout>
-          }
-        />
-
-
-        <Route path="/users/:id"
-          element={
-            <MainLayout>
-              <UserDetail />
+              <PatientProfile />
             </MainLayout>
           }
         />
