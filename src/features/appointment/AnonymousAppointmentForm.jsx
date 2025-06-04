@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function AnonymousAppointmentForm() {
     const [formData, setFormData] = useState({
@@ -23,11 +24,19 @@ export default function AnonymousAppointmentForm() {
         console.log('Đặt lịch ẩn danh:', dataToSubmit);
         // appointmentService.createAppointment(dataToSubmit)
     };
+    const navigate = useNavigate();
 
     const doctors = ['Dr. Nguyễn Văn A', 'Dr. Trần Thị B', 'Dr. Phạm Văn C'];
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded mt-20">
+        <div className="w-full max-w-xl mx-auto p-6 bg-white shadow-md rounded-xl mt-30">
+            <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="text-red-600 hover:text-red-800 mb-4"
+            >
+                ← Trở lại
+            </button>
             <h2 className="text-xl font-bold mb-4 text-red-600">Đặt lịch ẩn danh</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -65,7 +74,7 @@ export default function AnonymousAppointmentForm() {
                     </select>
                 </div>
 
-                <button type="submit" className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Gửi yêu cầu</button>
+                <button type="submit" className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Đặt lịch</button>
             </form>
         </div>
     );

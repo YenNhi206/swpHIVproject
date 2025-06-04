@@ -26,6 +26,7 @@ import AppointmentForm from "./features/appointment/AppointmentForm";
 import DoctorAppointmentList from "./features/appointment/DoctorAppointments";
 import UserAppointmentList from "./features/appointment/UserAppointments";
 import PatientProfile from "./features/users/PatientProfile";
+import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmentForm";
 
 
 
@@ -133,6 +134,14 @@ export default function App() {
           element={
             <AuthLayout>
               <AppointmentForm />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/anonymous-appointment"
+          element={
+            <AuthLayout>
+              <AnonymousAppointmentForm />
             </AuthLayout>
           }
         />

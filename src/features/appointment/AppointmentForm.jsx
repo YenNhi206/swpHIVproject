@@ -27,7 +27,7 @@ export default function AppointmentForm() {
     const doctors = ['Dr. Nguyễn Văn A', 'Dr. Trần Thị B', 'Dr. Phạm Văn C'];
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded mt-20">
+        <div className="w-full max-w-2xl mx-auto p-8 bg-white shadow-md rounded-xl mt-5">
             <h2 className="text-xl font-bold mb-4 text-red-600">Đặt lịch hẹn</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <InputField label="Họ tên" name="fullName" value={formData.fullName} onChange={handleChange} required />
@@ -55,6 +55,10 @@ export default function AppointmentForm() {
                 </div>
 
                 <button type="submit" className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Đặt lịch</button>
+                <div className="text-sm text-center mt-4">
+                    <span>Bạn muốn đặt lịch ẩn danh? </span>
+                    <a href="/anonymous-appointment" className="text-red-600 hover:underline">Đặt lịch ẩn danh tại đây</a>
+                </div>
             </form>
 
         </div>

@@ -23,6 +23,7 @@ export default function AppRoutes() {
                 <Route path="/doctorappointments" element={<DoctorAppointmentList />} />
                 <Route path="/userappointments" element={<UserAppointmentList />} />
                 <Route path="/users" element={<PatientProfile />} />
+                <Route path="/anonymous-appointment" element={<AnonymousAppointmentForm />} />
 
             </Routes>
         </BrowserRouter>
