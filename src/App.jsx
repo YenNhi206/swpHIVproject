@@ -19,6 +19,8 @@ import DoctorDashboard from "./features/dashboard/DoctorDashboard";
 import PatientDashboard from "./features/dashboard/PatientDashboard";
 
 import Support from "./features/patientdashboard/Support";
+import Reminder from "./features/patientdashboard/Reminder";
+
 
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
@@ -93,6 +95,15 @@ export default function App() {
           element={
             <MainLayout>
               <Support />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/reminder"
+          element={
+            <MainLayout>
+              <Reminder />
             </MainLayout>
           }
         />

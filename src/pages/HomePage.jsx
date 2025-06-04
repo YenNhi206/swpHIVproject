@@ -19,10 +19,10 @@ export default function HomePage() {
               href="#explore"
               className="inline-block text-white px-6 py-3 rounded-lg text-lg transition"
               style={{
-                backgroundColor: "#E7000B",
+                backgroundColor: "#E7000B", color: "#FFFFFF",
               }}
-              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#FF0000")}
-              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#E7000B")}
+              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#FFFFFF", e.currentTarget.style.color = "#E7000B")}
+              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#E7000B", e.currentTarget.style.color = "#FFFFFF")}
             >
               Khám phá ngay
             </a>
