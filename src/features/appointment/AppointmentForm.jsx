@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function AppointmentForm() {
     const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function AppointmentForm() {
         doctor: '',
         gender: '',
     });
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -20,8 +22,7 @@ export default function AppointmentForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Đặt lịch:', formData);
-        // appointmentService.createAppointment(formData)
+        navigate('/payment', { state: { appointmentData: formData } });
     };
 
     const doctors = ['Dr. Nguyễn Văn A', 'Dr. Trần Thị B', 'Dr. Phạm Văn C'];
