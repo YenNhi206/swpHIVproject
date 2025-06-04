@@ -23,11 +23,21 @@ export default function AnonymousAppointmentForm() {
         };
         console.log('Đặt lịch ẩn danh:', dataToSubmit);
         // appointmentService.createAppointment(dataToSubmit)
+        navigate('/payment', { state: { appointmentData: formData } });
     };
     const navigate = useNavigate();
 
     const doctors = ['Dr. Nguyễn Văn A', 'Dr. Trần Thị B', 'Dr. Phạm Văn C'];
-
+    const timeSlots = [
+        { label: '08:00 - 09:00', value: '08:00' },
+        { label: '09:00 - 10:00', value: '09:00' },
+        { label: '10:00 - 11:00', value: '10:00' },
+        { label: '11:00 - 12:00', value: '11:00' },
+        { label: '13:00 - 14:00', value: '13:00' },
+        { label: '14:00 - 15:00', value: '14:00' },
+        { label: '15:00 - 16:00', value: '15:00' },
+        { label: '16:00 - 17:00', value: '16:00' },
+    ];
     return (
         <div className="w-full max-w-xl mx-auto p-6 bg-white shadow-md rounded-xl mt-30">
             <button
@@ -61,8 +71,20 @@ export default function AnonymousAppointmentForm() {
 
                 <div>
                     <label className="block mb-1">Giờ hẹn</label>
-                    <input type="time" name="time" value={formData.time} onChange={handleChange} className="w-full border p-2 rounded" required />
+                    <select
+                        name="time"
+                        value={formData.time}
+                        onChange={handleChange}
+                        className="w-full border p-2 rounded"
+                        required
+                    >
+                        <option value="">Chọn giờ</option>
+                        {timeSlots.map((slot, idx) => (
+                            <option key={idx} value={slot.value}>{slot.label}</option>
+                        ))}
+                    </select>
                 </div>
+
 
                 <div>
                     <label className="block mb-1">Chọn bác sĩ</label>
