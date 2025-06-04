@@ -20,6 +20,7 @@ import PatientDashboard from "./features/dashboard/PatientDashboard";
 
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
+import ResultPage from "./features/treatments/ResultPage";
 
 import AppointmentForm from "./features/appointment/AppointmentForm";
 import DoctorAppointmentList from "./features/appointment/DoctorAppointments";
@@ -38,27 +39,27 @@ export default function App() {
         <Route path="/users"
           element={
             <MainLayout>
-               <UserList/>
+              <UserList />
             </MainLayout>
-            }
-            />
+          }
+        />
 
 
         <Route path="/users/:id"
           element={
             <MainLayout>
-               <UserDetail/>
+              <UserDetail />
             </MainLayout>
-            }
-            />
+          }
+        />
 
-         <Route path="/treatment-results"
+        <Route path="/treatment-results"
           element={
             <MainLayout>
-               <ResultPage/>
+              <ResultPage />
             </MainLayout>
-            }
-            />
+          }
+        />
 
         <Route path="/treatment"
           element={

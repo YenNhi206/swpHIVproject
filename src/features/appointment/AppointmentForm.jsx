@@ -6,21 +6,27 @@ export default function AppointmentForm() {
         time: '',
         reason: '',
         doctor: '',
+        anonymous: false,
     });
 
     const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [name]: type === 'checkbox' ? checked : value
         });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Gửi dữ liệu form lên server
-        console.log('Đặt lịch:', formData);
-        // Gọi appointmentService.createAppointment(formData)
+        const dataToSubmit = {
+            ...formData,
+            user: formData.anonymous ? 'Ẩn danh' : 'User hiện tại' // hoặc lấy từ context/login
+        };
+        console.log('Đặt lịch:', dataToSubmit);
+        // Gọi appointmentService.createAppointment(dataToSubmit)
     };
+
     const doctors = ['Dr. Nguyễn Văn A', 'Dr. Trần Thị B', 'Dr. Phạm Văn C'];
 
     return (
@@ -47,6 +53,11 @@ export default function AppointmentForm() {
                             <option key={index} value={doctor}>{doctor}</option>
                         ))}
                     </select>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <input type="checkbox" name="anonymous" checked={formData.anonymous} onChange={handleChange} />
+                    <label>Đăng ký ẩn danh</label>
                 </div>
 
                 <button type="submit" className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Đặt lịch</button>
