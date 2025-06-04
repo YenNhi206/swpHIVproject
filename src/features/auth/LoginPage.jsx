@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function LoginPage() {
   const [credentials, setCredentials] = useState({
@@ -67,6 +68,13 @@ export default function LoginPage() {
           >
             Đăng nhập
           </button>
+           {/* Thêm phần này sau nút đăng nhập */}
+        <p className="mt-4 text-center text-gray-600">
+          Chưa có tài khoản?{" "}
+          <Link to="/signup" className="text-red-600 hover:text-red-700 font-medium">
+            Đăng ký ngay
+          </Link>
+        </p>
         </form>
       </div>
     </div>
