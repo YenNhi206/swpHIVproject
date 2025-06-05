@@ -29,6 +29,8 @@ import UserAppointmentList from "./features/appointment/UserAppointments";
 import UserDetail from "./features/users/UserDetail";
 import UserList from "./features/users/UserList";
 
+import OnlineConsultation from "./features/consultation/OnlineConsultation";
+
 
 export default function App() {
   return (
@@ -44,6 +46,13 @@ export default function App() {
           }
         />
 
+            <Route path="/consultation"
+          element={
+            <MainLayout>
+              <OnlineConsultation />
+            </MainLayout>
+          }
+        />
 
         <Route path="/users/:id"
           element={
@@ -92,7 +101,8 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route path="/doctor" element={
+        <Route path="/doctor" 
+        element={
           <MainLayout>
 
             <DoctorDashboard />
