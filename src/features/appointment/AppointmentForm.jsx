@@ -44,13 +44,7 @@ export default function AppointmentForm() {
 
     return (
         <div className="w-full max-w-2xl mx-auto p-8 bg-white shadow-md rounded-xl mt-5">
-            <button
-                type="button"
-                onClick={() => navigate(-1)}
-                className="text-red-600 hover:text-red-800 mb-4"
-            >
-                ← Trở lại
-            </button>
+
             <h2 className="text-xl font-bold mb-4 text-red-600">Đặt lịch hẹn</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -125,9 +119,22 @@ export default function AppointmentForm() {
                     </select>
                 </div>
 
-                {/* Submit */}
-                <button type="submit" className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Đặt lịch</button>
+                <div className="flex justify-between gap-4 mt-6">
+                    <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="bg-white text-red-600 border border-red-600 px-4 py-2 rounded hover:bg-red-50"
+                    >
+                        ← Trở lại
+                    </button>
 
+                    <button
+                        type="submit"
+                        className="bg-red-600 text-white border border-red-600 px-4 py-2 rounded hover:bg-red-700"
+                    >
+                        Đặt lịch
+                    </button>
+                </div>
                 <div className="text-sm text-center mt-4">
                     <span>Bạn muốn đặt lịch ẩn danh? </span>
                     <a href="/anonymous-appointment" className="text-red-600 hover:underline">Đặt lịch ẩn danh tại đây</a>

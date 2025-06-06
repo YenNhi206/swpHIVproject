@@ -36,6 +36,7 @@ import PaymentPage from "./features/payment/PaymentPage";
 
 
 import OnlineConsultation from "./features/consultation/OnlineConsultation";
+import CreateTreatment from "./features/treatments/CreateTreatment";
 
 
 export default function App() {
@@ -45,7 +46,7 @@ export default function App() {
 
         {/* Các route sử dụng MainLayout */}
 
-            <Route path="/consultation"
+        <Route path="/consultation"
           element={
             <MainLayout>
               <OnlineConsultation />
@@ -111,6 +112,7 @@ export default function App() {
             </MainLayout>
           }
         />
+        <Route path="/treatment/create" element={<CreateTreatment />} />
 
         <Route path="/admin"
           element={
@@ -119,12 +121,12 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route path="/doctor" 
-        element={
-          <MainLayout>
-            <DoctorDashboard />
-          </MainLayout>
-        }
+        <Route path="/doctor"
+          element={
+            <MainLayout>
+              <DoctorDashboard />
+            </MainLayout>
+          }
         />
         <Route
           path="/"
@@ -165,9 +167,9 @@ export default function App() {
         <Route
           path="/appointments"
           element={
-            <AuthLayout>
+            <MainLayout>
               <AppointmentForm />
-            </AuthLayout>
+            </MainLayout>
           }
         />
         <Route
@@ -181,9 +183,9 @@ export default function App() {
         <Route
           path="/anonymous-appointment"
           element={
-            <AuthLayout>
+            <MainLayout>
               <AnonymousAppointmentForm />
-            </AuthLayout>
+            </MainLayout>
           }
         />
         <Route
