@@ -76,7 +76,7 @@ export default function AdminDashboard() {
 
         <table className="min-w-full bg-white rounded overflow-hidden">
           <thead>
-            <tr className="bg-blue-600 text-white">
+            <tr className="bg-red-600 text-white">
               <th className="py-2 px-4 text-left">Tên bệnh nhân</th>
               <th className="py-2 px-4 text-left">Ngày đặt lịch</th>
               <th className="py-2 px-4 text-left">Trạng thái thanh toán</th>
