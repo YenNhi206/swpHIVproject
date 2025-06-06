@@ -1,65 +1,119 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function DoctorDashboard() {
+  const navigate = useNavigate();
+
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-3xl font-bold text-red-600 mb-6 text-center">Bảng điều khiển Bác sĩ</h1>
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 p-8">
+      {/* Header Section */}
+      <div className="mb-10 text-center">
+        <h1 className="text-4xl font-extrabold text-red-700 mb-2 tracking-wide">Bảng Điều Khiển Bác Sĩ</h1>
+        <p className="text-gray-500 text-lg">Quản lý bệnh nhân và theo dõi điều trị HIV</p>
+      </div>
 
-      {/* Thông tin bác sĩ */}
-      <section className="bg-white p-4 rounded-xl shadow mb-6">
-        <h2 className="text-xl font-semibold mb-2">Thông tin cá nhân</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <p><strong>Họ tên:</strong> TS. Nguyễn Văn A</p>
-          <p><strong>Chuyên môn:</strong> HIV/AIDS</p>
-          <p><strong>Bằng cấp:</strong> Bác sĩ Chuyên khoa II</p>
-          <p><strong>Kinh nghiệm:</strong> 10 năm</p>
+      <div className="max-w-7xl mx-auto">
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          <button 
+            onClick={() => navigate('/doctorappointments')}
+            className="p-6 bg-white rounded-2xl shadow-md hover:shadow-lg border border-gray-200 transition-all duration-300 group flex justify-between items-center"
+          >
+            <div>
+              <h3 className="text-2xl font-semibold text-gray-800 mb-1 group-hover:text-red-600 transition-all">
+                Lịch Hẹn Hôm Nay
+              </h3>
+              <p className="text-gray-500 text-sm">Xem và quản lý các cuộc hẹn</p>
+            </div>
+            <div className="text-red-500 group-hover:translate-x-2 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </button>
         </div>
-      </section>
 
-      {/* Lịch hẹn hôm nay */}
-      <section className="bg-white p-4 rounded-xl shadow mb-6">
-        <h2 className="text-xl font-semibold mb-2">Lịch hẹn hôm nay</h2>
-        <ul className="list-disc ml-5">
-          <li>10:00 - Nguyễn Thị A (Khám định kỳ)</li>
-          <li>11:00 - (Ẩn danh) (Tư vấn ARV)</li>
-        </ul>
-      </section>
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Doctor Info */}
+          <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+            <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <svg className="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A12 12 0 0112 2a12 12 0 016.879 15.804M15 11h.01M9 11h.01M9 16h6" />
+              </svg>
+              Thông Tin Cá Nhân
+            </h2>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                <span className="text-gray-600">Họ tên:</span>
+                <span className="font-medium">TS. Nguyễn Văn A</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                <span className="text-gray-600">Chuyên môn:</span>
+                <span className="font-medium">HIV/AIDS</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                <span className="text-gray-600">Bằng cấp:</span>
+                <span className="font-medium">Bác sĩ CK II</span>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">Kinh nghiệm:</span>
+                <span className="font-medium">10 năm</span>
+              </div>
+            </div>
+          </section>
 
-      {/* Danh sách bệnh nhân */}
-      <section className="bg-white p-4 rounded-xl shadow mb-6">
-        <h2 className="text-xl font-semibold mb-2">Bệnh nhân của tôi</h2>
-        <ul className="list-disc ml-5">
-          <li>Nguyễn Văn B</li>
-          <li>Trần Thị C</li>
-        </ul>
-      </section>
+          {/* Treatment Plan */}
+          <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-800">Phác Đồ Điều Trị</h2>
+              <button 
+                onClick={() => navigate('/treatment')}
+                className="text-red-500 hover:text-red-600"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-all cursor-pointer"
+                   onClick={() => navigate('/treatment')}>
+                <p className="text-gray-700 mb-1">Phác đồ hiện tại:</p>
+                <p className="text-red-700 font-semibold text-lg">TDF + 3TC + DTG</p>
+              </div>
+              <button 
+                onClick={() => navigate('/treatment')}
+                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-300 flex items-center justify-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                  <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                </svg>
+                Tùy chỉnh phác đồ
+              </button>
+            </div>
+          </section>
 
-      {/* Phác đồ điều trị */}
-      <section className="bg-white p-4 rounded-xl shadow mb-6">
-        <h2 className="text-xl font-semibold mb-2">Phác đồ điều trị</h2>
-        <p>Ví dụ: TDF + 3TC + DTG</p>
-        <button className="mt-2 px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700">Tùy chỉnh</button>
-      </section>
-
-      {/* Kết quả xét nghiệm */}
-      <section className="bg-white p-4 rounded-xl shadow mb-6">
-        <h2 className="text-xl font-semibold mb-2">Theo dõi CD4 / HIV Load</h2>
-        <p>Hiển thị biểu đồ diễn tiến CD4, tải lượng virus...</p>
-      </section>
-
-      {/* Nhắn tin tư vấn */}
-      <section className="bg-white p-4 rounded-xl shadow mb-6">
-        <h2 className="text-xl font-semibold mb-2">Tư vấn & Nhắn tin</h2>
-        <p>Gửi và nhận tin nhắn bảo mật với bệnh nhân</p>
-        <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Xem tin nhắn</button>
-      </section>
-
-      {/* Ghi chú và báo cáo */}
-      <section className="bg-white p-4 rounded-xl shadow">
-        <h2 className="text-xl font-semibold mb-2">Ghi chú & Báo cáo</h2>
-        <textarea placeholder="Ghi chú nhanh..." className="w-full p-2 border rounded-md" rows={3}></textarea>
-        <button className="mt-2 px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700">Lưu báo cáo</button>
-      </section>
+          {/* Quick Note */}
+          <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <svg className="h-5 w-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M4 4h12v2H4V4zM4 7h12v2H4V7zM4 10h8v2H4v-2z" />
+              </svg>
+              Ghi Chú Nhanh
+            </h2>
+            <textarea 
+              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+              rows={4}
+              placeholder="Thêm ghi chú..."
+            ></textarea>
+            <button className="mt-4 w-full px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors duration-300">
+              Lưu ghi chú
+            </button>
+          </section>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,32 +1,90 @@
 import React from "react";
+import hivCareImg from "../assets/hiv-care.png";
+import educationImg from "../assets/education.png";
+import blogImg from "../assets/blog.jpg";
 
 export default function HomePage() {
   return (
-    <div>
-      <header>
-        <div
-          className="relative bg-cover bg-center min-h-[80vh] flex items-center justify-center text-white"
-          style={{
-            backgroundImage: "url('https://charlescountyhealth.org/wp-content/uploads/2022/01/HIV-Services.jpg')",
-          }}
-        >
-          <div className="text-center bg-black/50 backdrop-brightness-75 p-8 rounded-xl max-w-2xl animate-fade-in">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Chào mừng bạn đến với HIV Care+</h1>
-            <p className="text-lg md:text-xl mb-6">
-              Nơi chia sẻ kiến thức, hỗ trợ và đồng hành cùng bạn trong hành trình sống khỏe với HIV.
+
+    <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
+      {/* Giới thiệu cơ sở y tế */}
+      <section className="grid md:grid-cols-2 gap-6 items-center">
+        <div>
+          <img
+            src={hivCareImg}
+            alt="Giới thiệu cơ sở y tế"
+            className="w-full h-64 object-cover rounded-xl shadow-md"
+          />
+        </div>
+        <div>
+          <h2 className="text-3xl font-bold text-red-600 mb-2">
+            🏥 Giới thiệu cơ sở y tế
+          </h2>
+          <p className="text-gray-700 text-lg">
+            Chúng tôi là cơ sở y tế chuyên sâu trong điều trị HIV, với đội ngũ bác sĩ giàu kinh nghiệm, tận tâm và hệ thống trang thiết bị hiện đại, bảo mật. Mục tiêu là mang lại hy vọng và sức khỏe bền vững cho bệnh nhân.
+          </p>
+        </div>
+      </section>
+
+      {/* Tài liệu giáo dục */}
+      <section className="grid md:grid-cols-2 gap-6 items-center">
+        <div className="order-2 md:order-1">
+          <h2 className="text-2xl font-bold text-red-600 mb-2">
+            📘 Tài liệu giáo dục & giảm kỳ thị
+          </h2>
+          <ul className="list-disc list-inside text-gray-700 text-lg space-y-1">
+            <li>Kiến thức cơ bản về HIV và điều trị ARV</li>
+            <li>Cách sống khỏe mạnh với HIV</li>
+            <li>Phá bỏ kỳ thị – Hiểu đúng, thương đúng</li>
+          </ul>
+        </div>
+        <div className="order-1 md:order-2">
+          <img
+            src={educationImg}
+            alt="Giáo dục và giảm kỳ thị"
+            className="w-full h-64 object-cover rounded-xl shadow-md"
+          />
+        </div>
+      </section>
+
+      {/* Blog chia sẻ */}
+      <section>
+        <h2 className="text-2xl font-bold text-red-600 mb-4">
+          ✍️ Blog chia sẻ kinh nghiệm
+        </h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="bg-white shadow-md rounded-xl p-5 hover:shadow-lg transition">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              💡 Câu chuyện vượt qua kỳ thị
+            </h3>
+            <p className="text-gray-600 text-sm">
+              Những hành trình thật từ người sống chung với HIV – cách họ đối mặt với ánh nhìn xã hội và vượt lên chính mình.
             </p>
-            <a
-              href="#explore"
-              className="inline-block text-white px-6 py-3 rounded-lg text-lg transition"
-              style={{
-                backgroundColor: "#E7000B", color: "#FFFFFF",
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#FFFFFF", e.currentTarget.style.color = "#E7000B")}
-              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#E7000B", e.currentTarget.style.color = "#FFFFFF")}
-            >
-              Khám phá ngay
-            </a>
           </div>
+          <div className="bg-white shadow-md rounded-xl p-5 hover:shadow-lg transition">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              🧬 Kinh nghiệm điều trị hiệu quả
+            </h3>
+            <p className="text-gray-600 text-sm">
+              Chia sẻ về quá trình điều trị ARV, theo dõi tải lượng HIV, và cách duy trì tâm lý tích cực khi điều trị lâu dài.
+            </p>
+          </div>
+          <div className="bg-white shadow-md rounded-xl p-5 hover:shadow-lg transition">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              👨‍⚕️ Lời khuyên từ chuyên gia
+            </h3>
+            <p className="text-gray-600 text-sm">
+              Phỏng vấn các bác sĩ chuyên khoa HIV/AIDS về lời khuyên điều trị, lối sống, và cập nhật y khoa mới nhất.
+            </p>
+          </div>
+        </div>
+        <div className="mt-6 text-center">
+          <img
+            src={blogImg}
+            alt="Blog cộng đồng"
+            className="w-full h-64 object-cover rounded-xl shadow-md"
+          />
+
         </div>
       </header>
 

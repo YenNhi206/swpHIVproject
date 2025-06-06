@@ -34,6 +34,8 @@ import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmen
 
 
 
+import OnlineConsultation from "./features/consultation/OnlineConsultation";
+
 
 export default function App() {
   return (
@@ -42,6 +44,13 @@ export default function App() {
 
         {/* Các route sử dụng MainLayout */}
 
+            <Route path="/consultation"
+          element={
+            <MainLayout>
+              <OnlineConsultation />
+            </MainLayout>
+          }
+        />
 
         <Route path="/users"
           element={
@@ -109,7 +118,8 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route path="/doctor" element={
+        <Route path="/doctor" 
+        element={
           <MainLayout>
 
             <DoctorDashboard />

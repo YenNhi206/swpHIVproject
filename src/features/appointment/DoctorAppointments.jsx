@@ -1,5 +1,7 @@
 import React from 'react';
 import { CalendarCheck, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 
 const doctorAppointments = [
     {
@@ -19,6 +21,7 @@ const doctorAppointments = [
 ];
 
 export default function DoctorAppointmentList() {
+    const navigate = useNavigate();
     return (
         <div className="p-6">
             <h2 className="text-2xl text-red-600 font-bold mb-4">Lịch hẹn của bác sĩ</h2>
