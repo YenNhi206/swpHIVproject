@@ -20,6 +20,8 @@ import PatientDashboard from "./features/dashboard/PatientDashboard";
 
 import Support from "./features/patientdashboard/Support";
 import Reminder from "./features/patientdashboard/Reminder";
+import History from "./features/patientdashboard/History";
+
 
 
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
@@ -113,6 +115,16 @@ export default function App() {
           }
         />
         <Route path="/treatment/create" element={<CreateTreatment />} />
+
+        <Route
+          path="/history"
+          element={
+            <MainLayout>
+              <History />
+            </MainLayout>
+          }
+        />
+
 
         <Route path="/admin"
           element={
