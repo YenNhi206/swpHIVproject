@@ -48,7 +48,7 @@ export default function DoctorAppointmentList() {
                 ))}
             </div>
             <button
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/doctor')}
                 className="mt-6 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
             >
                 Quay về trang chủ
