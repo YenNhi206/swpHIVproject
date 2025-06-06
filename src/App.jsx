@@ -18,6 +18,10 @@ import AdminDashboard from "./features/dashboard/AdminDashboard";
 import DoctorDashboard from "./features/dashboard/DoctorDashboard";
 import PatientDashboard from "./features/dashboard/PatientDashboard";
 
+import Support from "./features/patientdashboard/Support";
+import Reminder from "./features/patientdashboard/Reminder";
+
+
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
 import ResultPage from "./features/treatments/ResultPage";
@@ -25,9 +29,10 @@ import ResultPage from "./features/treatments/ResultPage";
 import AppointmentForm from "./features/appointment/AppointmentForm";
 import DoctorAppointmentList from "./features/appointment/DoctorAppointments";
 import UserAppointmentList from "./features/appointment/UserAppointments";
+import PatientProfile from "./features/users/PatientProfile";
+import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmentForm";
 
-import UserDetail from "./features/users/UserDetail";
-import UserList from "./features/users/UserList";
+
 
 import OnlineConsultation from "./features/consultation/OnlineConsultation";
 
@@ -38,13 +43,6 @@ export default function App() {
       <Routes>
 
         {/* Các route sử dụng MainLayout */}
-        <Route path="/users"
-          element={
-            <MainLayout>
-              <UserList />
-            </MainLayout>
-          }
-        />
 
             <Route path="/consultation"
           element={
@@ -54,10 +52,10 @@ export default function App() {
           }
         />
 
-        <Route path="/users/:id"
+        <Route path="/users"
           element={
             <MainLayout>
-              <UserDetail />
+              <PatientProfile />
             </MainLayout>
           }
         />
@@ -94,6 +92,25 @@ export default function App() {
             </MainLayout>
           }
         />
+
+        <Route
+          path="/support"
+          element={
+            <MainLayout>
+              <Support />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/reminder"
+          element={
+            <MainLayout>
+              <Reminder />
+            </MainLayout>
+          }
+        />
+
         <Route path="/admin"
           element={
             <MainLayout>
@@ -150,6 +167,14 @@ export default function App() {
           element={
             <AuthLayout>
               <AppointmentForm />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/anonymous-appointment"
+          element={
+            <AuthLayout>
+              <AnonymousAppointmentForm />
             </AuthLayout>
           }
         />
