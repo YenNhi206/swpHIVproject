@@ -31,6 +31,7 @@ import DoctorAppointmentList from "./features/appointment/DoctorAppointments";
 import UserAppointmentList from "./features/appointment/UserAppointments";
 import PatientProfile from "./features/users/PatientProfile";
 import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmentForm";
+import PaymentPage from "./features/payment/PaymentPage";
 
 
 
@@ -121,7 +122,6 @@ export default function App() {
         <Route path="/doctor" 
         element={
           <MainLayout>
-
             <DoctorDashboard />
           </MainLayout>
         }
@@ -167,6 +167,14 @@ export default function App() {
           element={
             <AuthLayout>
               <AppointmentForm />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/payment"
+          element={
+            <AuthLayout>
+              <PaymentPage />
             </AuthLayout>
           }
         />
