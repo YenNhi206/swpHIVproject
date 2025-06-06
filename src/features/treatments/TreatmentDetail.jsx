@@ -1,66 +1,246 @@
+// File: src/features/treatments/TreatmentDetail.jsx
 import React from "react";
-import { useNavigate } from "react-router-dom";
-export default function TreatmentDetail({ treatment }) {
-    const navigate = useNavigate();
-  // treatment là object chứa dữ liệu liệu trình
-  return (
-    
-    <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-3xl font-bold text-red-700 mb-4">{treatment.name}</h1>
-      <p className="text-gray-700 mb-2"><strong>Mục đích:</strong> {treatment.purpose}</p>
-      <p className="text-gray-600 mb-6">{treatment.description}</p>
+import { useParams, Link } from "react-router-dom";
 
-      <section className="mb-6">
-        <h2 className="text-xl font-semibold text-red-600 mb-3">Danh sách thuốc</h2>
-        <table className="w-full table-auto border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-red-100">
-              <th className="border border-gray-300 p-2 text-left">Tên thuốc</th>
-              <th className="border border-gray-300 p-2 text-left">Liều lượng</th>
-              <th className="border border-gray-300 p-2 text-left">Cách dùng</th>
-              <th className="border border-gray-300 p-2 text-left">Thời gian</th>
-              <th className="border border-gray-300 p-2 text-left">Ghi chú</th>
-            </tr>
-          </thead>
-          <tbody>
-            {treatment.medications.map((med, idx) => (
-              <tr key={idx} className="even:bg-gray-50">
-                <td className="border border-gray-300 p-2">{med.name}</td>
-                <td className="border border-gray-300 p-2">{med.dosage}</td>
-                <td className="border border-gray-300 p-2">{med.usage}</td>
-                <td className="border border-gray-300 p-2">{med.time}</td>
-                <td className="border border-gray-300 p-2">{med.note || "-"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+export default function TreatmentDetail() {
+  const { id } = useParams();
 
-      <section className="mb-6">
-        <h2 className="text-xl font-semibold text-red-600 mb-3">Tác dụng phụ & Lưu ý</h2>
-        <ul className="list-disc list-inside text-gray-700">
-          {treatment.sideEffects.map((effect, idx) => (
-            <li key={idx}>{effect}</li>
-          ))}
-        </ul>
-      </section>
+  // Giả lập dữ liệu chi tiết, bạn có thể thay bằng fetch từ backend sau
+  const treatmentData = {
+    1: {
+      name: "TDF + 3TC + DTG",
+      content: (
+        <>
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">1. Thành phần thuốc</h2>
+            <ul className="list-disc ml-6 mt-2">
+              <li><strong>TDF:</strong> NRTI, ức chế sự sao chép của virus HIV.</li>
+              <li><strong>3TC:</strong> NRTI, kết hợp với TDF tăng hiệu quả.</li>
+              <li><strong>DTG:</strong> INSTI, ngăn virus tích hợp vào DNA tế bào.</li>
+            </ul>
+          </section>
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">2. Liều dùng</h2>
+            <ul className="list-disc ml-6 mt-2">
+              <li>TDF: 300 mg/ngày</li>
+              <li>3TC: 300 mg/ngày</li>
+              <li>DTG: 50 mg/ngày</li>
+            </ul>
+          </section>
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">3. Chỉ định</h2>
+            <p>Người ≥12 tuổi, ≥40kg, dùng cho điều trị ban đầu hoặc sau thất bại.</p>
+          </section>
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">4. Tác dụng phụ</h2>
+            <ul className="list-disc ml-6 mt-2">
+              <li>Buồn nôn, tiêu chảy</li>
+              <li>Mệt mỏi</li>
+              <li>Ảnh hưởng chức năng thận (TDF)</li>
+            </ul>
+          </section>
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">5. Theo dõi</h2>
+            <p>Theo dõi chức năng thận, men gan và tải lượng virus.</p>
+          </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold">6. Lưu ý</h2>
+            <p>Không dùng nếu dị ứng thành phần thuốc. Tham khảo bác sĩ.</p>
+          </section>
+        </>
+      )
+    },
 
-      <section className="mb-6">
-        <h2 className="text-xl font-semibold text-red-600 mb-3">Theo dõi hiệu quả</h2>
-        <p className="text-gray-700">{treatment.monitoring}</p>
-      </section>
+    2: {
+      name: "AZT + 3TC + EFV",
+      content: (
+        <>
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">1. Thành phần thuốc</h2>
+            <ul className="list-disc ml-6 mt-2 text-gray-700 space-y-1">
+              <li><strong>AZT (Zidovudine):</strong> Là một NRTI, ức chế enzyme reverse transcriptase, ngăn virus HIV sao chép.</li>
+              <li><strong>3TC (Lamivudine):</strong> Cũng là NRTI, kết hợp với AZT để tăng cường hiệu quả điều trị.</li>
+              <li><strong>EFV (Efavirenz):</strong> Là một NNRTI, ức chế reverse transcriptase khác cơ chế với NRTI.</li>
+            </ul>
+          </section>
 
-       <div className="flex gap-4">
-        <button className="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700">Chỉnh sửa liệu trình</button>
-        <button
-          className="px-4 py-2 border border-red-600 text-red-600 rounded-xl hover:bg-red-50"
-          onClick={() => navigate('/treatments')}
-        >
-          Quay lại
-        </button>
-        <button className="px-4 py-2 bg-gray-200 rounded-xl hover:bg-gray-300">Xuất PDF</button>
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">2. Liều dùng</h2>
+            <ul className="list-disc ml-6 mt-2 text-gray-700 space-y-1">
+              <li>AZT: 300 mg/ngày</li>
+              <li>3TC: 300 mg/ngày</li>
+              <li>EFV: 600 mg/ngày (thường dùng vào buổi tối)</li>
+            </ul>
+          </section>
+
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">3. Chỉ định</h2>
+            <p className="text-gray-700">Dành cho người ≥12 tuổi, ≥40kg. Thích hợp với người chưa từng điều trị hoặc thất bại điều trị trước đó.</p>
+          </section>
+
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">4. Tác dụng phụ</h2>
+            <ul className="list-disc ml-6 mt-2 text-gray-700 space-y-1">
+              <li>Buồn nôn</li>
+              <li>Mệt mỏi</li>
+              <li>Đau đầu</li>
+              <li>Thay đổi chức năng gan (EFV)</li>
+              <li>Thiếu máu (AZT)</li>
+            </ul>
+          </section>
+
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">5. Theo dõi</h2>
+            <p className="text-gray-700">Theo dõi chức năng gan, công thức máu và tải lượng virus thường xuyên để đánh giá hiệu quả và an toàn.</p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold">6. Lưu ý</h2>
+            <p className="text-gray-700">Không sử dụng nếu dị ứng với bất kỳ thành phần nào. Cần tham khảo ý kiến bác sĩ trước khi dùng.</p>
+          </section>
+        </>
+      )
+    },
+
+    3: {
+      name: "ABC + 3TC + LPV/r",
+      content: (
+        <>
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">1. Thành phần thuốc</h2>
+            <ul className="list-disc ml-6 mt-2 text-gray-700 space-y-1">
+              <li><strong>ABC (Abacavir):</strong> Là NRTI, ức chế enzyme reverse transcriptase, ngăn sao chép HIV.</li>
+              <li><strong>3TC (Lamivudine):</strong> NRTI, tăng hiệu quả điều trị khi kết hợp với ABC.</li>
+              <li><strong>LPV/r (Lopinavir/ritonavir):</strong> Là PI, Lopinavir ức chế enzyme protease, Ritonavir tăng cường tác dụng của Lopinavir.</li>
+            </ul>
+          </section>
+
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">2. Liều dùng</h2>
+            <ul className="list-disc ml-6 mt-2 text-gray-700 space-y-1">
+              <li>ABC: 300 mg/ngày</li>
+              <li>3TC: 300 mg/ngày</li>
+              <li>LPV/r: 400 mg / 100 mg (Lopinavir/Ritonavir), dùng 2 lần/ngày</li>
+            </ul>
+          </section>
+
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">3. Chỉ định</h2>
+            <p className="text-gray-700">
+              Dùng cho phụ nữ mang thai để giảm nguy cơ lây truyền HIV từ mẹ sang con. Thích hợp cho cả bệnh nhân chưa điều trị hoặc thất bại điều trị.
+            </p>
+          </section>
+
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">4. Tác dụng phụ</h2>
+            <ul className="list-disc ml-6 mt-2 text-gray-700 space-y-1">
+              <li>Buồn nôn</li>
+              <li>Tiêu chảy</li>
+              <li>Mệt mỏi</li>
+              <li>Phản ứng dị ứng (đặc biệt với ABC)</li>
+            </ul>
+          </section>
+
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">5. Theo dõi</h2>
+            <p className="text-gray-700">
+              Theo dõi chức năng gan, tải lượng virus và phản ứng phụ trong suốt quá trình điều trị. Cần kiểm tra định kỳ để đảm bảo hiệu quả.
+            </p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold">6. Lưu ý</h2>
+            <p className="text-gray-700">
+              Không dùng nếu có tiền sử dị ứng với bất kỳ thành phần nào (đặc biệt là ABC). Cần được bác sĩ chỉ định và theo dõi chặt chẽ.
+            </p>
+          </section>
+        </>
+      )
+    },
+
+    4: {
+      name: "NVP + 3TC + AZT",
+      content: (
+        <>
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">1. Thành phần thuốc</h2>
+            <ul className="list-disc ml-6 mt-2 text-gray-700 space-y-1">
+              <li><strong>NVP (Nevirapine):</strong> NNRTI, ức chế enzyme reverse transcriptase, ngăn sao chép HIV.</li>
+              <li><strong>3TC (Lamivudine):</strong> NRTI, tăng hiệu quả điều trị khi kết hợp với NVP và AZT.</li>
+              <li><strong>AZT (Zidovudine):</strong> NRTI, giúp ức chế HIV bằng cách ngăn enzyme reverse transcriptase.</li>
+            </ul>
+          </section>
+
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">2. Liều dùng</h2>
+            <ul className="list-disc ml-6 mt-2 text-gray-700 space-y-1">
+              <li>NVP: 200 mg/ngày (trẻ &lt; 8 tuổi), tăng lên 400 mg/ngày nếu dung nạp tốt</li>
+              <li>3TC: 4 mg/kg/ngày (tối đa 300 mg/ngày)</li>
+              <li>AZT: 4 mg/kg/ngày (tối đa 300 mg/ngày)</li>
+            </ul>
+          </section>
+
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">3. Chỉ định</h2>
+            <p className="text-gray-700">
+              Dành cho trẻ em từ 2 tuổi trở lên, chưa điều trị hoặc thất bại điều trị trước đó.
+            </p>
+          </section>
+
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">4. Tác dụng phụ</h2>
+            <ul className="list-disc ml-6 mt-2 text-gray-700 space-y-1">
+              <li>Phát ban da (NVP)</li>
+              <li>Buồn nôn</li>
+              <li>Mệt mỏi</li>
+              <li>Thiếu máu (AZT)</li>
+            </ul>
+          </section>
+
+          <section className="mb-4">
+            <h2 className="text-xl font-semibold">5. Theo dõi</h2>
+            <p className="text-gray-700">
+              Theo dõi chức năng gan, tải lượng virus và phản ứng phụ. Kiểm tra định kỳ để đảm bảo hiệu quả điều trị.
+            </p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold">6. Lưu ý</h2>
+            <p className="text-gray-700">
+              Không dùng nếu trẻ có tiền sử dị ứng với bất kỳ thành phần nào. Cần được bác sĩ chỉ định và giám sát.
+            </p>
+          </section>
+        </>
+      )
+    },
+
+
+
+
+
+  };
+
+  const treatment = treatmentData[id];
+
+  if (!treatment) {
+    return (
+      <div className="p-6 max-w-3xl mx-auto">
+        <h2 className="text-2xl font-bold text-red-600 mb-4">Phác đồ không tồn tại</h2>
+        <Link to="/treatment" className="text-blue-500 underline">Quay lại danh sách</Link>
       </div>
+    );
+  }
+
+  return (
+    <div className="p-6 bg-white rounded-xl shadow-md max-w-3xl mx-auto">
+      <h1 className="text-3xl font-bold text-red-600 mb-6">{treatment.name}</h1>
+      {treatment.content}
+      <Link
+        to="/treatment"
+        className="inline-block px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+      >
+        ← Quay lại danh sách
+      </Link>
     </div>
-    
   );
 }
