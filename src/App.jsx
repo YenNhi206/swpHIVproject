@@ -20,6 +20,8 @@ import PatientDashboard from "./features/dashboard/PatientDashboard";
 
 import Support from "./features/patientdashboard/Support";
 import Reminder from "./features/patientdashboard/Reminder";
+import History from "./features/patientdashboard/History";
+
 
 
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
@@ -45,7 +47,7 @@ export default function App() {
 
         {/* Các route sử dụng MainLayout */}
 
-            <Route path="/consultation"
+        <Route path="/consultation"
           element={
             <MainLayout>
               <OnlineConsultation />
@@ -112,6 +114,16 @@ export default function App() {
           }
         />
 
+        <Route
+          path="/history"
+          element={
+            <MainLayout>
+              <History />
+            </MainLayout>
+          }
+        />
+
+
         <Route path="/admin"
           element={
             <MainLayout>
@@ -119,12 +131,12 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route path="/doctor" 
-        element={
-          <MainLayout>
-            <DoctorDashboard />
-          </MainLayout>
-        }
+        <Route path="/doctor"
+          element={
+            <MainLayout>
+              <DoctorDashboard />
+            </MainLayout>
+          }
         />
         <Route
           path="/"

@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
 
+// Dữ liệu mẫu
 const mockHistory = [
   {
     id: 1,
@@ -26,65 +23,110 @@ const mockHistory = [
 ];
 
 export default function History() {
-  const [dateRange, setDateRange] = useState({
-    from: new Date("2025-01-01"),
-    to: new Date("2025-06-01"),
-  });
+  const [fromDate, setFromDate] = useState("2025-01-01");
+  const [toDate, setToDate] = useState("2025-06-01");
 
   const filterByDate = (entries) => {
     return entries.filter((entry) => {
       const entryDate = new Date(entry.date);
-      return (
-        entryDate >= dateRange.from &&
-        entryDate <= dateRange.to
-      );
+      return entryDate >= new Date(fromDate) && entryDate <= new Date(toDate);
     });
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Lịch sử khám & điều trị</h1>
-      <p className="text-muted-foreground">
+    <div style={styles.container}>
+      <h2 style={styles.title}>Lịch sử khám & điều trị</h2>
+      <p style={styles.subTitle}>
         Xem lại các lần khám, đơn thuốc và quá trình điều trị HIV
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+      <div style={styles.filterSection}>
         <div>
-          <p className="font-medium">Chọn khoảng thời gian:</p>
-          <div className="flex space-x-2 mt-2">
-            <Calendar
-              selected={dateRange.from}
-              onSelect={(date) => setDateRange({ ...dateRange, from: date })}
-            />
-            <Calendar
-              selected={dateRange.to}
-              onSelect={(date) => setDateRange({ ...dateRange, to: date })}
-            />
-          </div>
+          <label>Từ ngày: </label>
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Đến ngày: </label>
+          <input
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+          />
         </div>
       </div>
 
-      <div className="space-y-4">
-        {filterByDate(mockHistory).map((item) => (
-          <Card key={item.id}>
-            <CardContent className="p-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-lg font-semibold">{item.type}</h2>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
-                </div>
-                <span className="text-sm text-right text-gray-500">
-                  {format(new Date(item.date), "dd/MM/yyyy")}
+      <div style={styles.historyList}>
+        {filterByDate(mockHistory).length === 0 ? (
+          <p style={styles.noData}>Không có dữ liệu trong khoảng thời gian đã chọn.</p>
+        ) : (
+          filterByDate(mockHistory).map((item) => (
+            <div key={item.id} style={styles.card}>
+              <div style={styles.cardHeader}>
+                <strong>{item.type}</strong>
+                <span style={styles.date}>
+                  {new Date(item.date).toLocaleDateString("vi-VN")}
                 </span>
               </div>
-            </CardContent>
-          </Card>
-        ))}
-
-        {filterByDate(mockHistory).length === 0 && (
-          <p className="text-center text-gray-500 italic">Không có dữ liệu trong khoảng thời gian đã chọn.</p>
+              <p style={styles.description}>{item.description}</p>
+            </div>
+          ))
         )}
       </div>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    padding: "20px",
+    maxWidth: "800px",
+    margin: "0 auto",
+    fontFamily: "Arial, sans-serif",
+  },
+  title: {
+    fontSize: "24px",
+    fontWeight: "bold",
+    marginBottom: "4px",
+  },
+  subTitle: {
+    color: "#555",
+    marginBottom: "20px",
+  },
+  filterSection: {
+    display: "flex",
+    gap: "20px",
+    marginBottom: "20px",
+  },
+  historyList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "15px",
+  },
+  card: {
+    border: "1px solid #ddd",
+    borderRadius: "6px",
+    padding: "15px",
+    backgroundColor: "#f9f9f9",
+  },
+  cardHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: "6px",
+  },
+  date: {
+    fontSize: "12px",
+    color: "#666",
+  },
+  description: {
+    fontSize: "14px",
+    marginTop: "4px",
+  },
+  noData: {
+    fontStyle: "italic",
+    color: "#888",
+  },
+};
