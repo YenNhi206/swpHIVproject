@@ -86,7 +86,7 @@ export default function HomePage() {
           />
 
         </div>
-      </header>
+     
 
       {/* Title dưới header */}
       <div className="text-center my-10">
@@ -125,7 +125,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      
+      </section>
     </div>
   );
 }
