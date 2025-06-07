@@ -150,9 +150,9 @@ export default function App() {
         {/* Các route sử dụng AuthLayout */}
         <Route
           path="/login" element={
-            <AuthLayout>
+            <MainLayout>
               <LoginPage />
-            </AuthLayout>
+            </MainLayout>
           }
         />
         <Route
