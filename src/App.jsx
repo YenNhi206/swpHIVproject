@@ -29,16 +29,21 @@ import PatientProfile from "./features/users/PatientProfile";
 import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmentForm";
 import PaymentPage from "./features/payment/PaymentPage";
 
+
 // 👉 Thêm ChatWidget ở đây:
 import ChatWidget from "./components/ChatWidget";
+
+
+
 
 export default function App() {
   return (
     <Router>
       <Routes>
         {/* Các route sử dụng MainLayout */}
-        <Route
-          path="/users"
+  
+
+        <Route path="/users"
           element={
             <MainLayout>
               <PatientProfile />
@@ -93,16 +98,17 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route
-          path="/admin"
+
+
+        <Route path="/admin"
           element={
             <MainLayout>
               <AdminDashboard />
             </MainLayout>
           }
         />
-        <Route
-          path="/doctor"
+
+        <Route path="/doctor"
           element={
             <MainLayout>
               <DoctorDashboard />
@@ -146,9 +152,9 @@ export default function App() {
         <Route
           path="/appointments"
           element={
-            <AuthLayout>
+            <MainLayout>
               <AppointmentForm />
-            </AuthLayout>
+            </MainLayout>
           }
         />
         <Route
@@ -162,9 +168,9 @@ export default function App() {
         <Route
           path="/anonymous-appointment"
           element={
-            <AuthLayout>
+            <MainLayout>
               <AnonymousAppointmentForm />
-            </AuthLayout>
+            </MainLayout>
           }
         />
         <Route
