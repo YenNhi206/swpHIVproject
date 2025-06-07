@@ -1,5 +1,3 @@
-
-// File: src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -13,14 +11,12 @@ import NotFoundPage from "./pages/NotFoundPage";
 import LoginPage from "./features/auth/LoginPage";
 import SignupPage from "./features/auth/SignupPage";
 
-
 import AdminDashboard from "./features/dashboard/AdminDashboard";
 import DoctorDashboard from "./features/dashboard/DoctorDashboard";
 import PatientDashboard from "./features/dashboard/PatientDashboard";
 
 import Support from "./features/patientdashboard/Support";
 import Reminder from "./features/patientdashboard/Reminder";
-
 
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
@@ -34,25 +30,18 @@ import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmen
 import PaymentPage from "./features/payment/PaymentPage";
 
 
+// 👉 Thêm ChatWidget ở đây:
+import ChatWidget from "./components/ChatWidget";
 
-import OnlineConsultation from "./features/consultation/OnlineConsultation";
-import CreateTreatment from "./features/treatments/CreateTreatment";
+
 
 
 export default function App() {
   return (
     <Router>
       <Routes>
-
         {/* Các route sử dụng MainLayout */}
-
-        <Route path="/consultation"
-          element={
-            <MainLayout>
-              <OnlineConsultation />
-            </MainLayout>
-          }
-        />
+  
 
         <Route path="/users"
           element={
@@ -61,40 +50,38 @@ export default function App() {
             </MainLayout>
           }
         />
-
-        <Route path="/treatment-results"
+        <Route
+          path="/treatment-results"
           element={
             <MainLayout>
               <ResultPage />
             </MainLayout>
           }
         />
-
-        <Route path="/treatment"
+        <Route
+          path="/treatment"
           element={
             <MainLayout>
               <TreatmentList />
             </MainLayout>
           }
         />
-
-        <Route path="/treatment/:id"
+        <Route
+          path="/treatment/:id"
           element={
             <MainLayout>
               <TreatmentDetail />
             </MainLayout>
           }
         />
-
-
-        <Route path="/patient"
+        <Route
+          path="/patient"
           element={
             <MainLayout>
               <PatientDashboard />
             </MainLayout>
           }
         />
-
         <Route
           path="/support"
           element={
@@ -103,7 +90,6 @@ export default function App() {
             </MainLayout>
           }
         />
-
         <Route
           path="/reminder"
           element={
@@ -112,7 +98,7 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route path="/treatment/create" element={<CreateTreatment />} />
+
 
         <Route path="/admin"
           element={
@@ -121,6 +107,7 @@ export default function App() {
             </MainLayout>
           }
         />
+
         <Route path="/doctor"
           element={
             <MainLayout>
@@ -145,11 +132,10 @@ export default function App() {
           }
         />
 
-
-
         {/* Các route sử dụng AuthLayout */}
         <Route
-          path="/login" element={
+          path="/login"
+          element={
             <AuthLayout>
               <LoginPage />
             </AuthLayout>
@@ -163,7 +149,6 @@ export default function App() {
             </AuthLayout>
           }
         />
-
         <Route
           path="/appointments"
           element={
@@ -215,6 +200,9 @@ export default function App() {
           }
         />
       </Routes>
+
+      {/* 👉 ChatWidget nằm ngoài Routes để luôn hiển thị */}
+      <ChatWidget />
     </Router>
   );
 }

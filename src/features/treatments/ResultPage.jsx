@@ -1,9 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { CheckCircle, AlertCircle } from "lucide-react";
 
 export default function ResultPage() {
-     const navigate = useNavigate(); // dùng để điều hướng trang
-  // Giả lập dữ liệu
+  const navigate = useNavigate();
+
   const result = {
     patientName: "Nguyễn Văn A",
     doctorName: "BS. Trần Thị B",
@@ -18,33 +19,62 @@ export default function ResultPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow rounded-lg">
-      <h1 className="text-2xl font-bold text-red-700 mb-4">Kết quả điều trị</h1>
-      <p><strong>Bệnh nhân:</strong> {result.patientName}</p>
-      <p><strong>Bác sĩ phụ trách:</strong> {result.doctorName}</p>
-      <p><strong>Ngày xét nghiệm:</strong> {result.testDate}</p>
+    <div className="max-w-4xl mx-auto p-6 my-10 bg-white shadow-xl rounded-2xl border border-gray-200">
+      <h1 className="text-3xl font-extrabold text-red-700 mb-6 text-center">Kết quả điều trị</h1>
 
-      <div className="mt-6">
-        <h2 className="text-xl font-semibold text-red-600 mb-2">Chỉ số kết quả</h2>
-        <ul className="list-disc list-inside text-gray-700">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div className="bg-gray-50 p-4 rounded-lg shadow">
+          <p className="font-semibold text-gray-600">Bệnh nhân</p>
+          <p className="text-lg text-gray-800">{result.patientName}</p>
+        </div>
+        <div className="bg-gray-50 p-4 rounded-lg shadow">
+          <p className="font-semibold text-gray-600">Bác sĩ phụ trách</p>
+          <p className="text-lg text-gray-800">{result.doctorName}</p>
+        </div>
+        <div className="bg-gray-50 p-4 rounded-lg shadow">
+          <p className="font-semibold text-gray-600">Ngày xét nghiệm</p>
+          <p className="text-lg text-gray-800">{result.testDate}</p>
+        </div>
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-red-600 mb-4">Chỉ số kết quả</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {result.results.map((item, idx) => (
-            <li key={idx}>
-              <strong>{item.label}:</strong> {item.value}
-            </li>
+            <div
+              key={idx}
+              className="bg-red-50 border border-red-200 p-4 rounded-lg shadow text-center"
+            >
+              <p className="font-semibold text-red-600 text-lg">{item.label}</p>
+              <p className="text-xl font-bold text-gray-900 mt-2">{item.value}</p>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
 
-      <div className="mt-4">
-        <p><strong>Trạng thái:</strong> <span className="text-green-600">{result.status}</span></p>
-        <p className="mt-2 text-gray-700"><strong>Ghi chú:</strong> {result.note}</p>
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-red-600 mb-4">Đánh giá tổng quan</h2>
+        <div className="flex items-center space-x-3 mb-2">
+          {result.status === "Đáp ứng tốt" ? (
+            <CheckCircle className="text-green-600" size={28} />
+          ) : (
+            <AlertCircle className="text-yellow-500" size={28} />
+          )}
+          <p className="text-lg font-medium text-gray-800">
+            <strong>Trạng thái:</strong>{" "}
+            <span className="text-green-600">{result.status}</span>
+          </p>
+        </div>
+        <p className="text-gray-700"><strong>Ghi chú:</strong> {result.note}</p>
       </div>
 
-      <div className="mt-6 flex gap-3">
-        <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">In kết quả</button>
-         <button
+      <div className="flex flex-wrap gap-4 justify-center mt-8">
+        <button className="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition">
+          In kết quả
+        </button>
+        <button
           onClick={() => navigate("/")}
-          className="px-4 py-2 border border-red-600 text-red-600 rounded-lg hover:bg-red-100"
+          className="px-6 py-3 border border-red-600 text-red-600 font-semibold rounded-lg hover:bg-red-100 transition"
         >
           Quay lại
         </button>
