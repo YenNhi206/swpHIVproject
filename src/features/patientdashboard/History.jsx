@@ -23,15 +23,30 @@ const mockHistory = [
 ];
 
 export default function History() {
-  const [fromDate, setFromDate] = useState("2025-01-01");
-  const [toDate, setToDate] = useState("2025-06-01");
+  const today = new Date().toISOString().split("T")[0];
+
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [isFiltered, setIsFiltered] = useState(false);
+
+  const isInvalidRange = toDate && new Date(toDate) > new Date(today);
+
+  const handleFilterChange = (setter) => (e) => {
+    setter(e.target.value);
+    setIsFiltered(true);
+  };
 
   const filterByDate = (entries) => {
     return entries.filter((entry) => {
       const entryDate = new Date(entry.date);
-      return entryDate >= new Date(fromDate) && entryDate <= new Date(toDate);
+      return (
+        (!fromDate || entryDate >= new Date(fromDate)) &&
+        (!toDate || entryDate <= new Date(toDate))
+      );
     });
   };
+
+  const filteredData = filterByDate(mockHistory);
 
   return (
     <div style={styles.container}>
@@ -46,7 +61,8 @@ export default function History() {
           <input
             type="date"
             value={fromDate}
-            onChange={(e) => setFromDate(e.target.value)}
+            onChange={handleFilterChange(setFromDate)}
+            max={today}
           />
         </div>
         <div>
@@ -54,16 +70,27 @@ export default function History() {
           <input
             type="date"
             value={toDate}
-            onChange={(e) => setToDate(e.target.value)}
+            onChange={handleFilterChange(setToDate)}
+            max={today}
           />
         </div>
       </div>
 
+      {isInvalidRange && (
+        <p style={styles.error}>
+          ❌ Ngày kết thúc không được vượt quá ngày hôm nay ({today}).
+        </p>
+      )}
+
       <div style={styles.historyList}>
-        {filterByDate(mockHistory).length === 0 ? (
+        {!isFiltered ? (
+          <p style={styles.noData}>
+            🔍 Vui lòng chọn khoảng thời gian để xem lịch sử khám và điều trị.
+          </p>
+        ) : !isInvalidRange && filteredData.length === 0 ? (
           <p style={styles.noData}>Không có dữ liệu trong khoảng thời gian đã chọn.</p>
         ) : (
-          filterByDate(mockHistory).map((item) => (
+          filteredData.map((item) => (
             <div key={item.id} style={styles.card}>
               <div style={styles.cardHeader}>
                 <strong>{item.type}</strong>
@@ -128,5 +155,10 @@ const styles = {
   noData: {
     fontStyle: "italic",
     color: "#888",
+  },
+  error: {
+    color: "red",
+    marginBottom: "10px",
+    fontWeight: "bold",
   },
 };
