@@ -43,15 +43,7 @@ export default function App() {
     <Router>
       <Routes>
         {/* Các route sử dụng MainLayout */}
-        <Route path="/history"
-          element={
-            <MainLayout>
-              <History />
-            </MainLayout>
-          }
-        />
 
-        
         <Route path="/users"
           element={
             <MainLayout>
@@ -108,6 +100,14 @@ export default function App() {
           }
         />
 
+        <Route path="/history"
+          element={
+            <MainLayout>
+              <History />
+            </MainLayout>
+          }
+        />
+
         <Route path="/admin"
           element={
             <MainLayout>
@@ -115,12 +115,12 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route path="/doctor" 
-        element={
-          <MainLayout>
-            <DoctorDashboard />
-          </MainLayout>
-        }
+        <Route path="/doctor"
+          element={
+            <MainLayout>
+              <DoctorDashboard />
+            </MainLayout>
+          }
         />
         <Route
           path="/"
@@ -142,9 +142,9 @@ export default function App() {
         {/* Các route sử dụng AuthLayout */}
         <Route
           path="/login" element={
-           <MainLayout>
+            <MainLayout>
 
-         
+
               <LoginPage />
             </MainLayout>
           }

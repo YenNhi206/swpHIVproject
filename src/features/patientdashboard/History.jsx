@@ -22,11 +22,12 @@ const mockHistory = [
   },
 ];
 
-export  function History() {
+export function History() {
   const today = new Date().toISOString().split("T")[0];
 
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [isFiltered, setIsFiltered] = useState(false);
 
   const isInvalidRange = toDate && new Date(toDate) > new Date(today);
@@ -36,17 +37,27 @@ export  function History() {
     setIsFiltered(true);
   };
 
-  const filterByDate = (entries) => {
+  const handleSearchChange = (e) => {
+    setSearchInput(e.target.value);
+    setIsFiltered(true);
+  };
+
+  const filterByDateAndSearch = (entries) => {
     return entries.filter((entry) => {
       const entryDate = new Date(entry.date);
-      return (
+      const inRange =
         (!fromDate || entryDate >= new Date(fromDate)) &&
-        (!toDate || entryDate <= new Date(toDate))
-      );
+        (!toDate || entryDate <= new Date(toDate));
+      const matchesSearch =
+        !searchInput ||
+        entry.id.toString() === searchInput ||
+        entry.date === searchInput;
+
+      return inRange && (!searchInput || matchesSearch);
     });
   };
 
-  const filteredData = filterByDate(mockHistory);
+  const filteredData = filterByDateAndSearch(mockHistory);
 
   return (
     <div style={styles.container}>
@@ -74,6 +85,15 @@ export  function History() {
             max={today}
           />
         </div>
+        <div>
+          <label>Nhập ID hoặc ngày: </label>
+          <input
+            type="text"
+            placeholder="VD: 1 hoặc 2025-03-02"
+            value={searchInput}
+            onChange={handleSearchChange}
+          />
+        </div>
       </div>
 
       {isInvalidRange && (
@@ -83,12 +103,18 @@ export  function History() {
       )}
 
       <div style={styles.historyList}>
+        {isFiltered && !isInvalidRange && filteredData.length > 0 && (
+          <p style={{ fontWeight: "bold" }}>
+            📌 Có {filteredData.length} kết quả được tìm thấy.
+          </p>
+        )}
+
         {!isFiltered ? (
           <p style={styles.noData}>
-            🔍 Vui lòng chọn khoảng thời gian để xem lịch sử khám và điều trị.
+            🔍 Vui lòng chọn khoảng thời gian hoặc nhập thông tin để xem lịch sử.
           </p>
         ) : !isInvalidRange && filteredData.length === 0 ? (
-          <p style={styles.noData}>Không có dữ liệu trong khoảng thời gian đã chọn.</p>
+          <p style={styles.noData}>Không có dữ liệu phù hợp với điều kiện đã chọn.</p>
         ) : (
           filteredData.map((item) => (
             <div key={item.id} style={styles.card}>
@@ -127,6 +153,7 @@ const styles = {
     display: "flex",
     gap: "20px",
     marginBottom: "20px",
+    flexWrap: "wrap",
   },
   historyList: {
     display: "flex",
@@ -162,4 +189,5 @@ const styles = {
     fontWeight: "bold",
   },
 };
-export default History
+
+export default History;
