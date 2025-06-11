@@ -64,21 +64,21 @@ export default function HomePage() {
           {/* Mỗi bài tài liệu */}
           {[
             {
-              title: "📚 Kiến thức cơ bản về HIV và điều trị ARV",
+              title: "HIV là gì?, HIV lây nhiễm như thế nào?",
               description:
-                "Tìm hiểu về virus HIV, cách lây nhiễm, các giai đoạn và hướng điều trị bằng thuốc ARV hiệu quả.",
+                "Hầu như tất cả mọi người đều đã từng nghe đến HIV và AIDS, tuy nhiên có rất ít người hiểu đúng về nó. Những sai lầm trong hiểu biết về HIV/AIDS khiến chúng ta có cái nhìn không thiện cảm với bệnh nhân không may mắc phải căn bệnh thế kỷ này. Bài viết sau đây sẽ cung cấp cho bạn những kiến thức cơ bản cần nhớ về HIV và AIDS.",
               link: "https://www.vinmec.com/vie/bai-viet/hiv-va-aids-nhung-dieu-ban-can-nho-vi",
             },
             {
-              title: "🌱 Cách sống khỏe mạnh với HIV",
+              title: "4 bí quyết sống lâu, sống khỏe cho người nhiễm HIV",
               description:
-                "Hướng dẫn chăm sóc sức khỏe toàn diện, dinh dưỡng, tập luyện và duy trì tinh thần tích cực khi sống chung với HIV.",
+                "SKĐS - Khi phát hiện mình bị nhiễm HIV, nhiều người cứ nghĩ cuộc đời mình sẽ mất tất cả. Đây là lối suy nghĩ tiêu cực và hết sức sai lầm. Nếu tuân thủ điều trị tốt và thực hành lối sống lành mạnh, người nhiễm HIV vẫn có thể sống khỏe mạnh, lâu dài.Để được sống lâu, sống khỏe, điều quan trọng là người nhiễm HIV cần thực hiện các nguyên tắc sau:",
               link: "https://bvquan5.medinet.gov.vn/hivaids/4-bi-quyet-song-lau-song-khoe-cho-nguoi-nhiem-hiv-cmobile16896-191243.aspx",
             },
             {
-              title: "💬 Phá bỏ kỳ thị – Hiểu đúng, thương đúng",
+              title: "Xóa bỏ kỳ thị và phân biệt đối xử với người nhiễm HIV/AIDS",
               description:
-                "Những câu chuyện và kiến thức giúp cộng đồng hiểu đúng về HIV để giảm bớt định kiến và kỳ thị xã hội.",
+                "Chỉ thị 54-CT/TW, ngày 30/1/2005 của Ban Bí thư “về tăng cường lãnh đạo công tác phòng, chống HIV/AIDS trong tình hình mới” đã nêu: “Phát huy truyền thống tương thân, tương ái, chăm sóc, giúp đỡ của cộng đồng, chống kỳ thị và phân biệt đối xử với người nhiễm HIV/AIDS”.",
               link: "https://btgtu.binhthuan.dcs.vn/Trang-chu/post/1520/xoa-bo-ky-thi-va-phan-biet-doi-xu-voi-nguoi-nhiem-hivaids",
             },
           ].map(({ title, description, link }) => (
@@ -126,21 +126,21 @@ export default function HomePage() {
         <div className="grid md:grid-cols-3 gap-8">
           {[
             {
-              title: "💡 Câu chuyện vượt qua kỳ thị",
+              title: "Người sẻ chia khủng hoảng, buồn vui cùng bệnh nhân HIV",
               description:
-                "Những hành trình thật từ người sống chung với HIV – cách họ đối mặt với ánh nhìn xã hội và vượt lên chính mình.",
+                "SKĐS - Người nhiễm HIV thường nghĩ rằng, họ sẽ nhận được sự kỳ thị, xa lánh... thay vì thương cảm, sẻ chia từ cộng đồng. Vậy nên, để người bệnh chủ động và an tâm điều trị cần được sự tư vấn, quan tâm nhiều từ đội ngũ nhân viên y tế...",
               link: "https://bvquan5.medinet.gov.vn/chuyen-muc/nguoi-se-chia-khung-hoang-buon-vui-cung-benh-nhan-hiv-c16896-131217.aspx",
             },
             {
-              title: "🧬 Kinh nghiệm điều trị hiệu quả",
+              title: "8 cách để hỗ trợ điều trị HIV hiệu quả và tăng cường hệ miễn dịch",
               description:
-                "Chia sẻ về quá trình điều trị ARV, theo dõi tải lượng HIV, và cách duy trì tâm lý tích cực khi điều trị lâu dài.",
+                "Thuốc điều trị HIV là chìa khóa để bệnh nhân HIV khỏe mạnh khi sống chung với loại virus này. Tuy nhiên, một số thói quen dưới đây có thể hỗ trợ việc điều trị hiệu quả hơn và tăng cường hệ miễn dịch của người nhiễm HIV",
               link: "https://vaac.gov.vn/8-cach-de-ho-tro-dieu-tri-hiv-hieu-qua-va-tang-cuong-he-mien-dich.html",
             },
             {
-              title: "👨‍⚕️ Lời khuyên từ chuyên gia",
+              title: "Lời khuyên bổ ích cho người nhiễm HIV/AIDS",
               description:
-                "Phỏng vấn các bác sĩ chuyên khoa HIV/AIDS về lời khuyên điều trị, lối sống, và cập nhật y khoa mới nhất.",
+                "Đối với những người nhiễm HIV/AIDS, cần thêm vitamin và khoáng chất để giúp sửa chữa và chữa lành các tế bào bị hư hỏng, cải thiện hệ thống miễn dịch.",
               link: "https://moh.gov.vn/chuong-trinh-muc-tieu-quoc-gia/-/asset_publisher/7ng11fEWgASC/content/loi-khuyen-bo-ich-cho-nguoi-nhiem-hiv-aids",
             },
           ].map(({ title, description, link }) => (
