@@ -22,7 +22,7 @@ const mockHistory = [
   },
 ];
 
-export default function History() {
+export  function History() {
   const today = new Date().toISOString().split("T")[0];
 
   const [fromDate, setFromDate] = useState("");
@@ -162,3 +162,4 @@ const styles = {
     fontWeight: "bold",
   },
 };
+export default History
