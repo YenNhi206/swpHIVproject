@@ -41,7 +41,7 @@ export default function App() {
     <Router>
       <Routes>
         {/* Các route sử dụng MainLayout */}
-  
+
 
         <Route path="/users"
           element={
@@ -135,9 +135,9 @@ export default function App() {
         {/* Các route sử dụng AuthLayout */}
         <Route
           path="/login" element={
-           <MainLayout>
+            <MainLayout>
 
-         
+
               <LoginPage />
             </MainLayout>
           }
@@ -145,9 +145,9 @@ export default function App() {
         <Route
           path="/signup"
           element={
-            <AuthLayout>
+            <MainLayout>
               <SignupPage />
-            </AuthLayout>
+            </MainLayout>
           }
         />
         <Route
