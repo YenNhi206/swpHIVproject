@@ -107,7 +107,7 @@ export function History() {
           <label>Nhập ID hoặc ngày: </label>
           <input
             type="text"
-            placeholder="VD: 1 hoặc yyyy-mm-dd"
+            placeholder="VD: 1 hoặc YYYY-MM-DD"
             value={searchInput}
             onChange={handleSearchChange}
             style={styles.input}
