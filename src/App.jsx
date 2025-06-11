@@ -152,9 +152,9 @@ export default function App() {
         <Route
           path="/signup"
           element={
-            <AuthLayout>
+            <MainLayout>
               <SignupPage />
-            </AuthLayout>
+            </MainLayout>
           }
         />
         <Route
