@@ -17,6 +17,8 @@ import PatientDashboard from "./features/dashboard/PatientDashboard";
 
 import Support from "./features/patientdashboard/Support";
 import Reminder from "./features/patientdashboard/Reminder";
+import History from "./features/patientdashboard/History";
+
 
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
@@ -41,7 +43,6 @@ export default function App() {
     <Router>
       <Routes>
         {/* Các route sử dụng MainLayout */}
-
 
         <Route path="/users"
           element={
@@ -99,6 +100,13 @@ export default function App() {
           }
         />
 
+        <Route path="/history"
+          element={
+            <MainLayout>
+              <History />
+            </MainLayout>
+          }
+        />
 
         <Route path="/admin"
           element={
@@ -107,7 +115,6 @@ export default function App() {
             </MainLayout>
           }
         />
-
         <Route path="/doctor"
           element={
             <MainLayout>
