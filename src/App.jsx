@@ -1,5 +1,3 @@
-
-// File: src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -13,15 +11,12 @@ import NotFoundPage from "./pages/NotFoundPage";
 import LoginPage from "./features/auth/LoginPage";
 import SignupPage from "./features/auth/SignupPage";
 
-
 import AdminDashboard from "./features/dashboard/AdminDashboard";
 import DoctorDashboard from "./features/dashboard/DoctorDashboard";
 import PatientDashboard from "./features/dashboard/PatientDashboard";
 
 import Support from "./features/patientdashboard/Support";
 import Reminder from "./features/patientdashboard/Reminder";
-import History from "./features/patientdashboard/History";
-
 
 
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
@@ -36,18 +31,19 @@ import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmen
 import PaymentPage from "./features/payment/PaymentPage";
 
 
+// 👉 Thêm ChatWidget ở đây:
+import ChatWidget from "./components/ChatWidget";
 
-import OnlineConsultation from "./features/consultation/OnlineConsultation";
+
 
 
 export default function App() {
   return (
     <Router>
       <Routes>
-
         {/* Các route sử dụng MainLayout */}
 
-        <Route path="/consultation"
+            <Route path="/consultation"
           element={
             <MainLayout>
               <OnlineConsultation />
@@ -62,40 +58,38 @@ export default function App() {
             </MainLayout>
           }
         />
-
-        <Route path="/treatment-results"
+        <Route
+          path="/treatment-results"
           element={
             <MainLayout>
               <ResultPage />
             </MainLayout>
           }
         />
-
-        <Route path="/treatment"
+        <Route
+          path="/treatment"
           element={
             <MainLayout>
               <TreatmentList />
             </MainLayout>
           }
         />
-
-        <Route path="/treatment/:id"
+        <Route
+          path="/treatment/:id"
           element={
             <MainLayout>
               <TreatmentDetail />
             </MainLayout>
           }
         />
-
-
-        <Route path="/patient"
+        <Route
+          path="/patient"
           element={
             <MainLayout>
               <PatientDashboard />
             </MainLayout>
           }
         />
-
         <Route
           path="/support"
           element={
@@ -104,7 +98,6 @@ export default function App() {
             </MainLayout>
           }
         />
-
         <Route
           path="/reminder"
           element={
@@ -114,16 +107,6 @@ export default function App() {
           }
         />
 
-        <Route
-          path="/history"
-          element={
-            <MainLayout>
-              <History />
-            </MainLayout>
-          }
-        />
-
-
         <Route path="/admin"
           element={
             <MainLayout>
@@ -131,12 +114,12 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route path="/doctor"
-          element={
-            <MainLayout>
-              <DoctorDashboard />
-            </MainLayout>
-          }
+        <Route path="/doctor" 
+        element={
+          <MainLayout>
+            <DoctorDashboard />
+          </MainLayout>
+        }
         />
         <Route
           path="/"
@@ -155,14 +138,14 @@ export default function App() {
           }
         />
 
-
-
         {/* Các route sử dụng AuthLayout */}
         <Route
           path="/login" element={
-            <AuthLayout>
+           <MainLayout>
+
+         
               <LoginPage />
-            </AuthLayout>
+            </MainLayout>
           }
         />
         <Route
@@ -173,13 +156,12 @@ export default function App() {
             </AuthLayout>
           }
         />
-
         <Route
           path="/appointments"
           element={
-            <AuthLayout>
+            <MainLayout>
               <AppointmentForm />
-            </AuthLayout>
+            </MainLayout>
           }
         />
         <Route
@@ -193,9 +175,9 @@ export default function App() {
         <Route
           path="/anonymous-appointment"
           element={
-            <AuthLayout>
+            <MainLayout>
               <AnonymousAppointmentForm />
-            </AuthLayout>
+            </MainLayout>
           }
         />
         <Route
@@ -225,6 +207,9 @@ export default function App() {
           }
         />
       </Routes>
+
+      {/* 👉 ChatWidget nằm ngoài Routes để luôn hiển thị */}
+      <ChatWidget />
     </Router>
   );
 }
