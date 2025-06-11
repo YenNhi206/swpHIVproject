@@ -174,25 +174,25 @@ export default function HomePage() {
             {
               img: hiv1Img,
               alt: "Phát hiện liệu pháp mới",
-              title: "🌍 Phát hiện liệu pháp mới giúp ức chế HIV",
+              title: "Thử nghiệm lâm sàng trên người liệu pháp mới điều trị HIV",
               description:
-                "Các nhà nghiên cứu đã công bố một phương pháp mới giúp giảm tải lượng HIV hiệu quả hơn trên thế giới.",
+                "Nhóm chuyên gia công nghệ sinh học từ Hoa Kỳ đang thử nghiệm liệu pháp CRISPR trên 3 bệnh nhân HIV, với kỳ vọng tìm ra cách chữa dứt điểm “căn bệnh thế kỷ” HIV/AIDS.",
               link: "https://vaac.gov.vn/thu-nghiem-lam-sang-tren-nguoi-lieu-phap-moi-dieu-tri-hiv.html",
             },
             {
               img: hivbhytImg,
               alt: "Chương trình hỗ trợ ARV miễn phí",
-              title: "🏥 Chương trình hỗ trợ ARV miễn phí cho bệnh nhân HIV",
+              title: "TP. Hồ Chí Minh: Sẵn sàng công tác điều trị cho người nhiễm HIV thông qua BHYT",
               description:
-                "Nhiều địa phương đã triển khai chương trình cấp phát thuốc ARV miễn phí giúp người bệnh tiếp cận điều trị dễ dàng hơn.",
+                "Đây sẽ là thách thức lớn trong việc duy trì ổn định điều trị cho bệnh nhân HIV. Nếu không có thẻ BHYT, người nhiễm HIV sẽ phải chi một số tiền khá lớn để điều trị bằng thuốc ARV.",
               link: "https://baohiemxahoi.gov.vn/gioithieu/Pages/gioi-thieu-chung.aspx?CateID=0&ItemID=11910",
             },
             {
               img: hivpaitentImg,
               alt: "Hành trình sống chung với HIV",
-              title: '💬 Hành trình "sống chung với HIV" - Góc nhìn từ bệnh nhân',
+              title: 'Bệnh nhân HIV: HIV không phải là dấu chấm hết, sự đồng cảm giúp tôi vững bước',
               description:
-                "Chia sẻ từ những người đã sống chung với HIV nhiều năm: cách họ xây dựng lối sống khỏe mạnh, lạc quan.",
+                "SKĐS - Tôi - một bệnh nhân đang sống chung với HIV, hai từ khó khăn không đủ để diễn tả về hành trình của bản thân. Hy vọng, sự đồng cảm và hỗ trợ là những điều giúp tôi vững bước hơn trong cuộc sống.",
               link: "https://bvquan5.medinet.gov.vn/hivaids/benh-nhan-hiv-hiv-khong-phai-la-dau-cham-het-su-dong-cam-giup-toi-vung-buoc-cmobile16896-199511.aspx",
             },
           ].map(({ img, alt, title, description, link }) => (
