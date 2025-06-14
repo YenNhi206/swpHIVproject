@@ -20,6 +20,7 @@ import Reminder from "./features/patientdashboard/Reminder";
 import History from "./features/patientdashboard/History";
 
 
+
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
 import ResultPage from "./features/treatments/ResultPage";
@@ -44,6 +45,11 @@ export default function App() {
     <Router>
       <Routes>
         {/* Các route sử dụng MainLayout */}
+<<<<<<< Updated upstream
+=======
+
+          
+>>>>>>> Stashed changes
 
         <Route path="/users"
           element={
