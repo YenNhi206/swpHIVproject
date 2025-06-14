@@ -1,12 +1,13 @@
-// File: src/layouts/MainLayout.jsx
-import React from "react";
-import Navbar from "../components/Navbar";
+import React from 'react';
+import Navbar from '../components/Navbar'; // Hoặc NewNavbar nếu đã tạo
+import Breadcrumb from '../components/Breadcrumb';
 
 export default function MainLayout({ children }) {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <main className="p-4">{children}</main>
+      <Breadcrumb />
+      <main className="max-w-7xl mx-auto p-6">{children}</main>
     </div>
   );
 }

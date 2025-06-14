@@ -25,6 +25,7 @@ import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
 import ResultPage from "./features/treatments/ResultPage";
 import CreateTreatment from "./features/treatments/CreateTreatment";
+import EditTreatment from "./features/treatments/EditTreatment";
 
 import AppointmentForm from "./features/appointment/AppointmentForm";
 import DoctorAppointmentList from "./features/appointment/DoctorAppointments";
@@ -82,6 +83,15 @@ export default function App() {
           element={
             <MainLayout>
               <CreateTreatment />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/treatment/:id/edit"
+          element={
+            <MainLayout>
+              <EditTreatment />
             </MainLayout>
           }
         />
@@ -222,6 +232,7 @@ export default function App() {
 
       {/* 👉 ChatWidget nằm ngoài Routes để luôn hiển thị */}
       <ChatWidget />
+
     </Router>
   );
 }

@@ -59,12 +59,6 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex flex-col">
-      {/* Thanh điều hướng */}
-      <div className="w-full bg-gray-200 py-4 px-6 text-lg mt-0">
-        <Link to="/" className="text-black hover:text-red-600 font-normal">Trang chủ</Link>
-        <span className="text-gray-500 px-1">{">>"}</span>
-        <span className="font-bold">Tạo tài khoản</span>
-      </div>
 
       <div className="flex items-center justify-center flex-grow px-4">
         <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-8 opacity-0 translate-y-4 animate-fade-in">

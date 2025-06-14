@@ -52,6 +52,13 @@ export default function TreatmentList() {
     }, 500);
   }, [newTreatment]);
 
+  const handleDelete = (id) => {
+    const confirmed = window.confirm('Bạn có chắc muốn xóa phác đồ này không?');
+    if (confirmed) {
+      setTreatments((prev) => prev.filter((t) => t.id !== id));
+    }
+  };
+
   const filteredTreatments = treatments.filter((treatment) =>
     [treatment.name, treatment.category]
       .join(' ')
@@ -120,14 +127,27 @@ export default function TreatmentList() {
                         <td className="px-6 py-4 text-gray-800">{t.name}</td>
                         <td className="px-6 py-4 text-gray-600">{t.description}</td>
                         <td className="px-6 py-4 text-gray-600">{t.category}</td>
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-6 py-4 text-center space-x-2">
                           <Link
                             to={`/treatment/${t.id}`}
-                            className="inline-flex items-center gap-2 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                            className="inline-flex items-center gap-1 px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
                           >
                             <Eye className="w-4 h-4" />
                             Chi tiết
                           </Link>
+                          <Link
+                            to={`/treatment/${t.id}/edit`}
+                            className="inline-flex items-center gap-1 px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
+                          >
+                            ✏️ Sửa
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(t.id)}
+                            className="inline-flex items-center gap-1 px-2 py-1 bg-red-200 text-red-700 rounded hover:bg-red-300 text-sm"
+                          >
+                            🗑️ Xóa
+                          </button>
+
                         </td>
                       </tr>
                     ))}
@@ -138,21 +158,31 @@ export default function TreatmentList() {
               {/* Mobile Card */}
               <div className="block sm:hidden space-y-4">
                 {filteredTreatments.map((t) => (
-                  <div
-                    key={t.id}
-                    className="bg-gray-50 p-4 rounded-xl shadow-sm hover:shadow-md"
-                  >
+                  <div key={t.id} className="bg-gray-50 p-4 rounded-xl shadow-sm hover:shadow-md">
                     <h3 className="text-lg font-semibold text-gray-800">{t.name}</h3>
                     <p className="text-gray-600 mt-1"><strong>Mô tả:</strong> {t.description}</p>
                     <p className="text-gray-600 mt-1"><strong>Đối tượng:</strong> {t.category}</p>
-                    <div className="mt-3">
+                    <div className="mt-3 flex gap-2 flex-wrap">
                       <Link
                         to={`/treatment/${t.id}`}
-                        className="inline-flex items-center gap-2 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                        className="inline-flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm"
                       >
                         <Eye className="w-4 h-4" />
                         Chi tiết
                       </Link>
+                      <Link
+                        to={`/treatment/edit/${t.id}`}
+                        className="inline-flex items-center gap-1 px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm"
+                      >
+                        ✏️ Sửa
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(t.id)}
+                        className="inline-flex items-center gap-1 px-3 py-1 bg-red-200 text-red-700 rounded-lg hover:bg-red-300 text-sm"
+                      >
+                        🗑️ Xóa
+                      </button>
+
                     </div>
                   </div>
                 ))}
