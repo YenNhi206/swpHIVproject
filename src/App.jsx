@@ -217,6 +217,7 @@ export default function App() {
 
       {/* 👉 ChatWidget nằm ngoài Routes để luôn hiển thị */}
       <ChatWidget />
+    
     </Router>
   );
 }
