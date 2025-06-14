@@ -23,6 +23,7 @@ import History from "./features/patientdashboard/History";
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
 import ResultPage from "./features/treatments/ResultPage";
+import CreateTreatment from "./features/treatments/CreateTreatment";
 
 import AppointmentForm from "./features/appointment/AppointmentForm";
 import DoctorAppointmentList from "./features/appointment/DoctorAppointments";
@@ -75,6 +76,15 @@ export default function App() {
             </MainLayout>
           }
         />
+        <Route
+          path="/create"
+          element={
+            <MainLayout>
+              <CreateTreatment />
+            </MainLayout>
+          }
+        />
+
         <Route
           path="/patient"
           element={
