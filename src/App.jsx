@@ -45,11 +45,6 @@ export default function App() {
     <Router>
       <Routes>
         {/* Các route sử dụng MainLayout */}
-<<<<<<< Updated upstream
-=======
-
-          
->>>>>>> Stashed changes
 
         <Route path="/users"
           element={
@@ -83,7 +78,7 @@ export default function App() {
           }
         />
         <Route
-          path="/create"
+          path="/treatment/create"
           element={
             <MainLayout>
               <CreateTreatment />
