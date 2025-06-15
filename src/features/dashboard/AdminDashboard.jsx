@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, UserPlus, FileText, Download, Calendar, Info } from 'lucide-react';
-
+import { Users, UserPlus, FileText, Calendar, Info } from 'lucide-react';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -20,20 +19,45 @@ export default function AdminDashboard() {
   const [filterPaid, setFilterPaid] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Giả lập fetch dữ liệu từ API
-    setTimeout(() => {
-      setPatients(mockPatients);
-      setIsLoading(false);
-    }, 1000);
-  }, []);
-
+  // Mock data bệnh nhân
   const mockPatients = [
     { id: 1, name: 'Nguyễn Văn A', appointmentDate: '2025-06-01', paid: true },
     { id: 2, name: 'Trần Thị B', appointmentDate: '2025-06-02', paid: false },
     { id: 3, name: 'Lê Văn C', appointmentDate: '2025-06-03', paid: true },
     { id: 4, name: 'Phạm Thị D', appointmentDate: '2025-06-04', paid: false },
   ];
+
+  const bookings = [
+    { doctorId: 1, patientId: 1, date: '2025-06-01' },
+    { doctorId: 1, patientId: 2, date: '2025-06-10' },
+    { doctorId: 2, patientId: 3, date: '2025-06-15' },
+    { doctorId: 3, patientId: 4, date: '2025-06-20' },
+    { doctorId: 2, patientId: 1, date: '2025-06-25' },
+    { doctorId: 1, patientId: 3, date: '2025-06-30' },
+  ];
+
+  const hivDoctors = [
+    { id: 1, name: 'Dr. Trần Thị B', specialty: 'HIV/AIDS' },
+    { id: 2, name: 'Dr. Nguyễn Văn H', specialty: 'HIV/AIDS' },
+    { id: 3, name: 'Dr. Lê Thị M', specialty: 'HIV/AIDS' },
+    { id: 4, name: 'Dr. Lê Thị N', specialty: 'HIV/AIDS' },
+    { id: 5, name: 'Dr. Trần Văn A', specialty: 'HIV/AIDS' },
+  ];
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+
+  const doctorsWithBookingCount = hivDoctors
+    .map((doctor) => {
+      const count = bookings.filter((b) => {
+        if (b.doctorId !== doctor.id) return false;
+        const d = new Date(b.date);
+        return d.getFullYear() === year && d.getMonth() + 1 === month;
+      }).length;
+      return { ...doctor, bookingCount: count };
+    })
+    .sort((a, b) => b.bookingCount - a.bookingCount);
 
   const filteredPatients = patients.filter((p) => {
     if (filterPaid === 'paid') return p.paid;
@@ -47,7 +71,7 @@ export default function AdminDashboard() {
       {
         label: 'Số cuộc hẹn',
         data: [10, 15, 12, 18, 20, 25],
-        backgroundColor: 'rgba(220, 38, 38, 0.6)', // Red-600
+        backgroundColor: 'rgba(220, 38, 38, 0.6)',
       },
     ],
   };
@@ -60,90 +84,61 @@ export default function AdminDashboard() {
     },
   };
 
-  const handleExportReport = () => {
-    alert('Chức năng xuất báo cáo đang phát triển!');
-  };
+  useEffect(() => {
+    setTimeout(() => {
+      setPatients(mockPatients);
+      setIsLoading(false);
+    }, 1000);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div className="max-w-6xl mx-auto space-y-12">
         <div className="text-center animate-fade-in">
-          <h1 className="text-3xl sm:text-4xl font-bold text-red-600">Trang quản trị hệ thống</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold text-red-600">
+            Trang quản trị hệ thống
+          </h1>
           <p className="mt-2 text-lg text-gray-600">Quản lý bệnh nhân và theo dõi hoạt động</p>
         </div>
 
         {/* Thống kê tổng quan */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in [animation-delay:0.2s]">
-          <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
-            <Users className="w-8 h-8 text-red-500 mx-auto mb-2" />
-            <p className="text-gray-500">Tổng người dùng</p>
-            <p className="text-2xl font-semibold">1,240</p>
-          </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
-            <UserPlus className="w-8 h-8 text-red-500 mx-auto mb-2" />
-            <p className="text-gray-500">Bệnh nhân đang điều trị</p>
-            <p className="text-2xl font-semibold">320</p>
-          </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
-            <Calendar className="w-8 h-8 text-red-500 mx-auto mb-2" />
-            <p className="text-gray-500">Cuộc hẹn chờ duyệt</p>
-            <p className="text-2xl font-semibold">45</p>
-          </div>
+          <SummaryCard icon={<Users className="w-8 h-8 text-red-500 mx-auto mb-2" />} title="Tổng người dùng" value="1,240" />
+          <SummaryCard icon={<UserPlus className="w-8 h-8 text-red-500 mx-auto mb-2" />} title="Bệnh nhân đang điều trị" value="320" />
+          <SummaryCard icon={<Calendar className="w-8 h-8 text-red-500 mx-auto mb-2" />} title="Cuộc hẹn chờ duyệt" value="45" />
         </div>
 
-        {/* Biểu đồ và danh sách bác sĩ */}
+        {/* Biểu đồ + danh sách bác sĩ */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in [animation-delay:0.3s]">
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <Bar data={chartData} options={chartOptions} />
           </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 overflow-y-auto h-64">
+
+          <div className="bg-white rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[400px]">
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <FileText className="w-5 h-5 text-red-500" />
-              Bác sĩ nổi bật
+              Danh sách bác sĩ HIV và booking tháng {month}
             </h2>
             <ul className="space-y-2">
-              <li className="border p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                Dr. Nguyễn Văn A - Nội khoa
-              </li>
-              <li className="border p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                Dr. Trần Thị B - HIV/AIDS
-              </li>
-              <li className="border p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                Dr. Lê Văn C - Truyền nhiễm
-              </li>
+              {doctorsWithBookingCount.map((doctor) => (
+                <li key={doctor.id} className="border p-3 rounded-lg hover:bg-gray-50 flex justify-between items-center">
+                  <div>{doctor.name} - {doctor.specialty}</div>
+                  <div className="font-semibold text-red-600">{doctor.bookingCount} booking</div>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
-        {/* Bảng quản lý bệnh nhân */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 opacity-0 translate-y-4 animate-fade-in [animation-delay:0.4s]">
+        {/* Quản lý bệnh nhân */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 animate-fade-in [animation-delay:0.4s]">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-semibold text-gray-800">Quản lý bệnh nhân và thanh toán</h2>
-            <div className="flex gap-4">
-              <Link
-                to="/patients/add"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300"
-              >
-                <UserPlus className="w-5 h-5" />
-                Thêm bệnh nhân
-              </Link>
-              <button
-                onClick={handleExportReport}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
-              >
-                <Download className="w-5 h-5" />
-                Xuất báo cáo
-              </button>
-            </div>
           </div>
 
           <div className="mb-6">
             <label className="mr-2 font-semibold text-gray-700">Lọc theo trạng thái thanh toán:</label>
-            <select
-              className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-              value={filterPaid}
-              onChange={(e) => setFilterPaid(e.target.value)}
-            >
+            <select className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-red-500" value={filterPaid} onChange={(e) => setFilterPaid(e.target.value)}>
               <option value="all">Tất cả</option>
               <option value="paid">Đã thanh toán</option>
               <option value="unpaid">Chưa thanh toán</option>
@@ -171,29 +166,18 @@ export default function AdminDashboard() {
               </thead>
               <tbody>
                 {filteredPatients.length === 0 ? (
-                  <tr>
-                    <td colSpan="4" className="text-center py-4 text-gray-500">
-                      Không có dữ liệu
-                    </td>
-                  </tr>
+                  <tr><td colSpan="4" className="text-center py-4 text-gray-500">Không có dữ liệu</td></tr>
                 ) : (
                   filteredPatients.map((patient) => (
-                    <tr
-                      key={patient.id}
-                      className="border-b hover:bg-gray-50 transition-colors duration-300"
-                    >
+                    <tr key={patient.id} className="border-b hover:bg-gray-50">
                       <td className="py-3 px-4">{patient.name}</td>
                       <td className="py-3 px-4">{patient.appointmentDate}</td>
                       <td className={`py-3 px-4 font-semibold ${patient.paid ? 'text-green-600' : 'text-red-600'}`}>
                         {patient.paid ? 'Đã thanh toán' : 'Chưa thanh toán'}
                       </td>
                       <td className="py-3 px-4">
-                        <Link
-                          to={`/patients/${patient.id}`}
-                          className="inline-flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
-                        >
-                          <Info className="w-4 h-4" />
-                          Xem chi tiết
+                        <Link to={`/patients/${patient.id}`} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                          <Info className="w-4 h-4" /> Xem chi tiết
                         </Link>
                       </td>
                     </tr>
@@ -207,3 +191,11 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+const SummaryCard = ({ icon, title, value }) => (
+  <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
+    {icon}
+    <p className="text-gray-500">{title}</p>
+    <p className="text-2xl font-semibold">{value}</p>
+  </div>
+);
