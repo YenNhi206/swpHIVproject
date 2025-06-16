@@ -10,16 +10,14 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const [forgotEmail, setForgotEmail] = useState('');
 
-  // Ngày giờ hiện tại (03:13 PM +07, 13/06/2025)
-  const currentDate = new Date('2025-06-13T15:13:00+07:00').toLocaleString('vi-VN', {
-    hour: '2-digit',
-    minute: '2-digit',
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour12: false,
-    timeZone: 'Asia/Ho_Chi_Minh',
-  });
+  const currentDate = new Date().toLocaleString('vi-VN', {
+  hour: '2-digit',
+  minute: '2-digit',
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour12: false,
+});
 
   const handleChange = (e) => {
     const { name, value } = e.target;

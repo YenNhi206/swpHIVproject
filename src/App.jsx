@@ -105,6 +105,14 @@ export default function App() {
             </MainLayout>
           }
         />
+        <Route
+          path="/staff"
+          element={
+            <MainLayout>
+              <StaffDasshboard />
+            </MainLayout>
+          }
+        />
 
         <Route
           path="/patient"

@@ -96,12 +96,12 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <Bar data={chartData} options={chartOptions} />
           </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 overflow-y-auto h-64">
+          <div className="bg-white rounded-2xl shadow-lg p-6 overflow-y-auto ">
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <FileText className="w-5 h-5 text-red-500" />
-              Bác sĩ nổi bật
+              Danh sách bác sĩ
             </h2>
-            <ul className="space-y-2">
+            <ul className="space-y-2 ">
               <li className="border p-3 rounded-lg hover:bg-gray-50 transition-colors">
                 Dr. Nguyễn Văn A - Nội khoa
               </li>
@@ -111,6 +111,9 @@ export default function AdminDashboard() {
               <li className="border p-3 rounded-lg hover:bg-gray-50 transition-colors">
                 Dr. Lê Văn C - Truyền nhiễm
               </li>
+              <li className="border p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                Dr. Lê Văn D - Truyền nhiễm
+              </li>
             </ul>
           </div>
         </div>
@@ -119,22 +122,7 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-2xl shadow-lg p-6 opacity-0 translate-y-4 animate-fade-in [animation-delay:0.4s]">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-semibold text-gray-800">Quản lý bệnh nhân và thanh toán</h2>
-            <div className="flex gap-4">
-              <Link
-                to="/patients/add"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300"
-              >
-                <UserPlus className="w-5 h-5" />
-                Thêm bệnh nhân
-              </Link>
-              <button
-                onClick={handleExportReport}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
-              >
-                <Download className="w-5 h-5" />
-                Xuất báo cáo
-              </button>
-            </div>
+            
           </div>
 
           <div className="mb-6">
