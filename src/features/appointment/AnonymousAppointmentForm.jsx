@@ -13,15 +13,16 @@ export default function AnonymousAppointmentForm() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  const currentDate = new Date().toLocaleString('vi-VN', {
-  hour: '2-digit',
-  minute: '2-digit',
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour12: false,
-});
-
+  // Ngày giờ hiện tại (03:35 PM +07, 13/06/2025)
+  const currentDate = new Date('2025-06-13T15:35:00+07:00').toLocaleString('vi-VN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour12: false,
+    timeZone: 'Asia/Ho_Chi_Minh',
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -71,7 +72,7 @@ export default function AnonymousAppointmentForm() {
       <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-8 opacity-0 translate-y-4 animate-fade-in">
         <h2 className="text-2xl font-bold text-red-700 mb-6 flex items-center gap-2">
           <Stethoscope className="w-6 h-6" />
-          Đặt lịch tư vấn ẩn danh
+          Đặt lịch ẩn danh
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
