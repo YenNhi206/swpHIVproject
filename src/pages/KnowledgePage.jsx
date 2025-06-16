@@ -1,4 +1,24 @@
 import React, { useState } from "react";
+import blogImg from "../assets/blog.jpg";
+
+
+
+ 
+const documents = [
+  
+    {
+      title: "Hướng dẫn điều trị HIV cho người mới phát hiện",
+      description:
+        "Tài liệu cơ bản giúp bạn hiểu về các bước điều trị ban đầu, xét nghiệm cần thiết và tư vấn tâm lý.",
+      link: "https://www.prepwatch.org/wp-content/uploads/2019/05/Care_and_Treatment_Guidelines_Vietnam_2017.pdf",
+    },
+    {
+      title: "Tài liệu giáo dục phòng ngừa HIV",
+      description:
+        "Thông tin giúp bạn hiểu cách phòng tránh lây nhiễm HIV trong cộng đồng và trong gia đình.",
+      link: "https://asttmoh.vn/wp-content/uploads/2015/05/Tai-lieu-dao-tao-HIV.AIDS-Trung-cap-Y.pdf",
+    },
+  ];
 
 const blogPosts = [
   {
@@ -53,6 +73,8 @@ const treatmentGuides = [
 ];
 
 export default function KnowledgePage() {
+  const [selectedDoc, setSelectedDoc] = useState(null);
+  
   // Bổ sung state để quản lý FAQ mở
   const [openFAQIndex, setOpenFAQIndex] = useState(null);
 
@@ -85,7 +107,7 @@ export default function KnowledgePage() {
         </h2>
         <div className="mb-8">
           <img
-            src="/images/blog-community.jpg"
+            src={blogImg}
             alt="Blog cộng đồng"
             className="w-full h-64 object-cover rounded-xl shadow-md"
           />
@@ -151,9 +173,8 @@ export default function KnowledgePage() {
               >
                 <span>{faq.question}</span>
                 <svg
-                  className={`w-5 h-5 transform transition-transform ${
-                    openFAQIndex === i ? "rotate-180" : ""
-                  }`}
+                  className={`w-5 h-5 transform transition-transform ${openFAQIndex === i ? "rotate-180" : ""
+                    }`}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -174,6 +195,80 @@ export default function KnowledgePage() {
             </div>
           ))}
         </div>
+      </section>
+      {/* Tài liệu giáo dục */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-red-700 mb-8 border-b-2 border-red-600 pb-3">📚 Thư viện tài liệu giáo dục</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {documents.map((doc, idx) => (
+            <div
+              key={idx}
+              className="bg-white border border-gray-200 rounded-xl p-6 shadow hover:shadow-lg transition cursor-pointer"
+              onClick={() => setSelectedDoc(doc.link)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") setSelectedDoc(doc.link);
+              }}
+            >
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">{doc.title}</h3>
+              <p className="text-gray-600 mb-5">{doc.description}</p>
+              <button
+                className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedDoc(doc.link);
+                }}
+              >
+                Xem tài liệu
+                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6h10M10 12h10M10 18h10M4 6h.01M4 12h.01M4 18h.01" />
+                </svg>
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {selectedDoc && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden">
+              <header className="flex justify-between items-center bg-red-600 text-white px-6 py-4 rounded-t-xl">
+                <h3 className="text-xl font-semibold">Xem tài liệu</h3>
+                <button onClick={() => setSelectedDoc(null)} className="p-2 hover:bg-red-700 rounded-full transition" aria-label="Đóng modal">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </header>
+              <div className="flex-1 p-4 bg-gray-50 overflow-auto">
+                <object data={selectedDoc} type="application/pdf" className="w-full h-[75vh] rounded-lg bg-white shadow-inner">
+                  <p>
+                    Trình duyệt của bạn không hỗ trợ xem PDF trực tiếp. {" "}
+                    <a href={selectedDoc} target="_blank" rel="noopener noreferrer" className="text-red-600 hover:text-red-700 underline">
+                      Tải xuống tài liệu
+                    </a>
+                  </p>
+                </object>
+              </div>
+              <footer className="flex justify-end gap-3 px-6 py-4 border-t border-gray-200">
+                <button
+                  onClick={() => window.open(selectedDoc, "_blank")}
+                  className="px-5 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                    <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                  </svg>
+                  Mở trong tab mới
+                </button>
+                <button onClick={() => setSelectedDoc(null)} className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                  Đóng
+                </button>
+              </footer>
+            </div>
+          </div>
+        )}
+        
       </section>
     </main>
   );
