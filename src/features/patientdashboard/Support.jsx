@@ -186,7 +186,12 @@ export default function Support() {
                 >
                   Hủy
                 </button>
+                
               </div>
+              <div className="text-sm text-center mt-4">
+                    <span>Bạn muốn đặt lịch ẩn danh? </span>
+                    <a href="/anonymous-appointment" className="text-red-600 hover:underline">Đặt lịch ẩn danh tại đây</a>
+                </div>
             </form>
           ) : (
             <div className="text-center bg-green-100 p-6 rounded-lg animate-fade-in [animation-delay:0.4s]">
@@ -206,6 +211,7 @@ export default function Support() {
                 >
                   Quay lại trang chủ
                 </Link>
+                
               </div>
             </div>
           )}
