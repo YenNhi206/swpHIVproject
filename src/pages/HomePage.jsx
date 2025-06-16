@@ -109,59 +109,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Blog chia sẻ kinh nghiệm */}
-      <section>
-        <h2 className="text-3xl font-bold text-red-600 mb-6 text-center">
-          ✍️ Blog chia sẻ kinh nghiệm
-        </h2>
-
-        <div className="mb-8">
-          <img
-            src={blogImg}
-            alt="Blog cộng đồng"
-            className="w-full h-64 object-cover rounded-xl shadow-md"
-          />
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {[
-            {
-              title: "Người sẻ chia khủng hoảng, buồn vui cùng bệnh nhân HIV",
-              description:
-                "SKĐS - Người nhiễm HIV thường nghĩ rằng, họ sẽ nhận được sự kỳ thị, xa lánh... thay vì thương cảm, sẻ chia từ cộng đồng. Vậy nên, để người bệnh chủ động và an tâm điều trị cần được sự tư vấn, quan tâm nhiều từ đội ngũ nhân viên y tế...",
-              link: "https://bvquan5.medinet.gov.vn/chuyen-muc/nguoi-se-chia-khung-hoang-buon-vui-cung-benh-nhan-hiv-c16896-131217.aspx",
-            },
-            {
-              title: "8 cách để hỗ trợ điều trị HIV hiệu quả và tăng cường hệ miễn dịch",
-              description:
-                "Thuốc điều trị HIV là chìa khóa để bệnh nhân HIV khỏe mạnh khi sống chung với loại virus này. Tuy nhiên, một số thói quen dưới đây có thể hỗ trợ việc điều trị hiệu quả hơn và tăng cường hệ miễn dịch của người nhiễm HIV",
-              link: "https://vaac.gov.vn/8-cach-de-ho-tro-dieu-tri-hiv-hieu-qua-va-tang-cuong-he-mien-dich.html",
-            },
-            {
-              title: "Lời khuyên bổ ích cho người nhiễm HIV/AIDS",
-              description:
-                "Đối với những người nhiễm HIV/AIDS, cần thêm vitamin và khoáng chất để giúp sửa chữa và chữa lành các tế bào bị hư hỏng, cải thiện hệ thống miễn dịch.",
-              link: "https://moh.gov.vn/chuong-trinh-muc-tieu-quoc-gia/-/asset_publisher/7ng11fEWgASC/content/loi-khuyen-bo-ich-cho-nguoi-nhiem-hiv-aids",
-            },
-          ].map(({ title, description, link }) => (
-            <div
-              key={title}
-              className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition"
-            >
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">{title}</h3>
-              <p className="text-gray-600 mb-4">{description}</p>
-              <a
-                href={link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-red-600 font-medium hover:underline"
-              >
-                Đọc thêm →
-              </a>
-            </div>
-          ))}
-        </div>
-      </section>
+      
 
       {/* Tin tức & Bài báo về HIV */}
       <section>
