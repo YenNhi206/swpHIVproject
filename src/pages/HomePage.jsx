@@ -55,30 +55,39 @@ export default function HomePage() {
 
 
       {/* Tài liệu giáo dục & giảm kỳ thị */}
-      <section className="grid md:grid-cols-2 gap-8 items-center">
-        <div className="order-2 md:order-1 space-y-6">
+      <section className="grid md:grid-cols-2 gap-8 items-stretch min-h-[600px]">
+        {/* Cột ảnh */}
+        <div className="w-full h-full">
+          <img
+            src={educationImg}
+            alt="Giáo dục và giảm kỳ thị"
+            className="w-full h-full object-cover rounded-xl shadow-md"
+          />
+        </div>
+
+        {/* Cột bài báo */}
+        <div className="flex flex-col justify-start space-y-6 h-full">
           <h2 className="text-3xl font-bold text-red-600 mb-4">
             📘 Tài liệu giáo dục & giảm kỳ thị
           </h2>
 
-          {/* Mỗi bài tài liệu */}
           {[
             {
               title: "HIV là gì?, HIV lây nhiễm như thế nào?",
               description:
-                "Hầu như tất cả mọi người đều đã từng nghe đến HIV và AIDS, tuy nhiên có rất ít người hiểu đúng về nó. Những sai lầm trong hiểu biết về HIV/AIDS khiến chúng ta có cái nhìn không thiện cảm với bệnh nhân không may mắc phải căn bệnh thế kỷ này. Bài viết sau đây sẽ cung cấp cho bạn những kiến thức cơ bản cần nhớ về HIV và AIDS.",
+                "Hầu như tất cả mọi người đều đã từng nghe đến HIV và AIDS, tuy nhiên có rất ít người hiểu đúng về nó...",
               link: "https://www.vinmec.com/vie/bai-viet/hiv-va-aids-nhung-dieu-ban-can-nho-vi",
             },
             {
               title: "4 bí quyết sống lâu, sống khỏe cho người nhiễm HIV",
               description:
-                "SKĐS - Khi phát hiện mình bị nhiễm HIV, nhiều người cứ nghĩ cuộc đời mình sẽ mất tất cả. Đây là lối suy nghĩ tiêu cực và hết sức sai lầm. Nếu tuân thủ điều trị tốt và thực hành lối sống lành mạnh, người nhiễm HIV vẫn có thể sống khỏe mạnh, lâu dài.Để được sống lâu, sống khỏe, điều quan trọng là người nhiễm HIV cần thực hiện các nguyên tắc sau:",
+                "SKĐS - Khi phát hiện mình bị nhiễm HIV, nhiều người cứ nghĩ cuộc đời mình sẽ mất tất cả...",
               link: "https://bvquan5.medinet.gov.vn/hivaids/4-bi-quyet-song-lau-song-khoe-cho-nguoi-nhiem-hiv-cmobile16896-191243.aspx",
             },
             {
               title: "Xóa bỏ kỳ thị và phân biệt đối xử với người nhiễm HIV/AIDS",
               description:
-                "Chỉ thị 54-CT/TW, ngày 30/1/2005 của Ban Bí thư “về tăng cường lãnh đạo công tác phòng, chống HIV/AIDS trong tình hình mới” đã nêu: “Phát huy truyền thống tương thân, tương ái, chăm sóc, giúp đỡ của cộng đồng, chống kỳ thị và phân biệt đối xử với người nhiễm HIV/AIDS”.",
+                "Chỉ thị 54-CT/TW, ngày 30/1/2005 của Ban Bí thư đã nêu rõ về việc chống kỳ thị...",
               link: "https://btgtu.binhthuan.dcs.vn/Trang-chu/post/1520/xoa-bo-ky-thi-va-phan-biet-doi-xu-voi-nguoi-nhiem-hivaids",
             },
           ].map(({ title, description, link }) => (
@@ -99,17 +108,10 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-
-        <div className="order-1 md:order-2 h-full">
-          <img
-            src={educationImg}
-            alt="Giáo dục và giảm kỳ thị"
-            className="w-full h-full object-cover rounded-xl shadow-md"
-          />
-        </div>
       </section>
 
-      
+
+
 
       {/* Tin tức & Bài báo về HIV */}
       <section>
@@ -169,22 +171,25 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-      <footer className="bg-red-600 text-white shadow-md py-4 mt-5 border-top text-center small text-secondary position-relative">
-        <div className="container">
-          <p className="mb-1">
-            Bản quyền thuộc về Hệ thống Dịch vụ Y tế và Điều trị HIV - Bộ Y Tế, 2025
+
+      <footer className="bg-red-700 text-white py-8 mt-10 shadow-inner">
+        <div className="max-w-screen-xl mx-auto px-4 text-center space-y-2 text-sm leading-relaxed">
+          <p>
+            <strong>© 2025 Hệ thống Dịch vụ Y tế và Điều trị HIV - Bộ Y Tế</strong>
           </p>
-          <p className="mb-1">
-            Trụ sở: 123 Đường Sức Khoẻ, Quận 3, TP. Hồ Chí Minh, Việt Nam - Tel: (028) 1234 5678 - E-mail: contact@hivtreatment.vn
+          <p>
+            Trụ sở: 123 Đường Sức Khoẻ, Quận 3, TP. Hồ Chí Minh, Việt Nam <br />
+            Tel: (028) 1234 5678 · E-mail: <a href="mailto:contact@hivtreatment.vn" className="underline hover:text-gray-200">contact@hivtreatment.vn</a>
           </p>
-          <p className="mb-1">
+          <p>
             Giám đốc hệ thống: TS.BS. Nguyễn Văn A
           </p>
-          <p className="mb-3">
-            Giấy phép số 123/GP-BC ngày 01/01/2025 của Cục Báo chí, Bộ Văn hoá, Thông tin.
+          <p className="text-gray-300">
+            Giấy phép số 123/GP-BC ngày 01/01/2025 của Cục Báo chí, Bộ Văn hoá, Thông tin
           </p>
         </div>
       </footer>
+
 
     </div>
   );

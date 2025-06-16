@@ -44,20 +44,61 @@ const blogPosts = [
 const faqItems = [
   {
     question: "HIV là gì và lây truyền qua những con đường nào?",
-    answer:
-      "HIV là virus gây suy giảm miễn dịch, chủ yếu lây truyền qua đường máu, quan hệ tình dục không an toàn và từ mẹ sang con trong thai kỳ hoặc khi cho con bú.",
+    shortAnswer:
+      "HIV là virus gây suy giảm miễn dịch, lây qua máu, tình dục không an toàn và từ mẹ sang con.",
+    detailedContent: (
+      <>
+        <p className="text-gray-700 mb-3">
+          HIV (Human Immunodeficiency Virus) là virus làm suy yếu hệ thống miễn dịch của con người, khiến cơ thể dễ mắc các bệnh nhiễm trùng và ung thư.
+        </p>
+        <p className="text-gray-700 mb-3 font-semibold">Các con đường lây truyền chính:</p>
+        <ul className="list-disc pl-5 mb-4 text-gray-700">
+          <li>Quan hệ tình dục không an toàn (qua đường âm đạo, hậu môn, hoặc miệng nếu có vết thương)</li>
+          <li>Dùng chung kim tiêm hoặc các dụng cụ tiêm chích</li>
+          <li>Truyền máu hoặc chế phẩm máu nhiễm HIV (rất hiếm hiện nay do sàng lọc máu tốt)</li>
+          <li>Truyền từ mẹ sang con trong thai kỳ, lúc sinh hoặc cho con bú</li>
+        </ul>
+      </>
+    ),
   },
   {
     question: "Người nhiễm HIV có thể sống bình thường không?",
-    answer:
-      "Với việc điều trị đúng và tuân thủ phác đồ, người nhiễm HIV có thể sống lâu dài và chất lượng cuộc sống gần như bình thường.",
+    shortAnswer:
+      "Với điều trị ARV đúng cách, người nhiễm HIV có thể sống khỏe mạnh và gần như bình thường.",
+    detailedContent: (
+      <>
+        <p className="text-gray-700 mb-3">
+          Ngày nay, HIV không còn là án tử. Nhờ điều trị bằng thuốc kháng virus (ARV), người nhiễm HIV có thể sống lâu dài, khỏe mạnh, và hòa nhập cộng đồng.
+        </p>
+        <ul className="list-disc pl-5 mb-4 text-gray-700">
+          <li>Tuân thủ điều trị giúp giảm tải lượng virus xuống mức không thể phát hiện</li>
+          <li>Người nhiễm HIV có thể làm việc, học tập, sinh hoạt, lập gia đình như người không nhiễm</li>
+          <li>Phụ nữ nhiễm HIV vẫn có thể sinh con khỏe mạnh nếu điều trị đúng cách</li>
+        </ul>
+      </>
+    ),
   },
   {
     question: "Làm thế nào để phòng tránh lây nhiễm HIV?",
-    answer:
-      "Sử dụng bao cao su khi quan hệ, không dùng chung kim tiêm, xét nghiệm HIV định kỳ và tuân thủ điều trị nếu nhiễm HIV.",
+    shortAnswer:
+      "Sử dụng bao cao su, không dùng chung kim tiêm, xét nghiệm định kỳ và điều trị sớm nếu nhiễm.",
+    detailedContent: (
+      <>
+        <p className="text-gray-700 mb-3">
+          Phòng tránh HIV hiệu quả bằng cách thay đổi hành vi và duy trì các biện pháp an toàn:
+        </p>
+        <ul className="list-disc pl-5 mb-4 text-gray-700">
+          <li>Luôn dùng bao cao su đúng cách khi quan hệ tình dục</li>
+          <li>Không dùng chung bơm kim tiêm hoặc dụng cụ có thể gây chảy máu</li>
+          <li>Xét nghiệm HIV định kỳ, đặc biệt là nhóm nguy cơ</li>
+          <li>Tham gia điều trị dự phòng trước phơi nhiễm (PrEP) nếu có nguy cơ cao</li>
+          <li>Phụ nữ mang thai cần kiểm tra HIV sớm để can thiệp kịp thời</li>
+        </ul>
+      </>
+    ),
   },
 ];
+
 
 const treatmentGuides = [
   {
@@ -189,7 +230,7 @@ export default function KnowledgePage() {
               </button>
               {openFAQIndex === i && (
                 <div className="px-6 py-3 bg-red-50 text-gray-700 leading-relaxed border-t border-red-200">
-                  {faq.answer}
+                  {faq.detailedContent}
                 </div>
               )}
             </div>

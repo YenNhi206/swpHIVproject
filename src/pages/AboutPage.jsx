@@ -15,24 +15,6 @@ export default function AboutPage() {
   const navigate = useNavigate();
   const [openFAQIndex, setOpenFAQIndex] = useState(null);
 
-  const faqs = [
-    {
-      question: "HIV lây truyền qua những con đường nào?",
-      answer:
-        "HIV lây truyền chủ yếu qua đường máu, quan hệ tình dục không an toàn, và mẹ sang con trong quá trình mang thai, sinh đẻ.",
-    },
-    {
-      question: "Tôi có thể đăng ký khám ẩn danh không?",
-      answer:
-        "Có, hệ thống hỗ trợ đăng ký khám và tư vấn ẩn danh để bảo mật thông tin người dùng.",
-    },
-    {
-      question: "Làm sao để nhận được nhắc nhở uống thuốc?",
-      answer:
-        "Sau khi đăng ký điều trị, bạn có thể bật chức năng nhắc nhở trong hồ sơ cá nhân để không bỏ liều thuốc.",
-    },
-  ];
-
   const toggleFAQ = (index) => {
     setOpenFAQIndex(openFAQIndex === index ? null : index);
   };
@@ -53,29 +35,53 @@ export default function AboutPage() {
         </h1>
 
         <div className="space-y-8">
-          <div>
-            <h2 className="text-2xl font-semibold text-red-600 mb-3 flex items-center gap-2">
-              🎯 Mục đích và sứ mệnh
+          {/* Gioiws thiệu về hệ thống */}
+          {/* Giới thiệu về hệ thống */}
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <h2 className="text-2xl font-semibold text-red-600 mb-4 flex items-center gap-2">
+              🎯 Mục đích và Sứ mệnh
             </h2>
-            <p className="text-gray-700 leading-relaxed">
-              Hệ thống <strong>HIV Treatment and Medical Services System</strong> được phát triển nhằm tăng cường tiếp cận dịch vụ y tế và điều trị HIV cho bệnh nhân tại cơ sở y tế. Chúng tôi cam kết hỗ trợ người bệnh một cách toàn diện, minh bạch và bảo mật.
+            <p className="text-gray-700 text-base leading-relaxed">
+              Hệ thống <strong className="text-red-700">HIV Treatment and Medical Services System </strong>
+               được phát triển nhằm tăng cường khả năng tiếp cận các <strong>dịch vụ y tế</strong> và <strong>điều trị HIV</strong>
+              một cách hiệu quả tại các cơ sở y tế. <br className="hidden md:block" />
+              <br />
+              Với cam kết đặt <strong>sự an toàn, minh bạch và bảo mật thông tin</strong> lên hàng đầu,
+              chúng tôi hướng đến việc xây dựng một nền tảng hỗ trợ điều trị HIV toàn diện,
+              đồng hành cùng người bệnh trên hành trình hồi phục và sống khỏe mạnh.
             </p>
           </div>
 
+
           <div>
-            <h2 className="text-2xl font-semibold text-red-600 mb-3 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold text-red-600 mb-4 flex items-center gap-2">
               🛠️ Chức năng chính
             </h2>
-            <ul className="list-disc list-inside text-gray-700 space-y-2 leading-relaxed">
-              <li>Đăng ký lịch khám & điều trị, chỉ định bác sĩ điều trị</li>
-              <li>Tra cứu kết quả xét nghiệm (CD4, tải lượng HIV, phác đồ ARV)</li>
-              <li>Nhắc nhở lịch tái khám & uống thuốc theo phác đồ</li>
-              <li>Đặt lịch hẹn trực tuyến, đăng ký ẩn danh</li>
-              <li>Quản lý hồ sơ bác sĩ và bệnh nhân</li>
-              <li>Dashboard & báo cáo phục vụ quản lý và điều trị</li>
-              <li>Chia sẻ blog, tài liệu giáo dục, góp phần giảm kỳ thị HIV</li>
+            <ul className="list-disc list-inside text-gray-800 space-y-2 leading-relaxed text-base">
+              <li>
+                <strong>Đăng ký lịch khám & điều trị:</strong> Chỉ định bác sĩ phù hợp cho từng trường hợp.
+              </li>
+              <li>
+                <strong>Tra cứu kết quả xét nghiệm:</strong> CD4, tải lượng HIV, phác đồ ARV theo thời gian.
+              </li>
+              <li>
+                <strong>Nhắc lịch tái khám & uống thuốc:</strong> Theo đúng phác đồ điều trị.
+              </li>
+              <li>
+                <strong>Đặt lịch hẹn trực tuyến:</strong> Hỗ trợ chế độ ẩn danh nếu cần thiết.
+              </li>
+              <li>
+                <strong>Quản lý hồ sơ:</strong> Dành cho cả bác sĩ và bệnh nhân.
+              </li>
+              <li>
+                <strong>Dashboard & báo cáo:</strong> Hỗ trợ theo dõi và đưa ra quyết định điều trị.
+              </li>
+              <li>
+                <strong>Chia sẻ tài liệu & blog:</strong> Góp phần giảm kỳ thị và nâng cao nhận thức về HIV.
+              </li>
             </ul>
           </div>
+
 
           <div>
             <h2 className="text-2xl font-semibold text-red-600 mb-3 flex items-center gap-2">
@@ -86,44 +92,204 @@ export default function AboutPage() {
             </p>
           </div>
 
+          {/* Đối tượng phục vụ */}
           <div>
-            <h2 className="text-2xl font-semibold text-red-600 mb-3 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold text-red-600 mb-6 flex items-center gap-2">
               🎯 Đối tượng phục vụ
             </h2>
-            <p className="text-gray-700 leading-relaxed">
-              Hệ thống hướng đến phục vụ các đối tượng:
+
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Hệ thống hướng đến phục vụ các đối tượng chính sau:
             </p>
-            <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
-              <li>Người sống chung với HIV/AIDS</li>
-              <li>Người có nguy cơ cao (MSM, chuyển giới nữ, người tiêm chích ma túy, bạn tình của người nhiễm HIV)</li>
-              <li>Cán bộ y tế, bác sĩ và nhân viên tư vấn</li>
-              <li>Cộng đồng, người thân của người nhiễm HIV</li>
-              <li>Các tổ chức y tế và quản lý nhà nước</li>
-            </ul>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Đối tượng 1 */}
+              <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex items-start gap-4">
+                <div className="text-red-500 text-2xl">🧑‍⚕️</div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Người sống chung với HIV/AIDS</h4>
+                  <p className="text-sm text-gray-600">Hỗ trợ điều trị và theo dõi sức khỏe định kỳ.</p>
+                </div>
+              </div>
+
+              {/* Đối tượng 2 */}
+              <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex items-start gap-4">
+                <div className="text-red-500 text-2xl">⚠️</div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Người có nguy cơ cao</h4>
+                  <p className="text-sm text-gray-600">
+                    Bao gồm MSM, người chuyển giới, tiêm chích ma túy, bạn tình của người nhiễm.
+                  </p>
+                </div>
+              </div>
+
+              {/* Đối tượng 3 */}
+              <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex items-start gap-4">
+                <div className="text-red-500 text-2xl">👨‍⚕️</div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Cán bộ y tế, bác sĩ</h4>
+                  <p className="text-sm text-gray-600">
+                    Quản lý, chăm sóc bệnh nhân và hỗ trợ công tác điều trị HIV.
+                  </p>
+                </div>
+              </div>
+
+              {/* Đối tượng 4 */}
+              <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex items-start gap-4">
+                <div className="text-red-500 text-2xl">🏡</div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Cộng đồng và người thân</h4>
+                  <p className="text-sm text-gray-600">
+                    Cung cấp thông tin, hỗ trợ tâm lý và giảm kỳ thị HIV.
+                  </p>
+                </div>
+              </div>
+
+              {/* Đối tượng 5 */}
+              <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex items-start gap-4">
+                <div className="text-red-500 text-2xl">🏢</div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Tổ chức & quản lý y tế</h4>
+                  <p className="text-sm text-gray-600">
+                    Hỗ trợ quản lý, báo cáo và hoạch định chính sách phòng chống HIV.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
+
+
+          {/* Đối Tác Hỗ Trợ */}
           <div>
-            <h2 className="text-2xl font-semibold text-red-600 mb-3 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold text-red-600 mb-6 flex items-center gap-2">
               🤝 Đối tác hỗ trợ
             </h2>
-            <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
-              <li>Bệnh viện Nhiệt Đới TP.HCM</li>
-              <li>Viện Pasteur</li>
-              <li>Tổ chức UNAIDS Việt Nam</li>
-              <li>Trung tâm phòng, chống HIV/AIDS TP XYZ</li>
-            </ul>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Card template */}
+              {[
+                {
+                  name: "BV Nhiệt Đới TP.HCM",
+                  image:
+                    "https://benhnhietdoi.vn/wp-content/themes/yootheme/cache/e1/logo-header-1-e142e9a4.webp",
+                  description:
+                    "Trung tâm điều trị bệnh truyền nhiễm hàng đầu tại Việt Nam.",
+                  link: "https://benhnhietdoi.vn",
+                  linkLabel: "benhnhietdoi.vn",
+                },
+                {
+                  name: "Viện Pasteur TP.HCM",
+                  image:
+                    "http://tiemchung.pasteurhcm.gov.vn/Contents/Themes/client/images/logo-pastuer.png",
+                  description:
+                    "Trung tâm nghiên cứu và phòng chống dịch bệnh lớn tại miền Nam.",
+                  link: "http://www.pasteurhcm.gov.vn/",
+                  linkLabel: "pasteurhcm.gov.vn",
+                },
+                {
+                  name: "UNAIDS Việt Nam",
+                  image:
+                    "https://www.liblogo.com/img-logo/un5310u65c-unaids-logo-unaids-ungis.png",
+                  description:
+                    "Tổ chức quốc tế hỗ trợ phòng chống HIV/AIDS tại Việt Nam.",
+                  link: "https://www.unaids.org/en",
+                  linkLabel: "unaids.org",
+                },
+                {
+                  name: "Trung tâm HIV/AIDS TP XYZ",
+                  image:
+                    "https://cdn-icons-png.flaticon.com/512/3022/3022256.png",
+                  description:
+                    "Đơn vị trực thuộc Sở Y tế địa phương, cung cấp dịch vụ tư vấn & điều trị.",
+                  link: "#",
+                  linkLabel: "Trang chủ đang cập nhật",
+                },
+              ].map((partner, index) => (
+                <div
+                  key={index}
+                  className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition p-4 flex flex-col justify-between items-center text-center h-full min-h-[280px]"
+                >
+                  <div className="flex flex-col items-center">
+                    <img
+                      src={partner.image}
+                      alt={partner.name}
+                      className="w-20 h-20 object-contain mb-3"
+                    />
+                    <h3 className="font-semibold text-lg text-red-700 mb-1">
+                      {partner.name}
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-3">{partner.description}</p>
+                  </div>
+                  <a
+                    href={partner.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-red-600 hover:underline text-sm font-medium mt-auto"
+                  >
+                    👉 {partner.linkLabel}
+                  </a>
+                </div>
+              ))}
+            </div>
           </div>
 
+
+          {/* Liên hệ */}
           <div>
-            <h2 className="text-2xl font-semibold text-red-600 mb-3 flex items-center gap-2">
+            <h2 className="text-2xl font-semibold text-red-600 mb-6 flex items-center gap-2">
               📞 Liên hệ
             </h2>
-            <address className="not-italic text-gray-700 space-y-1">
-              <p>Địa chỉ: 123 Đường ABC, Thành phố XYZ</p>
-              <p>Email: <a href="mailto:support@hiv-treatment.com" className="text-red-600 hover:underline">support@hiv-treatment.com</a></p>
-              <p>Điện thoại: <a href="tel:0123456789" className="text-red-600 hover:underline">0123 456 789</a></p>
-            </address>
+
+            <div className="bg-white border border-gray-200 rounded-xl shadow-md p-6 grid sm:grid-cols-2 gap-6">
+              {/* Địa chỉ */}
+              <div className="flex items-start gap-4">
+                <div className="text-red-600 text-xl">📍</div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Địa chỉ</h4>
+                  <p className="text-gray-700 text-sm">123 Đường ABC, Thành phố XYZ</p>
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-start gap-4">
+                <div className="text-red-600 text-xl">✉️</div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Email</h4>
+                  <a
+                    href="mailto:support@hiv-treatment.com"
+                    className="text-sm text-red-600 hover:underline"
+                  >
+                    support@hiv-treatment.com
+                  </a>
+                </div>
+              </div>
+
+              {/* Điện thoại */}
+              <div className="flex items-start gap-4">
+                <div className="text-red-600 text-xl">📞</div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Điện thoại</h4>
+                  <a
+                    href="tel:0123456789"
+                    className="text-sm text-red-600 hover:underline"
+                  >
+                    0123 456 789
+                  </a>
+                </div>
+              </div>
+
+              {/* Giờ làm việc (thêm nếu muốn) */}
+              <div className="flex items-start gap-4">
+                <div className="text-red-600 text-xl">⏰</div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Giờ làm việc</h4>
+                  <p className="text-gray-700 text-sm">Thứ 2 – Thứ 6: 8h – 17h</p>
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
       </section>
 
