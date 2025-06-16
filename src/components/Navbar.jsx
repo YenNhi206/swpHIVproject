@@ -21,6 +21,7 @@ export default function Navbar() {
     { path: '/', label: 'Trang chủ', icon: Home },
     { path: '/about', label: 'Giới thiệu', icon: Info },
     { path: '/knowledge', label: 'Kiến thức HIV', icon: BookOpen },
+    { path: '/listdoctor', label: 'Chuyên Gia - Bác Sĩ', icon: Stethoscope },
     { path: '/login', label: 'Đăng nhập', icon: LogIn },
     { path: '/signup', label: 'Đăng ký', icon: UserPlus },
 

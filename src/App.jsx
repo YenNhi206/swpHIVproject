@@ -39,6 +39,7 @@ import PaymentPage from "./features/payment/PaymentPage";
 import ChatWidget from "./components/ChatWidget";
 import StaffDasshboard from "./features/dashboard/StaffDashboard";
 import KnowledgePage from "./pages/KnowledgePage";
+import DoctorsPage from "./pages/DoctorsPage";
 
 
 
@@ -56,6 +57,7 @@ export default function App() {
             </MainLayout>
           }
         />
+        
         <Route
           path="/treatment-results"
           element={
@@ -64,6 +66,15 @@ export default function App() {
             </MainLayout>
           }
         />
+        <Route
+          path="/listdoctor"
+          element={
+            <MainLayout>
+              <DoctorsPage />
+            </MainLayout>
+          }
+        />
+        
         <Route
           path="/treatment"
           element={
