@@ -38,6 +38,7 @@ import PaymentPage from "./features/payment/PaymentPage";
 // 👉 Thêm ChatWidget ở đây:
 import ChatWidget from "./components/ChatWidget";
 import StaffDasshboard from "./features/dashboard/StaffDashboard";
+import KnowledgePage from "./pages/KnowledgePage";
 
 
 
@@ -68,6 +69,14 @@ export default function App() {
           element={
             <MainLayout>
               <TreatmentList />
+            </MainLayout>
+          }
+        />
+         <Route
+          path="/knowledge"
+          element={
+            <MainLayout>
+              <KnowledgePage />
             </MainLayout>
           }
         />

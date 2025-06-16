@@ -142,31 +142,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="mb-16">
-        <h2 className="text-3xl font-bold text-red-700 mb-8 border-b-2 border-red-600 pb-3">❓ Câu hỏi thường gặp (FAQ)</h2>
-        <div className="space-y-4">
-          {faqs.map((faq, i) => (
-            <div key={i} className="border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-              <button
-                onClick={() => toggleFAQ(i)}
-                className="w-full flex justify-between items-center px-6 py-4 text-left text-gray-800 font-semibold hover:bg-red-50 transition"
-                aria-expanded={openFAQIndex === i}
-              >
-                <span>{faq.question}</span>
-                <svg className={`w-5 h-5 transform transition-transform ${openFAQIndex === i ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {openFAQIndex === i && (
-                <div className="px-6 py-3 bg-red-50 text-gray-700 leading-relaxed border-t border-red-200">
-                  {faq.answer}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
+      
 
       {/* Tài liệu giáo dục */}
       <section className="mb-16">

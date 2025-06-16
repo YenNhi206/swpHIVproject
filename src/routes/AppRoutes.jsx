@@ -10,6 +10,7 @@ import UserAppointmentList from '../features/appointment/UserAppointments';
 import PatientProfile from '../features/users/PatientProfile';
 import AnonymousAppointmentForm from '../features/appointment/AnonymousAppointmentForm';
 import PaymentPage from '../features/payment/PaymentPage';
+import KnowledgePage from '../pages/KnowledgePage';
 
 export default function AppRoutes() {
     return (
@@ -26,6 +27,8 @@ export default function AppRoutes() {
                 <Route path="/users" element={<PatientProfile />} />
                 <Route path="/anonymous-appointment" element={<AnonymousAppointmentForm />} />
                 <Route path="/payment" element={<PaymentPage />} />
+                <Route path="/knowledge" element={<KnowledgePage />} />
+
 
             </Routes>
         </BrowserRouter>
