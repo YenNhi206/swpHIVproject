@@ -197,6 +197,14 @@ export default function App() {
           }
         />
         <Route
+          path="/staff"
+          element={
+            <MainLayout>
+              <StaffDasshboard/>
+            </MainLayout>
+          }
+        />
+        <Route
           path="/payment"
           element={
             <AuthLayout>
