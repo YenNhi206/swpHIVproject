@@ -41,23 +41,98 @@ export default function LoginPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Đăng nhập với:', credentials);
-      // Gọi API đăng nhập ở đây
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        const response = await fetch('http://localhost:8080/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: credentials.identifier, // Sử dụng identifier từ form
+            password: credentials.password,
+          }),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Thông tin đăng nhập không hợp lệ');
+        }
+
+        const data = await response.json();
+        console.log('Phản hồi từ server:', data); // Thêm log để kiểm tra phản hồi
+        if (data.message.includes('thành công')) {
+          localStorage.setItem('user', JSON.stringify({
+            fullName: data.fullName,
+            role: data.role, // Lưu role (USER hoặc DOCTOR)
+          }));
+          // Chuyển hướng dựa trên role
+          if (data.role === 'DOCTOR') {
+            window.location.href = '/doctor';
+          } else {
+            window.location.href = '/'; // Giả định USER
+          }
+        } else {
+          setErrors({ server: data.message || 'Đăng nhập thất bại' });
+        }
+      } catch (error) {
+        console.error('Lỗi đăng nhập:', error.message);
+        if (error.name === 'AbortError') {
+          setErrors({ server: 'Yêu cầu quá thời gian' });
+        } else {
+          setErrors({ server: error.message || 'Có lỗi xảy ra' });
+        }
+      }
     }
   };
 
-  const handleForgotSubmit = (e) => {
+  const handleForgotSubmit = async (e) => {
     e.preventDefault();
     if (!forgotEmail) {
       setErrors((prev) => ({ ...prev, forgotEmail: 'Email là bắt buộc' }));
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(forgotEmail)) {
       setErrors((prev) => ({ ...prev, forgotEmail: 'Email không hợp lệ' }));
     } else {
-      console.log('Gửi yêu cầu lấy lại mật khẩu với:', forgotEmail);
-      // Gọi API quên mật khẩu ở đây
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // Timeout 5 giây
+
+        const response = await fetch('http://localhost:8080/api/auth/forgot-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: forgotEmail, // Gửi email để yêu cầu đặt lại mật khẩu
+          }),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Gửi yêu cầu thất bại');
+        }
+
+        const data = await response.json();
+        alert(data.message || 'Email đặt lại mật khẩu đã được gửi!');
+      } catch (error) {
+        console.error('Lỗi quên mật khẩu:', error.message);
+        if (error.name === 'AbortError') {
+          setErrors((prev) => ({ ...prev, forgotEmail: 'Yêu cầu quá thời gian' }));
+        } else {
+          setErrors((prev) => ({ ...prev, forgotEmail: error.message || 'Có lỗi xảy ra' }));
+        }
+      }
     }
   };
 
