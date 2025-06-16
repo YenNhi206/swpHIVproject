@@ -70,9 +70,9 @@ export default function PatientDashboard() {
                 icon={<Calendar className="w-6 h-6 text-red-500" />}
               />
               <DashboardCard
-                title="Nhắc lịch"
+                title="Kết quả khám"
                 description="Xem và nhận thông báo nhắc nhở uống thuốc & tái khám."
-                to="/reminder"
+                to="/treatment-results"
                 icon={<Bell className="w-6 h-6 text-red-500" />}
               />
               <DashboardCard
