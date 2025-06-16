@@ -18,15 +18,15 @@ export default function AppointmentForm() {
   const navigate = useNavigate();
 
   // Ngày giờ hiện tại (03:31 PM +07, 13/06/2025)
-  const currentDate = new Date().toLocaleString('vi-VN', {
-  hour: '2-digit',
-  minute: '2-digit',
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour12: false,
-});
-
+  const currentDate = new Date('2025-06-13T15:31:00+07:00').toLocaleString('vi-VN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour12: false,
+    timeZone: 'Asia/Ho_Chi_Minh',
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -261,7 +261,10 @@ export default function AppointmentForm() {
               Đặt lịch
             </button>
           </div>
-            
+            <div className="text-sm text-center mt-4">
+                    <span>Bạn muốn đặt lịch ẩn danh? </span>
+                    <a href="/anonymous-appointment" className="text-red-600 hover:underline">Đặt lịch ẩn danh tại đây</a>
+                </div>
 
           <p className="text-sm text-gray-500 text-center mt-2">Thời gian: {currentDate}</p>
         </form>
