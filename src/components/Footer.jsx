@@ -2,7 +2,7 @@ export default function Footer() {
     return (
         <footer className="bg-white border-t">
             {/* Đối Tác Hỗ Trợ */}
-            <div className="max-w-7xl mx-auto px-4 py-10">
+            <div className="max-w-7xl mx-auto px-4 py-6">
                 <h2 className="text-2xl font-semibold text-red-600 mb-6 flex items-center justify-center gap-2">
                     🤝 Đối tác hỗ trợ
                 </h2>
@@ -40,7 +40,7 @@ export default function Footer() {
                     ].map((partner, index) => (
                         <div
                             key={index}
-                            className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition p-4 flex flex-col justify-between items-center text-center h-full min-h-[280px]"
+                            className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition p-4 flex flex-col justify-between items-center text-center h-full min-h-[240px]"
                         >
                             <div className="flex flex-col items-center">
                                 <img
@@ -69,7 +69,7 @@ export default function Footer() {
             </div>
 
             {/* Main Footer */}
-            <div className="bg-red-700 text-white py-8 mt-10 shadow-inner">
+            <div className="bg-red-700 text-white py-5 mt-6 shadow-inner text-sm">
                 <div className="max-w-5xl mx-auto px-4 text-center space-y-2">
                     <p>
                         <strong>© 2025 Hệ thống Dịch vụ Y tế và Điều trị HIV - Bộ Y Tế</strong>

@@ -102,3 +102,7 @@
   animation: slideDown 0.3s ease-out forwards;
   overflow: hidden;
 }
+.image-gallery-slide img {
+  object-fit: contain;
+  height: 100%;
+}
