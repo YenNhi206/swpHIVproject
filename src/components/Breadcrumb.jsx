@@ -18,6 +18,8 @@ export default function Breadcrumb() {
     '/users': 'Hồ sơ bệnh nhân',
     '/treatment': 'Danh sách phác đồ',
     '/treatment/:id': 'Chi tiết phác đồ',
+    '/treatment/:create': 'Tạo phác đồ',
+    '/treatment/:id/edit': 'Sửa phác đồ',
     '/patient': 'Bảng điều khiển bệnh nhân',
     '/support': 'Hỗ trợ',
     '/reminder': 'Nhắc nhở',
@@ -31,17 +33,29 @@ export default function Breadcrumb() {
     '*': 'Không tìm thấy',
   };
 
-  // Tách đường dẫn thành mảng và xử lý dynamic route (ví dụ: /treatment/:id)
+  // Tách đường dẫn thành mảng
   const pathSegments = location.pathname.split('/').filter((segment) => segment);
+
+  // Xây dựng breadcrumb items
   const breadcrumbItems = pathSegments.reduce((acc, segment, index) => {
     const pathSoFar = `/${pathSegments.slice(0, index + 1).join('/')}`;
-    // Xử lý dynamic route (ví dụ: /treatment/:id thành "Chi tiết phác đồ")
-    const dynamicPath = pathSegments.length > 1 && index === pathSegments.length - 1 ? `/${pathSegments[0]}/:id` : pathSoFar;
+
+    // Xử lý dynamic routes và các route đặc biệt
+    let dynamicPath = pathSoFar;
+    if (pathSegments[0] === 'treatment') {
+      if (index === 1 && segment === 'create') {
+        dynamicPath = '/treatment/:create'; // Tạo mới phác đồ
+      } else if (index === 2 && pathSegments[2] === 'edit') {
+        dynamicPath = '/treatment/:id/edit'; // Sửa phác đồ
+      } else if (index === 1 && segment !== 'new') {
+        dynamicPath = '/treatment/:id'; // Chi tiết phác đồ
+      }
+    }
+
     const label = pathMap[dynamicPath] || pathMap[pathSoFar] || segment.charAt(0).toUpperCase() + segment.slice(1);
     acc.push({ path: pathSoFar, label });
     return acc;
   }, [{ path: '/', label: 'Trang chủ' }]);
-
   return (
     <div className="w-full bg-gradient-to-b from-gray-100 to-white py-2 px-6 shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center space-x-2 text-lg">

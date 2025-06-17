@@ -1,7 +1,7 @@
 import React from "react";
 import hivCareImg from "../assets/hiv-care.png";
 import educationImg from "../assets/education.png";
-import blogImg from "../assets/blog.jpg";
+
 import hiv1Img from "../assets/hiv1.jpg";
 import hivbhytImg from "../assets/hivbhyt.webp";
 import hivpaitentImg from "../assets/hivpaitent.jpg";
