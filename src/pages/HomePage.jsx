@@ -172,23 +172,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="bg-red-700 text-white py-8 mt-10 shadow-inner">
-        <div className="max-w-screen-xl mx-auto px-4 text-center space-y-2 text-sm leading-relaxed">
-          <p>
-            <strong>© 2025 Hệ thống Dịch vụ Y tế và Điều trị HIV - Bộ Y Tế</strong>
-          </p>
-          <p>
-            Trụ sở: 123 Đường Sức Khoẻ, Quận 3, TP. Hồ Chí Minh, Việt Nam <br />
-            Tel: (028) 1234 5678 · E-mail: <a href="mailto:contact@hivtreatment.vn" className="underline hover:text-gray-200">contact@hivtreatment.vn</a>
-          </p>
-          <p>
-            Giám đốc hệ thống: TS.BS. Nguyễn Văn A
-          </p>
-          <p className="text-gray-300">
-            Giấy phép số 123/GP-BC ngày 01/01/2025 của Cục Báo chí, Bộ Văn hoá, Thông tin
-          </p>
-        </div>
-      </footer>
 
 
     </div>

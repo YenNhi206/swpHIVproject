@@ -13,13 +13,13 @@ export default function DoctorsPage() {
     const mockDoctors = [
       {
         id: 1,
-        name: 'Dr. Nguyễn Văn A',
+        name: 'NGND.GS.TS.BS. Nguyễn Văn A',
         specialty: 'Nội khoa',
         experience: '10 năm',
         phone: '0901234567',
         email: 'nguyenvana@hospital.vn',
         address: '123 Nguyễn Trãi, Quận 5, TP.HCM',
-        image: 'https://randomuser.me/api/portraits/men/32.jpg',
+        image: 'https://taimuihongsg.com/wp-content/uploads/2023/10/BS-TRUONG-CONG-TRANG-KHOA-CHAN-DOAN-HINH-ANH_taimuihongsg.jpg',
         description:
           'Chuyên gia nội khoa với hơn 10 năm kinh nghiệm, điều trị các bệnh mãn tính và cấp cứu.',
         certifications: ['Đại học Y Dược TP.HCM', 'Chứng chỉ nội khoa nâng cao'],
@@ -27,13 +27,13 @@ export default function DoctorsPage() {
       },
       {
         id: 2,
-        name: 'Dr. Trần Thị B',
+        name: 'PGS.TS.BS. Trần Thị B',
         specialty: 'HIV/AIDS',
         experience: '8 năm',
         phone: '0912345678',
         email: 'tranthib@hospital.vn',
         address: '75 Hai Bà Trưng, Quận 1, TP.HCM',
-        image: 'https://randomuser.me/api/portraits/women/44.jpg',
+        image: 'https://luxclinic.vn/wp-content/uploads/2024/07/bac-Phuong-1.jpg',
         description:
           'Chuyên gia HIV/AIDS, tận tâm đồng hành cùng người nhiễm trong quá trình điều trị.',
         certifications: ['Thạc sĩ y tế công cộng', 'Chứng chỉ điều trị ARV'],
@@ -41,13 +41,13 @@ export default function DoctorsPage() {
       },
       {
         id: 3,
-        name: 'Dr. Lê Văn C',
+        name: 'TTƯT.PGS.TS. Lê Văn C',
         specialty: 'Truyền nhiễm',
         experience: '12 năm',
         phone: '0923456789',
         email: 'levanc@hospital.vn',
         address: '45 Lê Lợi, Quận 3, TP.HCM',
-        image: 'https://randomuser.me/api/portraits/men/52.jpg',
+        image: 'https://bizweb.dktcdn.net/100/175/849/files/chup-anh-profile-cho-bac-si-tai-ha-noi-studio-yeu-media-dep-01.jpg?v=1636203347577',
         description:
           'Kinh nghiệm dày dặn trong truyền nhiễm, xử lý tốt các ca nhiễm virus phức tạp.',
         certifications: ['BSCK I Truyền nhiễm', 'Chứng chỉ phòng chống dịch bệnh'],
@@ -68,9 +68,9 @@ export default function DoctorsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto space-y-8">
-        <h1 className="text-3xl font-bold text-red-600 text-center">Đội ngũ Bác sĩ</h1>
+        <h1 className="text-3xl font-bold text-red-600 text-center">Chuyên gia - bác sĩ</h1>
         <p className="text-center text-gray-600">
-          Các chuyên gia hàng đầu trong lĩnh vực HIV/AIDS và bệnh truyền nhiễm
+          Quy tụ các chuyên gia hàng đầu trong lĩnh vực HIV/AIDS và bệnh truyền nhiễm
         </p>
 
         {/* Search Bar */}
@@ -106,7 +106,7 @@ export default function DoctorsPage() {
                   <p className="text-red-600 font-medium">{doctor.specialty}</p>
                   <p className="text-gray-600">Kinh nghiệm: {doctor.experience}</p>
                   <p className="text-gray-600 line-clamp-2 mt-1">{doctor.description}</p>
-                  <p className="text-sm text-gray-500 mt-1">📞 {doctor.phone}</p>
+
                 </div>
                 <button
                   onClick={(e) => {

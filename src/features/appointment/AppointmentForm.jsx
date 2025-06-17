@@ -18,13 +18,13 @@ export default function AppointmentForm() {
   const navigate = useNavigate();
 
   const currentDate = new Date().toLocaleString('vi-VN', {
-  hour: '2-digit',
-  minute: '2-digit',
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour12: false,
-});
+    hour: '2-digit',
+    minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour12: false,
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -241,7 +241,7 @@ export default function AppointmentForm() {
               {errors.doctor && <p className="text-red-600 text-sm mt-1">{errors.doctor}</p>}
             </div>
 
-           
+
           </div>
 
           <div className="flex justify-between gap-6 mt-6">
@@ -259,7 +259,7 @@ export default function AppointmentForm() {
               Đặt lịch
             </button>
           </div>
-            
+
           <p className="text-sm text-gray-500 text-center mt-2">Thời gian: {currentDate}</p>
         </form>
       </div>
