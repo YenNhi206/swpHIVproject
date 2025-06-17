@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CheckCircle, XCircle } from 'lucide-react';
+import { CheckCircle, XCircle, PlusCircle } from 'lucide-react';
 
 // Dữ liệu thử
 const mockAppointments = [
@@ -12,6 +12,14 @@ const mockAppointments = [
 export default function StaffAppointmentPage() {
   const [appointments, setAppointments] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
+  // Form dữ liệu bệnh nhân mới
+  const [newPatient, setNewPatient] = useState({
+    fullName: '',
+    date: '',
+    time: '',
+    service: '',
+  });
+  const [errorNewPatient, setErrorNewPatient] = useState('');
 
   useEffect(() => {
     setAppointments(mockAppointments);
@@ -26,6 +34,42 @@ export default function StaffAppointmentPage() {
     setAppointments(updatedAppointments);
   };
 
+  // Xử lý thay đổi form thêm bệnh nhân mới
+  const handleNewPatientChange = (e) => {
+    const { name, value } = e.target;
+    setNewPatient((prev) => ({ ...prev, [name]: value }));
+    setErrorNewPatient('');
+  };
+
+  // Thêm bệnh nhân mới vào danh sách
+  const handleAddNewPatient = () => {
+    // Kiểm tra dữ liệu đơn giản
+    if (!newPatient.fullName || !newPatient.date || !newPatient.time || !newPatient.service) {
+      setErrorNewPatient('Vui lòng điền đầy đủ thông tin');
+      return;
+    }
+    const newId = appointments.length > 0 ? Math.max(...appointments.map(a => a.id)) + 1 : 1;
+    const newAppt = {
+      id: newId,
+      fullName: newPatient.fullName,
+      date: newPatient.date,
+      time: newPatient.time,
+      service: newPatient.service,
+      status: 'Chưa đến',
+    };
+    setAppointments((prev) => [...prev, newAppt]);
+
+    // Nếu ngày thêm trùng với ngày đang xem, không cần đổi selectedDate
+    // Có thể reset form
+    setNewPatient({
+      fullName: '',
+      date: '',
+      time: '',
+      service: '',
+    });
+    setErrorNewPatient('');
+  };
+
   const filteredAppointments = appointments.filter(
     (appt) => appt.date === selectedDate
   );
@@ -36,6 +80,7 @@ export default function StaffAppointmentPage() {
         Quản Lý Lịch Hẹn Điều Trị HIV
       </h1>
 
+      {/* Chọn ngày làm việc */}
       <div className="mb-6 flex justify-center items-center gap-4">
         <label className="font-semibold text-lg text-red-700">Chọn ngày làm việc:</label>
         <input
@@ -46,6 +91,7 @@ export default function StaffAppointmentPage() {
         />
       </div>
 
+      {/* Bảng lịch hẹn */}
       {filteredAppointments.length === 0 ? (
         <p className="text-center text-red-600 font-semibold">Không có lịch hẹn trong ngày.</p>
       ) : (
@@ -93,6 +139,53 @@ export default function StaffAppointmentPage() {
           </table>
         </div>
       )}
+
+      {/* Form thêm bệnh nhân mới */}
+      <div className="mt-10 max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold text-red-700 mb-4 flex items-center gap-2">
+          <PlusCircle className="w-6 h-6" />
+          Thêm bệnh nhân mới
+        </h2>
+        {errorNewPatient && <p className="text-red-600 mb-2">{errorNewPatient}</p>}
+        <div className="space-y-4">
+          <input
+            type="text"
+            name="fullName"
+            value={newPatient.fullName}
+            onChange={handleNewPatientChange}
+            placeholder="Họ tên bệnh nhân"
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+          <input
+            type="date"
+            name="date"
+            value={newPatient.date}
+            onChange={handleNewPatientChange}
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+          <input
+            type="time"
+            name="time"
+            value={newPatient.time}
+            onChange={handleNewPatientChange}
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+          <input
+            type="text"
+            name="service"
+            value={newPatient.service}
+            onChange={handleNewPatientChange}
+            placeholder="Dịch vụ điều trị"
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+          <button
+            onClick={handleAddNewPatient}
+            className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition"
+          >
+            Thêm bệnh nhân
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

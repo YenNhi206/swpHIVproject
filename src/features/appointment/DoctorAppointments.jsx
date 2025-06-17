@@ -8,15 +8,13 @@ export default function DoctorAppointmentList() {
   const [filterDate, setFilterDate] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  // Ngày giờ hiện tại (03:53 PM +07, 13/06/2025)
-  const currentDate = new Date('2025-06-13T15:53:00+07:00').toLocaleString('vi-VN', {
+  const currentDate = new Date().toLocaleString('vi-VN', {
     hour: '2-digit',
     minute: '2-digit',
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
     hour12: false,
-    timeZone: 'Asia/Ho_Chi_Minh',
   });
 
   useEffect(() => {

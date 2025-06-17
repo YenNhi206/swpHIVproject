@@ -26,6 +26,8 @@ export default function Breadcrumb() {
     '/doctorappointments': 'Lịch hẹn bác sĩ',
     '/userappointments': 'Lịch hẹn người dùng',
     '/anonymous-appointment': 'Đặt lịch ẩn danh',
+    '/knowledge': 'Kiến thức',
+    '/listdoctor': 'Chuyên gia - Bác sĩ',
     '*': 'Không tìm thấy',
   };
 
@@ -47,9 +49,8 @@ export default function Breadcrumb() {
           <React.Fragment key={item.path}>
             <Link
               to={item.path}
-              className={`hover:text-red-600 transition-colors duration-200 ${
-                index === breadcrumbItems.length - 1 ? 'text-red-700 font-semibold' : 'text-gray-700'
-              }`}
+              className={`hover:text-red-600 transition-colors duration-200 ${index === breadcrumbItems.length - 1 ? 'text-red-700 font-semibold' : 'text-gray-700'
+                }`}
             >
               {item.label}
             </Link>

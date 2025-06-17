@@ -14,13 +14,13 @@ export default function AnonymousAppointmentForm() {
   const navigate = useNavigate();
 
   const currentDate = new Date().toLocaleString('vi-VN', {
-  hour: '2-digit',
-  minute: '2-digit',
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour12: false,
-});
+    hour: '2-digit',
+    minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour12: false,
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,21 +94,6 @@ export default function AnonymousAppointmentForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Vấn đề cần khám</label>
-            <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-              <Stethoscope className="w-5 h-5 text-gray-400 mx-3" />
-              <textarea
-                name="reason"
-                value={formData.reason}
-                onChange={handleChange}
-                className="w-full p-3 border-none rounded-lg focus:outline-none resize-none h-24"
-                required
-              />
-            </div>
-            {errors.reason && <p className="text-red-600 text-sm mt-1">{errors.reason}</p>}
-          </div>
-
-          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Ngày hẹn</label>
             <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
               <Calendar className="w-5 h-5 text-gray-400 mx-3" />
@@ -163,6 +148,22 @@ export default function AnonymousAppointmentForm() {
             </div>
             {errors.doctor && <p className="text-red-600 text-sm mt-1">{errors.doctor}</p>}
           </div>
+
+          {/* Vấn đề */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả vấn đề cần tư vấn</label>
+            <textarea
+              name="reason"
+              placeholder="Ví dụ: Tôi cần tư vấn về việc điều trị HIV..."
+              value={formData.reason}
+              onChange={handleChange}
+              rows={4}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              required
+            ></textarea>
+            {errors.reason && <p className="text-red-600 text-sm mt-1">{errors.reason}</p>}
+          </div>
+
 
           <div className="flex justify-between gap-6 mt-6">
             <button
