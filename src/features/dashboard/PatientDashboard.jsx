@@ -69,12 +69,7 @@ export default function PatientDashboard() {
                 to="/appointments"
                 icon={<Calendar className="w-6 h-6 text-red-500" />}
               />
-              <DashboardCard
-                title="Kết quả khám"
-                description="Xem và nhận thông báo nhắc nhở uống thuốc & tái khám."
-                to="/treatment-results"
-                icon={<Bell className="w-6 h-6 text-red-500" />}
-              />
+
               <DashboardCard
                 title="Tư vấn trực tuyến"
                 description="Đặt lịch tư vấn online với bác sĩ nếu cần hỗ trợ."
