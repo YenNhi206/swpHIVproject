@@ -1,19 +1,35 @@
-import React, { useState} from 'react';
-import { User, Mail, Phone, Calendar, Clock, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { User, Mail, Phone, Calendar, Clock, Stethoscope } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Support() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     date: '',
     time: '',
+    doctor: '',
+    problem: '',
   });
+
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const doctors = ['BS. Nguyễn Văn A', 'BS. Trần Thị B', 'BS. Lê Văn C'];
+
+  const timeSlots = [
+    { label: '08:00 - 09:00', value: '08:00' },
+    { label: '09:00 - 10:00', value: '09:00' },
+    { label: '10:00 - 11:00', value: '10:00' },
+    { label: '11:00 - 12:00', value: '11:00' },
+    { label: '13:00 - 14:00', value: '13:00' },
+    { label: '14:00 - 15:00', value: '14:00' },
+    { label: '15:00 - 16:00', value: '15:00' },
+    { label: '16:00 - 17:00', value: '16:00' },
+  ];
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = 'Họ và tên là bắt buộc';
@@ -23,6 +39,8 @@ export default function Support() {
       newErrors.phone = 'Số điện thoại phải có 10-11 chữ số';
     if (!formData.date) newErrors.date = 'Ngày là bắt buộc';
     if (!formData.time) newErrors.time = 'Giờ là bắt buộc';
+    if (!formData.doctor) newErrors.doctor = 'Vui lòng chọn bác sĩ';
+    if (!formData.problem.trim()) newErrors.problem = 'Vui lòng mô tả vấn đề cần khám';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -40,15 +58,31 @@ export default function Support() {
     setIsLoading(true);
     setTimeout(() => {
       console.log('Tư vấn:', formData);
-      setSubmitted(true);
       setIsLoading(false);
+      navigate('/payment', { state: { appointmentData: formData } });
+
     }, 1000);
   };
+  const currentDate = new Date().toLocaleString('vi-VN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour12: false,
+  });
 
   const handleReset = () => {
-    setFormData({ name: '', email: '', phone: '', date: '', time: '' });
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      date: '',
+      time: '',
+      doctor: '',
+      problem: '',
+    });
     setErrors({});
-    setSubmitted(false);
   };
 
   return (
@@ -68,12 +102,11 @@ export default function Support() {
                 </div>
               ))}
             </div>
-          ) : !submitted ? (
+          ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="relative">
-                <label className="block text-sm font-semibold text-gray-600 mb-1">
-                  Họ và tên
-                </label>
+              {/* Họ và tên */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-600 mb-1">Họ và tên</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                   <User className="w-5 h-5 text-gray-400 mx-3" />
                   <input
@@ -83,16 +116,14 @@ export default function Support() {
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full p-3 border-none rounded-lg focus:outline-none"
-                    required
                   />
                 </div>
                 {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
               </div>
 
-              <div className="relative">
-                <label className="block text-sm font-semibold text-gray-600 mb-1">
-                  Email
-                </label>
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-600 mb-1">Email</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                   <Mail className="w-5 h-5 text-gray-400 mx-3" />
                   <input
@@ -102,16 +133,14 @@ export default function Support() {
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full p-3 border-none rounded-lg focus:outline-none"
-                    required
                   />
                 </div>
                 {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
               </div>
 
-              <div className="relative">
-                <label className="block text-sm font-semibold text-gray-600 mb-1">
-                  Số điện thoại
-                </label>
+              {/* Phone */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-600 mb-1">Số điện thoại</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                   <Phone className="w-5 h-5 text-gray-400 mx-3" />
                   <input
@@ -121,56 +150,82 @@ export default function Support() {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full p-3 border-none rounded-lg focus:outline-none"
-                    required
                   />
                 </div>
                 {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone}</p>}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="relative">
-                  <label className="block text-sm font-semibold text-gray-600 mb-1">
-                    Ngày tư vấn
-                  </label>
-                  <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                    <Calendar className="w-5 h-5 text-gray-400 mx-3" />
-                    <input
-                      type="date"
-                      name="date"
-                      value={formData.date}
-                      onChange={handleChange}
-                      className="w-full p-3 border-none rounded-lg focus:outline-none"
-                      required
-                    />
-                  </div>
-                  {errors.date && <p className="text-red-600 text-sm mt-1">{errors.date}</p>}
+              {/* Date */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Ngày hẹn</label>
+                <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                  <Calendar className="w-5 h-5 text-gray-400 mx-3" />
+                  <input
+                    type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                    className="w-full p-3 border-none rounded-lg focus:outline-none"
+                  />
                 </div>
-
-                <div className="relative">
-                  <label className="block text-sm font-semibold text-gray-600 mb-1">
-                    Giờ tư vấn
-                  </label>
-                  <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                    <Clock className="w-5 h-5 text-gray-400 mx-3" />
-                    <select
-                      name="time"
-                      value={formData.time}
-                      onChange={handleChange}
-                      className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none"
-                      required
-                    >
-                      <option value="" disabled>Chọn giờ</option>
-                      {['10:00 - 11:00', '11:00 - 12:00', '13:00 - 14:00', '14:00 - 15:00', '15:00 - 16:00'].map((time) => (
-                        <option key={time} value={time}>
-                          {time}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  {errors.time && <p className="text-red-600 text-sm mt-1">{errors.time}</p>}
-                </div>
+                {errors.date && <p className="text-red-600 text-sm mt-1">{errors.date}</p>}
               </div>
 
+              {/* Time */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Giờ hẹn</label>
+                <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                  <Clock className="w-5 h-5 text-gray-400 mx-3" />
+                  <select
+                    name="time"
+                    value={formData.time}
+                    onChange={handleChange}
+                    className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none"
+                  >
+                    <option value="">Chọn giờ</option>
+                    {timeSlots.map((slot, idx) => (
+                      <option key={idx} value={slot.value}>{slot.label}</option>
+                    ))}
+                  </select>
+                </div>
+                {errors.time && <p className="text-red-600 text-sm mt-1">{errors.time}</p>}
+              </div>
+
+              {/* Doctor */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Chọn bác sĩ</label>
+                <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                  <Stethoscope className="w-5 h-5 text-gray-400 mx-3" />
+                  <select
+                    name="doctor"
+                    value={formData.doctor}
+                    onChange={handleChange}
+                    className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none"
+                  >
+                    <option value="">Chọn bác sĩ</option>
+                    {doctors.map((doctor, index) => (
+                      <option key={index} value={doctor}>{doctor}</option>
+                    ))}
+                  </select>
+                </div>
+                {errors.doctor && <p className="text-red-600 text-sm mt-1">{errors.doctor}</p>}
+              </div>
+
+              {/* Problem description */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Vấn đề sức khỏe</label>
+                <textarea
+                  name="problem"
+                  placeholder="Mô tả vấn đề bạn đang gặp phải"
+                  value={formData.problem}
+                  onChange={handleChange}
+                  rows={4}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                ></textarea>
+                {errors.problem && <p className="text-red-600 text-sm mt-1">{errors.problem}</p>}
+              </div>
+
+              {/* Buttons */}
               <div className="flex gap-4">
                 <button
                   type="submit"
@@ -186,34 +241,15 @@ export default function Support() {
                 >
                   Hủy
                 </button>
-                
               </div>
+
               <div className="text-sm text-center mt-4">
-                    <span>Bạn muốn đặt lịch ẩn danh? </span>
-                    <a href="/anonymous-appointment" className="text-red-600 hover:underline">Đặt lịch ẩn danh tại đây</a>
-                </div>
-            </form>
-          ) : (
-            <div className="text-center bg-green-100 p-6 rounded-lg animate-fade-in [animation-delay:0.4s]">
-              <p className="font-semibold text-lg text-green-700">
-                Cảm ơn bạn! Chúng tôi sẽ liên hệ sớm nhất.
-              </p>
-              <div className="flex gap-4 justify-center mt-4">
-                <button
-                  onClick={handleReset}
-                  className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-300"
-                >
-                  Đặt lịch khác
-                </button>
-                <Link
-                  to="/"
-                  className="px-6 py-2 border border-red-600 text-red-600 rounded-lg hover:bg-red-100 transition-colors duration-300"
-                >
-                  Quay lại trang chủ
-                </Link>
-                
+                <span>Bạn muốn đặt lịch ẩn danh? </span>
+                <a href="/anonymous-appointment" className="text-red-600 hover:underline">Đặt lịch ẩn danh tại đây</a>
               </div>
-            </div>
+              <p className="text-sm text-gray-500 text-center mt-2">Thời gian: {currentDate}</p>
+
+            </form>
           )}
         </div>
       </div>

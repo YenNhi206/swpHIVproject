@@ -124,13 +124,7 @@ export default function DoctorDashboard() {
                   </button>
                 </li>
               ))}
-              <button
-                onClick={() => navigate('/patients/add')}
-                className="mt-4 w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300"
-              >
-                <UserPlus className="w-5 h-5 inline mr-2" />
-                Thêm bệnh nhân mới
-              </button>
+
             </ul>
           </section>
         </div>
