@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import blogImg from "../assets/blog.jpg";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { FaUserPlus, FaSyringe, FaBullseye } from "react-icons/fa";
+
 
 const documents = [
   {
@@ -130,44 +133,108 @@ export default function KnowledgePage() {
         </p>
       </section>
 
-      {/* Blog Section */}
-      <section className="mb-16 max-w-5xl mx-auto">
-        <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
-          <span>✍️</span> Blog Chia Sẻ Kinh Nghiệm
+      {/* Thống Kê Về HIV (Giả lập) */}
+np      <section className="mb-20 max-w-6xl mx-auto">
+        <h2 className="text-3xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2 animate-slide-in">
+          <span>📊</span> Thống Kê Về HIV tại Việt Nam
         </h2>
-        <div className="mb-8 relative">
-          <img
-            src={blogImg}
-            alt="Blog cộng đồng"
-            className="w-full h-64 sm:h-80 object-cover rounded-2xl shadow-lg transform hover:scale-[1.01] transition-transform duration-300"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-2xl"></div>
+
+        {/* Cards thống kê nhanh */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center mb-10">
+          <div className="bg-white p-6 rounded-2xl shadow-md">
+            <FaUserPlus className="text-4xl text-red-500 mx-auto mb-2" />
+            <p className="text-3xl font-bold text-red-700">230.000+</p>
+            <p className="text-sm text-gray-700 mt-1">Người đang sống với HIV</p>
+          </div>
+          <div className="bg-white p-6 rounded-2xl shadow-md">
+            <FaSyringe className="text-4xl text-red-500 mx-auto mb-2" />
+            <p className="text-3xl font-bold text-red-700">80%</p>
+            <p className="text-sm text-gray-700 mt-1">Tiếp cận điều trị ARV</p>
+          </div>
+          <div className="bg-white p-6 rounded-2xl shadow-md">
+            <FaBullseye className="text-4xl text-red-500 mx-auto mb-2" />
+            <p className="text-3xl font-bold text-red-700">95-95-95</p>
+            <p className="text-sm text-gray-700 mt-1">Mục tiêu quốc gia đến 2030</p>
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {blogPosts.map(({ title, description, link }, idx) => (
-            <article
-              key={title}
-              className="bg-white rounded-2xl shadow-md p-5 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
-            >
-              <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{title}</h3>
-              <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed">{description}</p>
-              <a
-                href={link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-3 py-1.5 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors text-sm font-medium"
-              >
-                Đọc thêm
-                <svg className="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
-            </article>
-          ))}
+
+        {/* Biểu đồ cải thiện nhờ ARV */}
+        <div className="bg-white p-6 rounded-2xl shadow-md">
+          <h3 className="text-xl font-semibold text-center text-red-700 mb-4">Tỷ lệ điều trị ARV qua các năm</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={[
+              { year: '2018', rate: 60 },
+              { year: '2019', rate: 65 },
+              { year: '2020', rate: 70 },
+              { year: '2021', rate: 75 },
+              { year: '2022', rate: 80 },
+              { year: '2023', rate: 83 },
+            ]}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="year" />
+              <YAxis unit="%" />
+              <Tooltip />
+              <Bar dataKey="rate" fill="#dc2626" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </section>
 
-      {/* Treatment Guides Section */}
+
+      {/* Kiến Thức Nền Tảng */}
+      <section className="mb-20 max-w-6xl mx-auto px-4">
+        <h3 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
+          🧠 Kiến thức nền tảng về HIV/AIDS
+        </h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Card 1 */}
+          <div className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200">
+            <span className="text-2xl">🧬</span>
+            <div>
+              <h4 className="text-lg font-semibold text-gray-900 mb-2">Các giai đoạn của HIV/AIDS</h4>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                HIV tiến triển qua 3 giai đoạn chính: <strong>Giai đoạn cấp tính</strong>, <strong>giai đoạn không triệu chứng</strong>, và <strong>AIDS</strong>. Nếu không điều trị, hệ miễn dịch sẽ suy yếu nghiêm trọng, dễ dẫn đến tử vong.
+              </p>
+            </div>
+          </div>
+
+          {/* Card 2 */}
+          <div className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200">
+            <span className="text-2xl">🧪</span>
+            <div>
+              <h4 className="text-lg font-semibold text-gray-900 mb-2">ARV là gì?</h4>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                ARV (thuốc kháng virus) giúp <strong>kiểm soát virus HIV</strong>, ngăn không cho virus nhân lên. Dùng ARV sớm và đều đặn giúp sống khỏe mạnh và giảm nguy cơ lây nhiễm.
+              </p>
+            </div>
+          </div>
+
+          {/* Card 3 */}
+          <div className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200">
+            <span className="text-2xl">🧫</span>
+            <div>
+              <h4 className="text-lg font-semibold text-gray-900 mb-2">Cơ chế hoạt động của ARV</h4>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                ARV ức chế enzyme cần thiết để HIV sao chép. Tuân thủ điều trị giúp <strong>tải lượng virus xuống mức không phát hiện</strong>, người nhiễm có thể sống như người bình thường.
+              </p>
+            </div>
+          </div>
+
+          {/* Card 4 */}
+          <div className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200">
+            <span className="text-2xl">🧻</span>
+            <div>
+              <h4 className="text-lg font-semibold text-gray-900 mb-2">HIV khác gì với AIDS?</h4>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                <strong>HIV</strong> là virus, còn <strong>AIDS</strong> là giai đoạn cuối của nhiễm HIV khi hệ miễn dịch bị phá hủy. Người có HIV không đồng nghĩa với việc đã mắc AIDS.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Hướng Dẫn Điều Trị*/}
       <section className="mb-16 max-w-5xl mx-auto">
         <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
           <span>💉</span> Hướng Dẫn Điều Trị
@@ -186,43 +253,6 @@ export default function KnowledgePage() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">{content}</p>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="mb-16 max-w-5xl mx-auto">
-        <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
-          <span>❓</span> Câu Hỏi Thường Gặp (FAQ)
-        </h2>
-        <div className="space-y-4 max-w-3xl mx-auto">
-          {faqItems.map((faq, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
-            >
-              <button
-                onClick={() => toggleFAQ(i)}
-                className="w-full flex justify-between items-center px-6 py-4 text-left text-gray-900 font-semibold hover:bg-red-50 transition-colors"
-                aria-expanded={openFAQIndex === i}
-              >
-                <span className="text-base">{faq.question}</span>
-                <svg
-                  className={`w-5 h-5 transform transition-transform duration-200 ${openFAQIndex === i ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {openFAQIndex === i && (
-                <div className="px-6 py-5 bg-red-50 text-gray-700 text-sm leading-relaxed animate-slide-down">
-                  {faq.detailedContent}
-                </div>
-              )}
             </div>
           ))}
         </div>
@@ -318,6 +348,72 @@ export default function KnowledgePage() {
             </div>
           </div>
         )}
+      </section>
+
+      {/* FAQ Section */}
+      <section className="mb-16 max-w-5xl mx-auto">
+        <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
+          <span>❓</span> Câu Hỏi Thường Gặp (FAQ)
+        </h2>
+        <div className="space-y-4 max-w-3xl mx-auto">
+          {faqItems.map((faq, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
+            >
+              <button
+                onClick={() => toggleFAQ(i)}
+                className="w-full flex justify-between items-center px-6 py-4 text-left text-gray-900 font-semibold hover:bg-red-50 transition-colors"
+                aria-expanded={openFAQIndex === i}
+              >
+                <span className="text-base">{faq.question}</span>
+                <svg
+                  className={`w-5 h-5 transform transition-transform duration-200 ${openFAQIndex === i ? "rotate-180" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {openFAQIndex === i && (
+                <div className="px-6 py-5 bg-red-50 text-gray-700 text-sm leading-relaxed animate-slide-down">
+                  {faq.detailedContent}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Blog Section */}
+      <section className="mb-16 max-w-5xl mx-auto">
+        <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
+          <span>✍️</span> Blog Chia Sẻ Kinh Nghiệm
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {blogPosts.map(({ title, description, link }, idx) => (
+            <article
+              key={title}
+              className="bg-white rounded-2xl shadow-md p-5 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+            >
+              <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{title}</h3>
+              <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed">{description}</p>
+              <a
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-3 py-1.5 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors text-sm font-medium"
+              >
+                Đọc thêm
+                <svg className="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </article>
+          ))}
+        </div>
       </section>
 
     </main>

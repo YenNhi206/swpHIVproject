@@ -41,7 +41,7 @@ export default function HomePage() {
             />
           </div>
         </div>
-
+        {/* Gioiws thiệu cơ sở y tế */}
         <section className="grid md:grid-cols-2 gap-8 items-center py-12">
           <div>
             <img
@@ -191,6 +191,86 @@ export default function HomePage() {
             ))}
           </div>
         </section>
+
+        {/*  */}
+        <section className="bg-white py-20">
+          <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 px-6">
+
+            {/* Cột 1: Hành động khi nghi nhiễm HIV */}
+            <div className="bg-white p-8 object-cover rounded-xl shadow-md">
+              <h2 className="text-3xl font-bold text-red-600 mb-8">
+                🧭 Nên làm gì khi có nghi vấn nhiễm HIV?
+              </h2>
+              <div className="space-y-6">
+                {[
+                  {
+                    icon: "📍",
+                    title: "Bước 1: Tìm cơ sở y tế",
+                    desc: "Tìm một cơ sở y tế gần bạn hoặc trang y tế có cung cấp dịch vụ tư vấn và xét nghiệm HIV.",
+                  },
+                  {
+                    icon: "🧪",
+                    title: "Bước 2: Xét nghiệm HIV",
+                    desc: "Xét nghiệm là cách duy nhất để biết bạn có nhiễm HIV hay không. Hoàn toàn bảo mật.",
+                  },
+                  {
+                    icon: "💊",
+                    title: "Bước 3: Điều trị & sống khỏe",
+                    desc: "Nếu dương tính, bạn sẽ được điều trị ARV và hỗ trợ để sống khỏe mạnh như người bình thường.",
+                  },
+                ].map((step, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="text-3xl text-red-600">{step.icon}</div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-red-700 mb-1">
+                        {step.title}
+                      </h3>
+                      <p className="text-gray-700 leading-relaxed">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Cột 2: Tại sao chọn dịch vụ */}
+            <div className="bg-white p-8 object-cover rounded-xl shadow-md">
+              <h2 className="text-3xl font-bold text-red-600 mb-8">
+                ❤️ Tại sao chọn dịch vụ y tế của chúng tôi?
+              </h2>
+              <div className="space-y-6">
+                {[
+                  {
+                    icon: "🩺",
+                    title: "Đội ngũ y bác sĩ tận tâm",
+                    desc: "Chúng tôi có đội ngũ chuyên gia nhiều năm kinh nghiệm trong chăm sóc và điều trị HIV, luôn lắng nghe và đồng hành cùng bạn.",
+                  },
+                  {
+                    icon: "🔒",
+                    title: "Bảo mật tuyệt đối",
+                    desc: "Mọi thông tin cá nhân và kết quả xét nghiệm của bạn được bảo mật nghiêm ngặt, đảm bảo quyền riêng tư tối đa.",
+                  },
+                  {
+                    icon: "💡",
+                    title: "Giáo dục và hỗ trợ toàn diện",
+                    desc: "Không chỉ điều trị, chúng tôi cung cấp tài liệu giáo dục, hỗ trợ tâm lý và cộng đồng để bạn sống tích cực và tự tin hơn.",
+                  },
+                ].map((item, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="text-3xl text-red-600">{item.icon}</div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-red-700 mb-1">
+                        {item.title}
+                      </h3>
+                      <p className="text-gray-700 leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </section>
+
       </div>
     </>
   );
