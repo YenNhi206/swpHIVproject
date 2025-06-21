@@ -6,6 +6,21 @@ export default function ResultPage() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
+  const determineStatus = (results) => {
+    const cd4 = parseInt(results.find((r) => r.label === 'CD4').value);
+    const viralLoad = results.find((r) => r.label === 'Tải lượng virus').value;
+    if (cd4 > 500 && viralLoad === 'Không phát hiện') {
+      return {
+        status: 'Đáp ứng tốt',
+        note: 'Bệnh nhân đáp ứng tốt với phác đồ hiện tại, tiếp tục theo dõi.',
+      };
+    }
+    return {
+      status: 'Không đáp ứng tốt',
+      note: 'CD4 giảm nhanh, cần đánh giá lại phác đồ.',
+    };
+  };
+
   const result = {
     patientName: 'Nguyễn Văn A',
     doctorName: 'BS. Trần Thị B',
@@ -15,11 +30,16 @@ export default function ResultPage() {
       { label: 'Tải lượng virus', value: 'Không phát hiện' },
       { label: 'Chỉ số ALT', value: '25 U/L' },
     ],
-    status: 'Đáp ứng tốt',
-    note: 'Tiếp tục theo dõi và duy trì phác đồ hiện tại.',
+    ...determineStatus([
+      { label: 'CD4', value: '520 tế bào/mm³' },
+      { label: 'Tải lượng virus', value: 'Không phát hiện' },
+      { label: 'Chỉ số ALT', value: '25 U/L' },
+    ]),
+    technician: 'Nguyễn Thị Xét Nghiệm',
+    currentRegimen: 'TDF + 3TC + DTG',
+    assignedBy: 'BS. Lê Văn C',
   };
 
-  // Giả lập loading
   useEffect(() => {
     setTimeout(() => setIsLoading(false), 1000);
   }, []);
@@ -31,11 +51,11 @@ export default function ResultPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-red-600 mb-8 text-center animate-fade-in">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-red-600 mb-8 text-center">
           Kết quả điều trị
         </h1>
 
-        <div className="bg-white rounded-2xl shadow-lg p-8 opacity-0 translate-y-4 animate-fade-in [animation-delay:0.2s]">
+        <div className="bg-white rounded-2xl shadow-lg p-8">
           {isLoading ? (
             <div className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-4">
@@ -56,50 +76,76 @@ export default function ResultPage() {
               </div>
             </div>
           ) : (
-            <>
+            <div className="space-y-8">
               {/* Thông tin cơ bản */}
-              <div className="grid sm:grid-cols-2 gap-4 mb-8">
-                <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl hover:bg-gray-100 transition-colors duration-300">
-                  <User className="w-5 h-5 text-red-500" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-500 uppercase">Bệnh nhân</p>
-                    <p className="text-lg text-gray-800">{result.patientName}</p>
+              <section>
+                <h2 className="text-2xl font-bold text-red-600 mb-4">Thông tin cơ bản</h2>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl">
+                    <User className="w-5 h-5 text-red-500" />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-500 uppercase">Bệnh nhân</p>
+                      <p className="text-lg text-gray-800">{result.patientName}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl">
+                    <Stethoscope className="w-5 h-5 text-red-500" />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-500 uppercase">Bác sĩ phụ trách</p>
+                      <p className="text-lg text-gray-800">{result.doctorName}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl">
+                    <Calendar className="w-5 h-5 text-red-500" />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-500 uppercase">Ngày xét nghiệm</p>
+                      <p className="text-lg text-gray-800">{result.testDate}</p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl hover:bg-gray-100 transition-colors duration-300">
-                  <Stethoscope className="w-5 h-5 text-red-500" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-500 uppercase">Bác sĩ phụ trách</p>
-                    <p className="text-lg text-gray-800">{result.doctorName}</p>
-                  </div>
+                <div className="mt-4">
+                  <p className="text-sm text-gray-500">Xét nghiệm thực hiện bởi:</p>
+                  <p className="text-gray-800 font-medium">{result.technician}</p>
                 </div>
-                <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl hover:bg-gray-100 transition-colors duration-300">
-                  <Calendar className="w-5 h-5 text-red-500" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-500 uppercase">Ngày xét nghiệm</p>
-                    <p className="text-lg text-gray-800">{result.testDate}</p>
-                  </div>
-                </div>
-              </div>
+              </section>
 
-              {/* Chỉ số kết quả */}
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold text-red-600 mb-4">Chỉ số kết quả</h2>
+              {/* Phác đồ điều trị */}
+              <section>
+                <h2 className="text-2xl font-bold text-red-600 mb-4">Phác đồ điều trị</h2>
+                {result.currentRegimen ? (
+                  <div className="bg-gray-50 border-l-4 border-green-500 p-4 rounded-md">
+                    <p className="text-gray-700">
+                      Phác đồ hiện tại: <strong className="text-green-700">{result.currentRegimen}</strong>
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">Bác sĩ chỉ định: {result.assignedBy}</p>
+                  </div>
+                ) : (
+                  <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
+                    <p className="text-yellow-800 font-medium">
+                      Chưa áp dụng phác đồ điều trị. Bác sĩ cần xem xét chỉ số để đưa ra phác đồ phù hợp.
+                    </p>
+                  </div>
+                )}
+              </section>
+
+              {/* Kết quả xét nghiệm */}
+              <section>
+                <h2 className="text-2xl font-bold text-red-600 mb-4">Kết quả xét nghiệm</h2>
                 <div className="grid sm:grid-cols-3 gap-4">
                   {result.results.map((item, idx) => (
                     <div
                       key={idx}
-                      className="bg-red-50 border border-red-100 p-4 rounded-xl shadow-sm text-center hover:shadow-md transition-shadow duration-300"
+                      className="bg-red-50 border border-red-100 p-4 rounded-xl text-center"
                     >
                       <p className="font-semibold text-red-600 text-lg">{item.label}</p>
                       <p className="text-xl font-bold text-gray-900 mt-2">{item.value}</p>
                     </div>
                   ))}
                 </div>
-              </div>
+              </section>
 
               {/* Đánh giá tổng quan */}
-              <div className="mb-8">
+              <section>
                 <h2 className="text-2xl font-bold text-red-600 mb-4">Đánh giá tổng quan</h2>
                 <div className="flex items-center gap-3 mb-3">
                   {result.status === 'Đáp ứng tốt' ? (
@@ -114,33 +160,38 @@ export default function ResultPage() {
                     </span>
                   </p>
                 </div>
+                {result.status !== 'Đáp ứng tốt' && (
+                  <div className="bg-red-50 border border-red-200 p-4 rounded-md mb-3 text-red-700">
+                    <p>Bệnh nhân không đáp ứng tốt với phác đồ hiện tại. Bác sĩ cần đánh giá lại và xem xét thay đổi điều trị.</p>
+                  </div>
+                )}
                 <p className="text-gray-700">
                   <strong>Ghi chú:</strong> {result.note}
                 </p>
-              </div>
+              </section>
 
-              {/* Nút hành động */}
-              <div className="flex flex-wrap gap-4 justify-center">
+              {/* Hành động */}
+              <section className="flex flex-wrap gap-4 justify-center">
                 <button
                   onClick={handlePrint}
-                  className="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition-colors duration-300"
+                  className="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition"
                 >
                   In kết quả
                 </button>
                 <button
                   onClick={() => alert('Chức năng chia sẻ đang phát triển!')}
-                  className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition-colors duration-300"
+                  className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition"
                 >
                   Chia sẻ kết quả
                 </button>
                 <button
                   onClick={() => navigate('/')}
-                  className="px-6 py-3 border border-red-600 text-red-600 font-semibold rounded-lg hover:bg-red-100 transition-colors duration-300"
+                  className="px-6 py-3 border border-red-600 text-red-600 font-semibold rounded-lg hover:bg-red-100 transition"
                 >
                   Quay lại
                 </button>
-              </div>
-            </>
+              </section>
+            </div>
           )}
         </div>
       </div>
