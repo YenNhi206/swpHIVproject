@@ -11,13 +11,13 @@ export default function LoginPage() {
   const [forgotEmail, setForgotEmail] = useState('');
 
   const currentDate = new Date().toLocaleString('vi-VN', {
-  hour: '2-digit',
-  minute: '2-digit',
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour12: false,
-});
+    hour: '2-digit',
+    minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour12: false,
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,16 +45,23 @@ export default function LoginPage() {
     e.preventDefault();
     if (validateForm()) {
       try {
+        console.log('Dữ liệu gửi login:', {
+          email: credentials.identifier,
+          password: credentials.password
+        });
+
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
+
 
         const response = await fetch('http://localhost:8080/api/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
+
           body: JSON.stringify({
-            username: credentials.identifier, // Sử dụng identifier từ form
+            email: credentials.identifier, // Sử dụng identifier từ form
             password: credentials.password,
           }),
           signal: controller.signal,
@@ -102,6 +109,9 @@ export default function LoginPage() {
       setErrors((prev) => ({ ...prev, forgotEmail: 'Email không hợp lệ' }));
     } else {
       try {
+        console.log('Dữ liệu gửi quên mật khẩu:', {
+          email: forgotEmail
+        });
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // Timeout 5 giây
 
