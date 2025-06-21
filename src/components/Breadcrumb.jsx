@@ -30,6 +30,7 @@ export default function Breadcrumb() {
     '/anonymous-appointment': 'Đặt lịch ẩn danh',
     '/knowledge': 'Kiến thức',
     '/listdoctor': 'Chuyên gia - Bác sĩ',
+    '/services': 'Dịch vụ - Giá tiền',
     '*': 'Không tìm thấy',
   };
 

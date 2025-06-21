@@ -1,88 +1,139 @@
-import React, { useEffect, useState } from 'react';
-import { CheckCircle, XCircle, PlusCircle } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import {
+  CheckCircle,
+  XCircle,
+  PlusCircle,
+  User,
+  Clock
+} from "lucide-react";
 
-// Dữ liệu thử
+import { Button, Col, Input, Row, Select, Form } from "antd";
+
 const mockAppointments = [
-  { id: 1, fullName: "Nguyễn Văn A", date: "2025-06-16", time: "09:00", service: "Tư vấn điều trị", status: "Chưa đến" },
-  { id: 2, fullName: "Trần Thị B", date: "2025-06-16", time: "10:30", service: "Lấy thuốc ARV", status: "Chưa đến" },
-  { id: 3, fullName: "Lê Văn C", date: "2025-06-17", time: "14:00", service: "Xét nghiệm tải lượng virus", status: "Chưa đến" },
-  { id: 4, fullName: "Phạm Thị D", date: "2025-06-18", time: "08:00", service: "Tư vấn tâm lý", status: "Chưa đến" },
+  {
+    id: 1,
+    fullName: "Nguyễn Văn A",
+    date: "2025-06-21",
+    time: "09:00-10:00",
+    doctorName: "BS. Trần Văn B",
+    service: "Tư vấn điều trị",
+    serviceType: "Khám mới",
+    status: "Chưa đến",
+  },
+  {
+    id: 2,
+    fullName: "Trần Thị B",
+    date: "2025-06-21",
+    time: "10:00-11:00",
+    doctorName: "BS. Nguyễn Văn C",
+    service: "Lấy thuốc ARV",
+    serviceType: "Tái khám",
+    status: "Đã đến",
+  },
 ];
+
+const TABS = ["Tất cả", "Chưa đến", "Đã đến", "Đang khám", "Hoàn tất", "Vắng"];
+const STATUS_FLOW = ["Chưa đến", "Đã đến", "Đang khám", "Hoàn tất"];
 
 export default function StaffAppointmentPage() {
   const [appointments, setAppointments] = useState([]);
+  const [selectedTab, setSelectedTab] = useState("Tất cả");
   const [selectedDate, setSelectedDate] = useState("");
-  // Form dữ liệu bệnh nhân mới
+
   const [newPatient, setNewPatient] = useState({
-    fullName: '',
-    date: '',
-    time: '',
-    service: '',
+    fullName: "",
+    date: "",
+    time: "",
+    doctorName: "",
+    service: "",
+    serviceType: "",
   });
-  const [errorNewPatient, setErrorNewPatient] = useState('');
+  const [errorNewPatient, setErrorNewPatient] = useState("");
 
   useEffect(() => {
     setAppointments(mockAppointments);
-    const today = new Date().toISOString().split('T')[0]; // Lấy ngày hôm nay
+    const today = new Date().toISOString().split("T")[0];
     setSelectedDate(today);
   }, []);
 
-  const handleUpdateStatus = (id, status) => {
-    const updatedAppointments = appointments.map((appt) =>
-      appt.id === id ? { ...appt, status } : appt
-    );
-    setAppointments(updatedAppointments);
-  };
-
-  // Xử lý thay đổi form thêm bệnh nhân mới
   const handleNewPatientChange = (e) => {
     const { name, value } = e.target;
     setNewPatient((prev) => ({ ...prev, [name]: value }));
-    setErrorNewPatient('');
+    setErrorNewPatient("");
   };
+  const timeSlots = [
+    { value: "08:00-09:00", label: "08:00-09:00" },
+    { value: "09:00-10:00", label: "09:00-10:00" },
+    { value: "10:00-11:00", label: "10:00-11:00" },
+    { value: "13:00-14:00", label: "13:00-14:00" },
+    { value: "14:00-15:00", label: "14:00-15:00" },
+  ];
 
-  // Thêm bệnh nhân mới vào danh sách
   const handleAddNewPatient = () => {
-    // Kiểm tra dữ liệu đơn giản
-    if (!newPatient.fullName || !newPatient.date || !newPatient.time || !newPatient.service) {
-      setErrorNewPatient('Vui lòng điền đầy đủ thông tin');
+    if (
+      !newPatient.fullName ||
+      !newPatient.date ||
+      !newPatient.time ||
+      !newPatient.service ||
+      !newPatient.doctorName ||
+      !newPatient.serviceType
+    ) {
+      setErrorNewPatient("Vui lòng điền đầy đủ thông tin.");
       return;
     }
-    const newId = appointments.length > 0 ? Math.max(...appointments.map(a => a.id)) + 1 : 1;
+
+    const newId = appointments.length > 0 ? Math.max(...appointments.map((a) => a.id)) + 1 : 1;
     const newAppt = {
       id: newId,
-      fullName: newPatient.fullName,
-      date: newPatient.date,
-      time: newPatient.time,
-      service: newPatient.service,
-      status: 'Chưa đến',
+      ...newPatient,
+      status: "Chưa đến",
     };
-    setAppointments((prev) => [...prev, newAppt]);
 
-    // Nếu ngày thêm trùng với ngày đang xem, không cần đổi selectedDate
-    // Có thể reset form
+    setAppointments((prev) => [...prev, newAppt]);
     setNewPatient({
-      fullName: '',
-      date: '',
-      time: '',
-      service: '',
+      fullName: "",
+      date: "",
+      time: "",
+      doctorName: "",
+      service: "",
+      serviceType: "",
     });
-    setErrorNewPatient('');
   };
 
-  const filteredAppointments = appointments.filter(
-    (appt) => appt.date === selectedDate
-  );
+  const handleUpdateStatus = (id) => {
+    setAppointments((prev) =>
+      prev.map((appt) => {
+        if (appt.id !== id) return appt;
+        const currentIndex = STATUS_FLOW.indexOf(appt.status);
+        if (currentIndex < STATUS_FLOW.length - 1) {
+          return { ...appt, status: STATUS_FLOW[currentIndex + 1] };
+        }
+        return appt;
+      })
+    );
+  };
+
+  const handleSetAbsent = (id) => {
+    setAppointments((prev) =>
+      prev.map((appt) => (appt.id === id ? { ...appt, status: "Vắng" } : appt))
+    );
+  };
+
+  const filteredAppointments = appointments.filter((appt) => {
+    const dateMatch = appt.date === selectedDate;
+    const statusMatch = selectedTab === "Tất cả" || appt.status === selectedTab;
+    return dateMatch && statusMatch;
+  });
 
   return (
-    <div className="p-8 min-h-screen bg-red-50">
-      <h1 className="text-3xl font-bold text-red-700 mb-8 text-center">
-        Quản Lý Lịch Hẹn Điều Trị HIV
+    <div className="p-6 bg-red-50 min-h-screen">
+      <h1 className="text-3xl font-bold text-center text-red-700 mb-6">
+        Quản Lý Lịch Hẹn Bệnh Nhân
       </h1>
 
-      {/* Chọn ngày làm việc */}
-      <div className="mb-6 flex justify-center items-center gap-4">
-        <label className="font-semibold text-lg text-red-700">Chọn ngày làm việc:</label>
+      {/* Ngày và Tabs */}
+      <div className="flex justify-center items-center gap-4 mb-6">
+        <label className="font-semibold text-red-700">Ngày:</label>
         <input
           type="date"
           value={selectedDate}
@@ -91,101 +142,226 @@ export default function StaffAppointmentPage() {
         />
       </div>
 
-      {/* Bảng lịch hẹn */}
-      {filteredAppointments.length === 0 ? (
-        <p className="text-center text-red-600 font-semibold">Không có lịch hẹn trong ngày.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border border-red-300 rounded-lg shadow-lg bg-white">
+      <div className="flex justify-center flex-wrap gap-2 mb-4">
+        {TABS.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setSelectedTab(tab)}
+            className={`px-4 py-2 rounded-full font-medium border ${selectedTab === tab
+              ? "bg-red-600 text-white"
+              : "bg-white text-red-700 border-red-500"
+              }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* Danh sách lịch hẹn */}
+      <div className="overflow-x-auto">
+        {filteredAppointments.length === 0 ? (
+          <p className="text-center text-red-600 font-medium mt-4">Không có lịch hẹn.</p>
+        ) : (
+          <table className="w-full table-auto bg-white border border-red-300 rounded shadow">
             <thead className="bg-red-600 text-white">
               <tr>
-                <th className="p-4 border">Họ tên bệnh nhân</th>
-                <th className="p-4 border">Giờ hẹn</th>
-                <th className="p-4 border">Dịch vụ điều trị</th>
-                <th className="p-4 border">Trạng thái</th>
-                <th className="p-4 border">Cập nhật</th>
+                <th className="p-3">Họ tên</th>
+                <th className="p-3">Giờ</th>
+                <th className="p-3">Bác sĩ</th>
+                <th className="p-3">Dịch vụ</th>
+                <th className="p-3">Loại</th>
+                <th className="p-3">Trạng thái</th>
+                <th className="p-3">Cập nhật</th>
               </tr>
             </thead>
             <tbody>
               {filteredAppointments.map((appt) => (
-                <tr key={appt.id} className="hover:bg-red-100 transition">
-                  <td className="p-4 border">{appt.fullName}</td>
-                  <td className="p-4 border">{appt.time}</td>
-                  <td className="p-4 border">{appt.service}</td>
-                  <td className={`p-4 border font-semibold ${appt.status === 'Đã đến' ? 'text-green-600' : appt.status === 'Vắng' ? 'text-red-600' : 'text-gray-600'}`}>
+                <tr key={appt.id} className="border-t text-center hover:bg-red-50">
+                  <td className="p-3">{appt.fullName}</td>
+                  <td className="p-3">{appt.time}</td>
+                  <td className="p-3">{appt.doctorName}</td>
+                  <td className="p-3">{appt.service}</td>
+                  <td className="p-3">{appt.serviceType}</td>
+                  <td
+                    className={`p-3 font-semibold ${appt.status === "Vắng"
+                      ? "text-red-600"
+                      : appt.status === "Hoàn tất"
+                        ? "text-green-600"
+                        : "text-gray-600"
+                      }`}
+                  >
                     {appt.status}
                   </td>
-                  <td className="p-4 border">
-                    <div className="flex justify-center gap-4">
-                      <button
-                        onClick={() => handleUpdateStatus(appt.id, "Đã đến")}
-                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition"
-                      >
-                        <CheckCircle className="w-5 h-5" />
-                        Đã đến
-                      </button>
-                      <button
-                        onClick={() => handleUpdateStatus(appt.id, "Vắng")}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition"
-                      >
-                        <XCircle className="w-5 h-5" />
-                        Vắng
-                      </button>
+                  <td className="p-3">
+                    <div className="flex gap-2 justify-center">
+                      {appt.status !== "Hoàn tất" && appt.status !== "Vắng" && (
+                        <button
+                          onClick={() => handleUpdateStatus(appt.id)}
+                          className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
+                        >
+                          <CheckCircle size={16} />
+                          Tiếp theo
+                        </button>
+                      )}
+                      {appt.status !== "Vắng" && appt.status !== "Hoàn tất" && (
+                        <button
+                          onClick={() => handleSetAbsent(appt.id)}
+                          className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                        >
+                          <XCircle size={16} />
+                          Vắng
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Form thêm bệnh nhân mới */}
-      <div className="mt-10 max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold text-red-700 mb-4 flex items-center gap-2">
+      <div className="mt-10 max-w-5xl mx-auto bg-gradient-to-br from-red-50 to-white p-10 rounded-lg shadow-lg border-2 border-red-200 opacity-0 translate-y-4 animate-fade-in [animation-delay:0.5s]">
+        <h2 className="text-xl font-semibold text-red-700 mb-6 flex items-center gap-2">
           <PlusCircle className="w-6 h-6" />
           Thêm bệnh nhân mới
         </h2>
-        {errorNewPatient && <p className="text-red-600 mb-2">{errorNewPatient}</p>}
-        <div className="space-y-4">
-          <input
-            type="text"
-            name="fullName"
-            value={newPatient.fullName}
-            onChange={handleNewPatientChange}
-            placeholder="Họ tên bệnh nhân"
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
-          <input
-            type="date"
-            name="date"
-            value={newPatient.date}
-            onChange={handleNewPatientChange}
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
-          <input
-            type="time"
-            name="time"
-            value={newPatient.time}
-            onChange={handleNewPatientChange}
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
-          <input
-            type="text"
-            name="service"
-            value={newPatient.service}
-            onChange={handleNewPatientChange}
-            placeholder="Dịch vụ điều trị"
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
-          <button
-            onClick={handleAddNewPatient}
-            className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition"
-          >
-            Thêm bệnh nhân
-          </button>
-        </div>
+        <Form
+          layout="vertical"
+          onFinish={(values) => {
+            const newId =
+              appointments.length > 0
+                ? Math.max(...appointments.map((a) => a.id)) + 1
+                : 1;
+            const newAppt = {
+              id: newId,
+              ...values,
+              doctorName: values.doctor,
+              status: "Chưa đến",
+            };
+            setAppointments((prev) => [...prev, newAppt]);
+          }}
+          className="space-y-4"
+        >
+          <Row gutter={24}>
+            <Col span={8}>
+              <Form.Item
+                label="Họ tên bệnh nhân"
+                name="fullName"
+                rules={[{ required: true, message: "Họ tên là bắt buộc" }]}
+              >
+                <Input
+                  prefix={<User className="w-5 h-5 text-gray-400" />}
+                  placeholder="Nhập họ tên"
+                  className="border border-gray-300 rounded-lg"
+                  style={{
+                    height: "42px",
+                    padding: "0 12px",
+                    lineHeight: "42px",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Ngày khám"
+                name="date"
+                rules={[{ required: true, message: "Ngày hẹn là bắt buộc" }]}
+              >
+                <Input
+                  type="date"
+                  className="border border-gray-300 rounded-lg"
+                  style={{
+                    height: "42px",
+                    padding: "0 12px",
+                    lineHeight: "42px",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Giờ hẹn"
+                name="time"
+                rules={[{ required: true, message: "Giờ hẹn là bắt buộc" }]}
+              >
+                <div className="flex items-center border border-gray-300 rounded-lg px-3 h-[42px] focus-within:ring-2 focus-within:ring-red-500">
+                  <Clock className="w-5 h-5 text-gray-400 mr-2" />
+                  <Select
+                    placeholder="Chọn giờ hẹn"
+                    className="flex-1 border-none shadow-none"
+                    size="large"
+                    allowClear
+                    bordered={false}
+                  >
+                    {timeSlots.map((slot) => (
+                      <Option key={slot.value} value={slot.value}>
+                        {slot.label}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={24}>
+            <Col span={12}>
+              <Form.Item
+                label="Loại khám"
+                name="serviceType"
+                rules={[{ required: true, message: "Loại khám là bắt buộc" }]}
+              >
+                <Select
+                  placeholder="Chọn loại khám"
+                  className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                  style={{ height: "42px" }}
+                >
+                  <Option value="Khám mới">Khám mới</Option>
+                  <Option value="Tái khám">Tái khám</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col span={12}>
+              <Form.Item
+                label="Dịch vụ cụ thể"
+                name="service"
+                rules={[{ required: true, message: "Dịch vụ là bắt buộc" }]}
+              >
+                <Select
+                  placeholder="Chọn dịch vụ"
+                  className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                  style={{ height: "42px" }}
+                >
+                  <Option value="Khám HIV cơ bản">Khám HIV cơ bản</Option>
+                  <Option value="Xét nghiệm tải lượng virus HIV">Xét nghiệm tải lượng virus HIV</Option>
+                  <Option value="Xét nghiệm CD4">Xét nghiệm CD4</Option>
+                  <Option value="Tư vấn và điều trị dự phòng">Tư vấn và điều trị dự phòng</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+
+
+          <Form.Item>
+            <button
+              type="submit"
+              className="w-full bg-red-600 text-white hover:bg-red-700 rounded-md transition-all duration-300"
+              style={{
+                height: "42px",
+                lineHeight: "42px",
+                padding: "0 16px",
+              }}
+            >
+              Thêm bệnh nhân
+            </button>
+
+          </Form.Item>
+        </Form>
       </div>
+
     </div>
   );
 }

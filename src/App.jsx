@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import MainLayout from "./layouts/MainLayout";
@@ -19,8 +19,6 @@ import Support from "./features/patientdashboard/Support";
 import Reminder from "./features/patientdashboard/Reminder";
 import History from "./features/patientdashboard/History";
 
-
-
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
 import ResultPage from "./features/treatments/ResultPage";
@@ -34,30 +32,43 @@ import PatientProfile from "./features/users/PatientProfile";
 import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmentForm";
 import PaymentPage from "./features/payment/PaymentPage";
 
-
-// 👉 Thêm ChatWidget ở đây:
 import ChatWidget from "./components/ChatWidget";
 import StaffDasshboard from "./features/dashboard/StaffDashboard";
 import KnowledgePage from "./pages/KnowledgePage";
 import DoctorsPage from "./pages/DoctorsPage";
-
-
-
+import ServicesPage from "./pages/ServicesPage";
 
 export default function App() {
+  // State lưu thông tin user
+  const [user, setUser] = useState(() => {
+    // Khi load app, lấy user từ localStorage nếu có
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+  // Có thể thêm useEffect để đồng bộ user state với localStorage (nếu muốn)
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
+
   return (
     <Router>
       <Routes>
         {/* Các route sử dụng MainLayout */}
 
-        <Route path="/users"
+        <Route
+          path="/users"
           element={
             <MainLayout>
               <PatientProfile />
             </MainLayout>
           }
         />
-        
+
         <Route
           path="/treatment-results"
           element={
@@ -74,7 +85,7 @@ export default function App() {
             </MainLayout>
           }
         />
-        
+
         <Route
           path="/treatment"
           element={
@@ -83,7 +94,7 @@ export default function App() {
             </MainLayout>
           }
         />
-         <Route
+        <Route
           path="/knowledge"
           element={
             <MainLayout>
@@ -150,7 +161,8 @@ export default function App() {
           }
         />
 
-        <Route path="/history"
+        <Route
+          path="/history"
           element={
             <MainLayout>
               <History />
@@ -158,14 +170,16 @@ export default function App() {
           }
         />
 
-        <Route path="/admin"
+        <Route
+          path="/admin"
           element={
             <MainLayout>
               <AdminDashboard />
             </MainLayout>
           }
         />
-        <Route path="/doctor"
+        <Route
+          path="/doctor"
           element={
             <MainLayout>
               <DoctorDashboard />
@@ -191,11 +205,11 @@ export default function App() {
 
         {/* Các route sử dụng AuthLayout */}
         <Route
-          path="/login" element={
+          path="/login"
+          element={
             <MainLayout>
-
-
-              <LoginPage />
+              {/* Truyền setUser để cập nhật user state khi login */}
+              <LoginPage setUser={setUser} />
             </MainLayout>
           }
         />
@@ -219,7 +233,7 @@ export default function App() {
           path="/staff"
           element={
             <MainLayout>
-              <StaffDasshboard/>
+              <StaffDasshboard />
             </MainLayout>
           }
         />
@@ -248,6 +262,14 @@ export default function App() {
           }
         />
         <Route
+          path="/services"
+          element={
+            <AuthLayout>
+              <ServicesPage />
+            </AuthLayout>
+          }
+        />
+        <Route
           path="/userappointments"
           element={
             <AuthLayout>
@@ -267,7 +289,7 @@ export default function App() {
         />
       </Routes>
 
-      {/* 👉 ChatWidget nằm ngoài Routes để luôn hiển thị */}
+      {/* ChatWidget luôn hiển thị ngoài Routes */}
       <ChatWidget />
     </Router>
   );
