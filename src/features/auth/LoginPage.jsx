@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { User, Lock, Mail, AlertCircle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { User, Lock, Mail } from 'lucide-react';
 
-export default function LoginPage() {
+export default function LoginPage({ setUser }) {
   const [credentials, setCredentials] = useState({
     identifier: '',
     password: '',
   });
   const [errors, setErrors] = useState({});
   const [forgotEmail, setForgotEmail] = useState('');
+  const navigate = useNavigate();
 
   const currentDate = new Date().toLocaleString('vi-VN', {
     hour: '2-digit',
@@ -32,11 +33,17 @@ export default function LoginPage() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!credentials.identifier) newErrors.identifier = 'Email hoặc Họ tên là bắt buộc';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(credentials.identifier) && !credentials.identifier.match(/^[a-zA-Z\s]+$/))
+    if (!credentials.identifier)
+      newErrors.identifier = 'Email hoặc Họ tên là bắt buộc';
+    else if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(credentials.identifier) &&
+      !credentials.identifier.match(/^[a-zA-Z\s]+$/)
+    )
       newErrors.identifier = 'Email hoặc Họ tên không hợp lệ';
-    if (!credentials.password) newErrors.password = 'Mật khẩu là bắt buộc';
-    else if (credentials.password.length < 6) newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+    if (!credentials.password)
+      newErrors.password = 'Mật khẩu là bắt buộc';
+    else if (credentials.password.length < 6)
+      newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -45,23 +52,16 @@ export default function LoginPage() {
     e.preventDefault();
     if (validateForm()) {
       try {
-        console.log('Dữ liệu gửi login:', {
-          email: credentials.identifier,
-          password: credentials.password
-        });
-
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
-
 
         const response = await fetch('http://localhost:8080/api/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-
           body: JSON.stringify({
-            email: credentials.identifier, // Sử dụng identifier từ form
+            username: credentials.identifier,
             password: credentials.password,
           }),
           signal: controller.signal,
@@ -75,17 +75,28 @@ export default function LoginPage() {
         }
 
         const data = await response.json();
-        console.log('Phản hồi từ server:', data); // Thêm log để kiểm tra phản hồi
+        console.log('Phản hồi từ server:', data);
         if (data.message.includes('thành công')) {
-          localStorage.setItem('user', JSON.stringify({
+          // Lưu user vào localStorage
+          localStorage.setItem(
+            'user',
+            JSON.stringify({
+              fullName: data.fullName,
+              role: data.role,
+            })
+          );
+
+          // Cập nhật user state ở App
+          setUser({
             fullName: data.fullName,
-            role: data.role, // Lưu role (USER hoặc DOCTOR)
-          }));
-          // Chuyển hướng dựa trên role
+            role: data.role,
+          });
+
+          // Điều hướng theo role
           if (data.role === 'DOCTOR') {
-            window.location.href = '/doctor';
+            navigate('/doctor');
           } else {
-            window.location.href = '/'; // Giả định USER
+            navigate('/'); // hoặc trang success của user
           }
         } else {
           setErrors({ server: data.message || 'Đăng nhập thất bại' });
@@ -109,22 +120,22 @@ export default function LoginPage() {
       setErrors((prev) => ({ ...prev, forgotEmail: 'Email không hợp lệ' }));
     } else {
       try {
-        console.log('Dữ liệu gửi quên mật khẩu:', {
-          email: forgotEmail
-        });
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // Timeout 5 giây
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-        const response = await fetch('http://localhost:8080/api/auth/forgot-password', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: forgotEmail, // Gửi email để yêu cầu đặt lại mật khẩu
-          }),
-          signal: controller.signal,
-        });
+        const response = await fetch(
+          'http://localhost:8080/api/auth/forgot-password',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: forgotEmail,
+            }),
+            signal: controller.signal,
+          }
+        );
 
         clearTimeout(timeoutId);
 
@@ -148,7 +159,8 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex flex-col">
-      <div className="flex-1 flex items-center justify-center px-4">
+      <div className="flex-1 flex items-start justify-center px-4 pt-8">
+
         <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-8 grid grid-cols-1 md:grid-cols-2 gap-8 opacity-0 translate-y-4 animate-fade-in">
           {/* Đăng nhập */}
           <div>
@@ -158,7 +170,9 @@ export default function LoginPage() {
             </h2>
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email hoặc Họ và Tên</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email hoặc Họ và Tên
+                </label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                   <Mail className="w-5 h-5 text-gray-400 mx-3" />
                   <input
@@ -171,10 +185,14 @@ export default function LoginPage() {
                     onChange={handleChange}
                   />
                 </div>
-                {errors.identifier && <p className="text-red-600 text-sm mt-1">{errors.identifier}</p>}
+                {errors.identifier && (
+                  <p className="text-red-600 text-sm mt-1">{errors.identifier}</p>
+                )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Mật khẩu
+                </label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                   <Lock className="w-5 h-5 text-gray-400 mx-3" />
                   <input
@@ -187,7 +205,9 @@ export default function LoginPage() {
                     onChange={handleChange}
                   />
                 </div>
-                {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
+                {errors.password && (
+                  <p className="text-red-600 text-sm mt-1">{errors.password}</p>
+                )}
               </div>
               <button
                 type="submit"
@@ -195,9 +215,15 @@ export default function LoginPage() {
               >
                 Đăng nhập
               </button>
+              {errors.server && (
+                <p className="text-red-600 text-center mt-2">{errors.server}</p>
+              )}
               <p className="mt-4 text-center text-gray-600">
                 Chưa có tài khoản?{' '}
-                <Link to="/signup" className="text-red-600 hover:text-red-700 font-medium">
+                <Link
+                  to="/signup"
+                  className="text-red-600 hover:text-red-700 font-medium"
+                >
                   Đăng ký ngay
                 </Link>
               </p>
@@ -209,10 +235,14 @@ export default function LoginPage() {
 
           {/* Quên mật khẩu */}
           <div>
-            <p className="text-sm text-gray-600 mb-4">Bạn quên mật khẩu? Nhập địa chỉ email để lấy lại mật khẩu qua email.</p>
+            <p className="text-sm text-gray-600 mb-4">
+              Bạn quên mật khẩu? Nhập địa chỉ email để lấy lại mật khẩu qua email.
+            </p>
             <form onSubmit={handleForgotSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email
+                </label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                   <Mail className="w-5 h-5 text-gray-400 mx-3" />
                   <input
@@ -223,7 +253,9 @@ export default function LoginPage() {
                     onChange={handleForgotChange}
                   />
                 </div>
-                {errors.forgotEmail && <p className="text-red-600 text-sm mt-1">{errors.forgotEmail}</p>}
+                {errors.forgotEmail && (
+                  <p className="text-red-600 text-sm mt-1">{errors.forgotEmail}</p>
+                )}
               </div>
               <button
                 type="submit"
