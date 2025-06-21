@@ -1,26 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, FileText, Users, AlertTriangle, UserPlus, RefreshCw } from 'lucide-react';
+import {
+  Calendar,
+  FileText,
+  Users,
+  AlertTriangle,
+  RefreshCw,
+} from 'lucide-react';
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
+import 'dayjs/locale/vi';
+dayjs.locale('vi');
 
 export default function DoctorDashboard() {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
+  const [slots, setSlots] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
 
-  // Ngày hiện tại (01:05 AM +07, 13/06/2025)
-  const today = new Date('2025-06-13T01:05:00+07:00').toISOString().split('T')[0];
+  // Cấu hình slot
+  const SLOT_DURATION = 60;
+  const SLOTS_PER_DAY = 8;
+  const MAX_BOOKINGS_PER_SLOT = 2;
 
-  useEffect(() => {
-    // Giả lập fetch dữ liệu lịch hẹn hôm nay
-    setTimeout(() => {
-      setAppointments([
+  const generateTimeSlots = () => {
+    const slots = [];
+    const startHour = 8;
+    for (let i = 0; i < SLOTS_PER_DAY; i++) {
+      const start = `${(startHour + i).toString().padStart(2, '0')}:00`;
+      const end = `${(startHour + i + 1).toString().padStart(2, '0')}:00`;
+      slots.push({ id: i + 1, time: `${start} - ${end}`, bookings: [] });
+    }
+    return slots;
+  };
+
+  const getAppointmentsForDate = (date) => {
+    const dateStr = dayjs(date).format('YYYY-MM-DD');
+    if (dateStr === '2025-06-13') {
+      return [
         { id: 1, time: '09:00', patient: 'Nguyễn Văn B', purpose: 'Khám định kỳ' },
         { id: 2, time: '10:30', patient: 'Trần Thị C', purpose: 'Cập nhật phác đồ' },
         { id: 3, time: '13:00', patient: 'Phạm Văn D', purpose: 'Tư vấn uống thuốc' },
-      ]);
-      setIsLoading(false);
-    }, 1000);
-  }, []);
+      ];
+    } else if (dateStr === '2025-06-14') {
+      return [
+        { id: 4, time: '08:00', patient: 'Lê Thị E', purpose: 'Xét nghiệm định kỳ' },
+        { id: 5, time: '14:00', patient: 'Ngô Văn F', purpose: 'Tư vấn thuốc mới' },
+      ];
+    } else {
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    const fetchedAppointments = getAppointmentsForDate(selectedDate);
+    const updatedSlots = generateTimeSlots().map((slot) => {
+      const slotStartHour = parseInt(slot.time.split(':')[0]);
+      const slotAppointments = fetchedAppointments.filter((appt) => {
+        const apptHour = parseInt(appt.time.split(':')[0]);
+        return apptHour === slotStartHour;
+      });
+      return { ...slot, bookings: slotAppointments };
+    });
+
+    setAppointments(fetchedAppointments);
+    setSlots(updatedSlots);
+    setIsLoading(false);
+  }, [selectedDate]);
 
   const patients = [
     { id: 1, name: 'Nguyễn Văn B' },
@@ -43,12 +91,21 @@ export default function DoctorDashboard() {
           <p className="text-gray-500 text-lg">Theo dõi và quản lý điều trị HIV</p>
         </div>
 
-        {/* Lịch hẹn hôm nay */}
+        {/* Lịch hẹn slot */}
         <section className="bg-white rounded-2xl shadow-lg p-6 border-2 border-red-600 opacity-0 translate-y-4 animate-fade-in [animation-delay:0.2s]">
-          <h2 className="text-2xl font-bold text-red-700 mb-4 flex items-center gap-2">
-            <Calendar className="w-6 h-6" />
-            Lịch Hẹn Hôm Nay
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-red-700 flex items-center gap-2">
+              <Calendar className="w-6 h-6" />
+              Lịch Hẹn Trong Ngày
+            </h2>
+            <DatePicker
+              value={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+              format="DD/MM/YYYY"
+              className="border border-red-400 rounded px-3 py-1"
+            />
+          </div>
+
           {isLoading ? (
             <div className="space-y-4">
               {[...Array(3)].map((_, idx) => (
@@ -58,24 +115,34 @@ export default function DoctorDashboard() {
                 </div>
               ))}
             </div>
+          ) : slots.filter(slot => slot.bookings.length > 0).length === 0 ? (
+            <p className="text-gray-500 italic">Không có lịch hẹn cho ngày này.</p>
           ) : (
             <>
               <div className="space-y-3">
-                {appointments.map((appt) => (
+                {slots.filter(slot => slot.bookings.length > 0).map(slot => (
                   <div
-                    key={appt.id}
-                    className="p-4 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition cursor-pointer"
-                    onClick={() => navigate(`/doctorappointments/${appt.id}`)}
+                    key={slot.id}
+                    className="p-4 border border-red-200 bg-red-50 rounded-lg hover:bg-red-100 transition"
                   >
-                    <p className="text-gray-700 font-medium">
-                      {appt.time} - {appt.patient} - {appt.purpose}
+                    <p className="font-semibold text-red-700 mb-2">
+                      Slot {slot.id} ({slot.time}) - {slot.bookings.length} cuộc hẹn
                     </p>
+                    <ul className="text-gray-700 text-sm space-y-1">
+                      {slot.bookings.map(appt => (
+                        <li key={appt.id} className="flex justify-between">
+                          <span>{appt.time} - {appt.patient}</span>
+                          <span className="italic text-gray-500">{appt.purpose}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 ))}
               </div>
+
               <button
                 onClick={() => navigate('/doctorappointments')}
-                className="mt-4 w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-300"
+                className="mt-6 w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
                 Xem tất cả lịch hẹn
               </button>
@@ -83,10 +150,9 @@ export default function DoctorDashboard() {
           )}
         </section>
 
-        {/* Grid main */}
+        {/* Phác đồ và Bệnh nhân */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Phác đồ điều trị */}
-          <section className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200 opacity-0 translate-y-4 animate-fade-in [animation-delay:0.3s]">
+          <section className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200 animate-fade-in [animation-delay:0.3s]">
             <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
               <FileText className="w-5 h-5 text-red-500" />
               Phác Đồ Điều Trị
@@ -99,22 +165,21 @@ export default function DoctorDashboard() {
               </div>
               <button
                 onClick={() => navigate('/treatment')}
-                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-300"
+                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
               >
                 Tùy chỉnh phác đồ
               </button>
             </div>
           </section>
 
-          {/* Danh sách bệnh nhân */}
-          <section className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200 opacity-0 translate-y-4 animate-fade-in [animation-delay:0.3s]">
+          <section className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200 animate-fade-in [animation-delay:0.3s]">
             <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
               <Users className="w-5 h-5 text-red-500" />
               Bệnh Nhân Đang Điều Trị
             </h2>
             <ul className="space-y-3 text-gray-700">
               {patients.map((patient) => (
-                <li key={patient.id} className="flex justify-between border-b pb-2 hover:bg-gray-50 transition-colors">
+                <li key={patient.id} className="flex justify-between border-b pb-2 hover:bg-gray-50">
                   <span>{patient.name}</span>
                   <button
                     onClick={() => navigate(`/patients/${patient.id}`)}
@@ -124,23 +189,22 @@ export default function DoctorDashboard() {
                   </button>
                 </li>
               ))}
-
             </ul>
           </section>
         </div>
 
-        {/* Alerts */}
-        <section className="bg-white rounded-2xl shadow-lg p-6 border border-red-200 opacity-0 translate-y-4 animate-fade-in [animation-delay:0.4s]">
+        {/* Cảnh báo */}
+        <section className="bg-white rounded-2xl shadow-lg p-6 border border-red-200 animate-fade-in [animation-delay:0.4s]">
           <h2 className="text-xl font-bold text-red-700 mb-4 flex items-center gap-2">
             <AlertTriangle className="w-5 h-5 text-red-500" />
             Cảnh Báo & Nhắc Nhở
           </h2>
           <ul className="space-y-3 text-gray-700">
             {alerts.map((alert) => (
-              <li key={alert.id} className="flex items-center justify-between border-b pb-2 hover:bg-gray-50 transition-colors">
+              <li key={alert.id} className="flex items-center justify-between border-b pb-2 hover:bg-gray-50">
                 <span>{alert.patient} - {alert.message}</span>
                 <button
-                  onClick={() => navigate(`/patients/${alerts.findIndex(a => a.id === alert.id) + 1}`)}
+                  onClick={() => navigate(`/patients/${alert.id}`)}
                   className="text-sm text-red-600 hover:underline"
                 >
                   {alert.action}
@@ -149,7 +213,7 @@ export default function DoctorDashboard() {
             ))}
             <button
               onClick={() => navigate('/alerts')}
-              className="mt-4 w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-300"
+              className="mt-4 w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
             >
               <RefreshCw className="w-5 h-5 inline mr-2" />
               Cập nhật cảnh báo
