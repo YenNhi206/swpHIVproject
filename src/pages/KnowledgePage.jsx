@@ -123,7 +123,7 @@ export default function KnowledgePage() {
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 sm:px-6 lg:px-8 py-12">
       {/* Header Section */}
       <section className="text-center mb-16 max-w-5xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-red-700 mb-4 tracking-tight animate-slide-in">
+        <h1 className="text-3xl font-extrabold text-red-700 mb-4 tracking-tight animate-slide-in">
           Trang Kiến Thức HIV
         </h1>
         <p className="text-base text-gray-700 max-w-2xl mx-auto leading-relaxed font-medium">
@@ -133,7 +133,7 @@ export default function KnowledgePage() {
 
       {/* Thống Kê Về HIV (Giả lập) */}
       <section className="mb-20 max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2 animate-slide-in">
+        <h2 className="text-2xl font-bold text-red-600 mb-6 text-center flex items-center justify-center gap-2 animate-slide-in">
           <span></span> Thống Kê Về HIV tại Việt Nam
         </h2>
 
@@ -158,7 +158,7 @@ export default function KnowledgePage() {
 
         {/* Biểu đồ cải thiện nhờ ARV */}
         <div className="bg-white p-6 rounded-2xl shadow-md">
-          <h3 className="text-xl font-semibold text-center text-red-700 mb-4">Tỷ lệ điều trị ARV qua các năm</h3>
+          <h3 className="text-2xl font-bold text-center text-red-600 mb-4">Tỷ lệ điều trị ARV qua các năm</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={[
               { year: '2018', rate: 60 },
@@ -181,7 +181,7 @@ export default function KnowledgePage() {
 
       {/* Kiến Thức Nền Tảng */}
       <section className="mb-20 max-w-6xl mx-auto px-4">
-        <h3 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
+        <h3 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
           Kiến thức nền tảng về HIV/AIDS
         </h3>
 
@@ -234,7 +234,7 @@ export default function KnowledgePage() {
 
       {/* Hướng Dẫn Điều Trị*/}
       <section className="mb-16 max-w-5xl mx-auto">
-        <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
+        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
           <span></span> Hướng Dẫn Điều Trị
         </h2>
         <p className="text-base text-gray-700 mb-8 max-w-2xl mx-auto text-center leading-relaxed">
@@ -258,7 +258,7 @@ export default function KnowledgePage() {
 
       {/* Educational Library Section */}
       <section className="mb-16 max-w-5xl mx-auto">
-        <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
+        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
           <span></span> Thư Viện Tài Liệu Giáo Dục
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -350,7 +350,7 @@ export default function KnowledgePage() {
 
       {/* FAQ Section */}
       <section className="mb-16 max-w-5xl mx-auto">
-        <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
+        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
           <span></span> Câu Hỏi Thường Gặp (FAQ)
         </h2>
         <div className="space-y-4 max-w-3xl mx-auto">
@@ -387,7 +387,7 @@ export default function KnowledgePage() {
 
       {/* Blog Section */}
       <section className="mb-16 max-w-5xl mx-auto">
-        <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
+        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
           <span></span> Blog Chia Sẻ Kinh Nghiệm
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

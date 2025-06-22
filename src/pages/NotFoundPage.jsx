@@ -3,16 +3,6 @@ import { Link } from 'react-router-dom';
 import { XCircle, AlertTriangle } from 'lucide-react';
 
 export default function NotFoundPage() {
-  // Ngày giờ hiện tại (03:09 PM +07, 13/06/2025)
-  const currentDate = new Date('2025-06-13T15:09:00+07:00').toLocaleString('vi-VN', {
-    hour: '2-digit',
-    minute: '2-digit',
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour12: false,
-    timeZone: 'Asia/Ho_Chi_Minh',
-  });
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex items-center justify-center p-4">
@@ -23,7 +13,6 @@ export default function NotFoundPage() {
         <p className="text-gray-600 mb-6">
           Trang bạn đang cố truy cập không tồn tại hoặc đã bị xóa. Vui lòng kiểm tra lại hoặc liên hệ hỗ trợ nếu cần.
         </p>
-        <p className="text-sm text-gray-500 mb-6">Thời gian: {currentDate}</p>
         <div className="space-x-4">
           <Link
             to="/"
@@ -31,7 +20,7 @@ export default function NotFoundPage() {
           >
             Quay lại Trang chủ
           </Link>
-          
+
         </div>
       </div>
     </div>
