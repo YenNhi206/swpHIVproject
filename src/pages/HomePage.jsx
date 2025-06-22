@@ -24,7 +24,7 @@ export default function HomePage() {
       {/* Nội dung giới thiệu */}
       <div className="max-w-6xl mx-auto px-6 py-6 space-y-10">
         <header className="text-center mb-10">
-          <h1 className="text-4xl font-extrabold text-red-600">
+          <h1 className="text-3xl font-extrabold text-red-700">
             Chăm sóc và Hỗ trợ HIV – Vì một cuộc sống khỏe mạnh
           </h1>
         </header>

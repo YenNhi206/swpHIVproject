@@ -30,7 +30,7 @@ export default function AboutPage() {
       </div>
 
       <section className="mb-16">
-        <h1 className="text-4xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+        <h1 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
           Giới thiệu về hệ thống
         </h1>
 
@@ -38,7 +38,7 @@ export default function AboutPage() {
           {/* Gioiws thiệu về hệ thống */}
           {/* Giới thiệu về hệ thống */}
           <div className="bg-white p-6 rounded-xl shadow-sm">
-            <h2 className="text-2xl font-semibold text-red-600 mb-4 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-red-600 mb-4 flex items-center gap-2">
               Mục đích và Sứ mệnh
             </h2>
             <p className="text-gray-700 text-base leading-relaxed">
@@ -54,7 +54,7 @@ export default function AboutPage() {
 
 
           <div>
-            <h2 className="text-2xl font-semibold text-red-600 mb-4 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-red-600 mb-4 flex items-center gap-2">
               Chức năng chính
             </h2>
             <ul className="list-disc list-inside text-gray-800 space-y-2 leading-relaxed text-base">
@@ -84,7 +84,7 @@ export default function AboutPage() {
 
 
           <div>
-            <h2 className="text-2xl font-semibold text-red-600 mb-3 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-red-600 mb-3 flex items-center gap-2">
               Đội ngũ phát triển
             </h2>
             <p className="text-gray-700 leading-relaxed">
@@ -94,7 +94,7 @@ export default function AboutPage() {
 
           {/* Đối tượng phục vụ */}
           <div>
-            <h2 className="text-2xl font-semibold text-red-600 mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-red-600 mb-6 flex items-center gap-2">
               Đối tượng phục vụ
             </h2>
 
@@ -165,7 +165,7 @@ export default function AboutPage() {
 
           {/* Liên hệ */}
           <div>
-            <h2 className="text-2xl font-semibold text-red-600 mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-red-600 mb-6 flex items-center gap-2">
               Liên hệ
             </h2>
 

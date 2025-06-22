@@ -33,21 +33,17 @@ import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmen
 import PaymentPage from "./features/payment/PaymentPage";
 
 import ChatWidget from "./components/ChatWidget";
-import StaffDasshboard from "./features/dashboard/StaffDashboard";
+import StaffDashboard from "./features/dashboard/StaffDashboard";
 import KnowledgePage from "./pages/KnowledgePage";
 import DoctorsPage from "./pages/DoctorsPage";
 import ServicesPage from "./pages/ServicesPage";
-import Footer from "./components/Footer";
 
 export default function App() {
-  // State lưu thông tin user
   const [user, setUser] = useState(() => {
-    // Khi load app, lấy user từ localStorage nếu có
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  // Có thể thêm useEffect để đồng bộ user state với localStorage (nếu muốn)
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -59,135 +55,138 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        {/* Các route sử dụng MainLayout */}
-
         <Route
-          path="/users"
+          path="/"
           element={
-            <MainLayout>
-              <PatientProfile />
+            <MainLayout user={user} setUser={setUser}>
+              <HomePage />
             </MainLayout>
           }
         />
-
         <Route
-          path="/treatment-results"
+          path="/about"
           element={
-            <MainLayout>
-              <ResultPage />
+            <MainLayout user={user} setUser={setUser}>
+              <AboutPage />
             </MainLayout>
           }
         />
         <Route
           path="/listdoctor"
           element={
-            <MainLayout>
+            <MainLayout user={user} setUser={setUser}>
               <DoctorsPage />
-              <Footer />
             </MainLayout>
           }
         />
-
         <Route
-          path="/treatment"
+          path="/services"
           element={
-            <MainLayout>
-              <TreatmentList />
+            <MainLayout user={user} setUser={setUser}>
+              <ServicesPage />
             </MainLayout>
           }
         />
         <Route
           path="/knowledge"
           element={
-            <MainLayout>
+            <MainLayout user={user} setUser={setUser}>
               <KnowledgePage />
-              <Footer />
-
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/treatment"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <TreatmentList />
             </MainLayout>
           }
         />
         <Route
           path="/treatment/:id"
           element={
-            <MainLayout>
+            <MainLayout user={user} setUser={setUser}>
               <TreatmentDetail />
-              <Footer />
-
             </MainLayout>
           }
         />
         <Route
           path="/treatment/create"
           element={
-            <MainLayout>
+            <MainLayout user={user} setUser={setUser}>
               <CreateTreatment />
-              <Footer />
-
             </MainLayout>
           }
         />
-
         <Route
           path="/treatment/:id/edit"
           element={
-            <MainLayout>
+            <MainLayout user={user} setUser={setUser}>
               <EditTreatment />
-              <Footer />
-
             </MainLayout>
           }
         />
         <Route
-          path="/staff"
+          path="/treatment-results"
           element={
-            <MainLayout>
-              <StaffDasshboard />
+            <MainLayout user={user} setUser={setUser}>
+              <ResultPage />
             </MainLayout>
           }
         />
-
         <Route
-          path="/patient"
+          path="/users"
           element={
-            <MainLayout>
-              <PatientDashboard />
+            <MainLayout user={user} setUser={setUser}>
+              <PatientProfile />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/appointments"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <AppointmentForm />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/anonymous-appointment"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <AnonymousAppointmentForm />
             </MainLayout>
           }
         />
         <Route
           path="/support"
           element={
-            <MainLayout>
+            <MainLayout user={user} setUser={setUser}>
               <Support />
-              <Footer />
-
             </MainLayout>
           }
         />
         <Route
           path="/reminder"
           element={
-            <MainLayout>
+            <MainLayout user={user} setUser={setUser}>
               <Reminder />
-              <Footer />
-
             </MainLayout>
           }
         />
-
         <Route
           path="/history"
           element={
-            <MainLayout>
+            <MainLayout user={user} setUser={setUser}>
               <History />
             </MainLayout>
           }
         />
-
         <Route
           path="/admin"
           element={
-            <MainLayout>
+            <MainLayout user={user} setUser={setUser}>
               <AdminDashboard />
             </MainLayout>
           }
@@ -195,69 +194,32 @@ export default function App() {
         <Route
           path="/doctor"
           element={
-            <MainLayout>
+            <MainLayout user={user} setUser={setUser}>
               <DoctorDashboard />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/"
-          element={
-            <MainLayout>
-              <HomePage />
-              <Footer />
-
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/about"
-          element={
-            <MainLayout>
-              <AboutPage />
-              <Footer />
-
-            </MainLayout>
-          }
-        />
-
-        {/* Các route sử dụng AuthLayout */}
-        <Route
-          path="/login"
-          element={
-            <MainLayout>
-              {/* Truyền setUser để cập nhật user state khi login */}
-              <LoginPage setUser={setUser} />
-              <Footer />
-
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <MainLayout>
-              <SignupPage />
-              <Footer />
-
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/appointments"
-          element={
-            <MainLayout>
-              <AppointmentForm />
-              <Footer />
-
             </MainLayout>
           }
         />
         <Route
           path="/staff"
           element={
-            <MainLayout>
-              <StaffDasshboard />
+            <MainLayout user={user} setUser={setUser}>
+              <StaffDashboard />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <LoginPage setUser={setUser} />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <SignupPage />
             </MainLayout>
           }
         />
@@ -266,19 +228,7 @@ export default function App() {
           element={
             <AuthLayout>
               <PaymentPage />
-              <Footer />
-
             </AuthLayout>
-          }
-        />
-        <Route
-          path="/anonymous-appointment"
-          element={
-            <MainLayout>
-              <AnonymousAppointmentForm />
-              <Footer />
-
-            </MainLayout>
           }
         />
         <Route
@@ -290,39 +240,22 @@ export default function App() {
           }
         />
         <Route
-          path="/services"
-          element={
-            <AuthLayout>
-              <ServicesPage />
-              <Footer />
-
-            </AuthLayout>
-          }
-        />
-        <Route
           path="/userappointments"
           element={
             <AuthLayout>
               <UserAppointmentList />
-              <Footer />
-
             </AuthLayout>
           }
         />
-
-        {/* Trang không tìm thấy */}
         <Route
           path="*"
           element={
-            <MainLayout>
+            <MainLayout user={user} setUser={setUser}>
               <NotFoundPage />
-
             </MainLayout>
           }
         />
       </Routes>
-
-      {/* ChatWidget luôn hiển thị ngoài Routes */}
       <ChatWidget />
     </Router>
   );

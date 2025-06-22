@@ -68,7 +68,7 @@ export default function DoctorsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto space-y-8">
-        <h1 className="text-3xl font-bold text-red-600 text-center">Chuyên gia - bác sĩ</h1>
+        <h1 className="text-3xl font-extrabold text-red-700 text-center">Chuyên gia - bác sĩ</h1>
         <p className="text-center text-gray-600">
           Quy tụ các chuyên gia hàng đầu trong lĩnh vực HIV/AIDS và bệnh truyền nhiễm
         </p>

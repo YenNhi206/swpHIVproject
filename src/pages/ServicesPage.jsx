@@ -1,4 +1,8 @@
 import React from 'react';
+import { Row, Col, Card, Typography } from 'antd';
+import { CheckCircle, FileText, Stethoscope, UserPlus } from 'lucide-react';
+
+const { Title, Text, Paragraph } = Typography;
 
 const firstVisitServices = [
     {
@@ -47,45 +51,79 @@ function formatPrice(price) {
 }
 
 export default function ServicesPage() {
+
+
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold text-red-600 mb-8 text-center">Dịch vụ - Giá tiền</h1>
+        <div className="min-h-screen bg-gradient-to-b from-red-50 to-white p-8">
+            <div className="max-w-6xl mx-auto space-y-12">
+                <h1 className="text-3xl font-extrabold text-red-700 text-center">Dịch vụ - Giá tiền </h1>
 
-            <section className="mb-12">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-6 border-b border-red-600 pb-2">
-                    Dịch vụ khám lần đầu
-                </h2>
-                <div className="space-y-6">
-                    {firstVisitServices.map(service => (
-                        <div
-                            key={service.id}
-                            className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
-                        >
-                            <h3 className="text-xl font-semibold text-gray-800">{service.name}</h3>
-                            <p className="text-gray-600 mt-2">{service.description}</p>
-                            <p className="mt-4 text-red-600 font-bold text-lg">{formatPrice(service.price)}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
 
-            <section>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-6 border-b border-red-600 pb-2">
-                    Dịch vụ tái khám
-                </h2>
-                <div className="space-y-6">
-                    {followUpServices.map(service => (
-                        <div
-                            key={service.id}
-                            className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
-                        >
-                            <h3 className="text-xl font-semibold text-gray-800">{service.name}</h3>
-                            <p className="text-gray-600 mt-2">{service.description}</p>
-                            <p className="mt-4 text-red-600 font-bold text-lg">{formatPrice(service.price)}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
+                {/* Dịch vụ khám lần đầu */}
+                <section>
+                    <Title level={3} className="text-2xl font-bold text-red-600 mb-6 border-b-2 border-red-300 pb-2 animate-fade-in [animation-delay:0.2s]">
+                        <FileText className="w-6 h-6 inline mr-2" />
+                        Dịch vụ khám lần đầu
+                    </Title>
+                    <Row gutter={[24, 24]}>
+                        {firstVisitServices.map((service) => (
+                            <Col xs={24} sm={12} key={service.id}>
+                                <Card
+                                    hoverable
+                                    className="bg-white shadow-xl border-2 border-red-100 hover:border-red-300 transition-all duration-300 h-full animate-scale-fade-in"
+                                >
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                            <UserPlus className="w-5 h-5 text-red-500" />
+                                            {service.name}
+                                        </h3>
+                                        <Paragraph className="text-gray-600 mb-4 leading-relaxed">
+                                            {service.description}
+                                        </Paragraph>
+                                        <span className="text-2xl font-extrabold text-red-600 hover:text-red-700 transition-colors duration-300 border-b-2 border-red-200 pb-1 block">
+                                            {formatPrice(service.price)}
+                                        </span>
+
+                                    </div>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                </section>
+
+                {/* Dịch vụ tái khám */}
+                <section>
+                    <Title level={3} className="text-2xl font-bold text-red-600 mb-6 border-b-2 border-red-300 pb-2 animate-fade-in [animation-delay:0.3s]">
+                        <Stethoscope className="w-6 h-6 inline mr-2" />
+                        Dịch vụ tái khám
+                    </Title>
+                    <Row gutter={[24, 24]}>
+                        {followUpServices.map((service) => (
+                            <Col xs={24} sm={12} key={service.id}>
+                                <Card
+                                    hoverable
+                                    className="bg-white shadow-xl border-2 border-red-100 hover:border-red-300 transition-all duration-300 h-full animate-scale-fade-in"
+                                >
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                            <CheckCircle className="w-5 h-5 text-red-500" />
+                                            {service.name}
+                                        </h3>
+                                        <Paragraph className="text-gray-600 mb-4 leading-relaxed">
+                                            {service.description}
+                                        </Paragraph>
+                                        <span className="text-2xl font-extrabold text-red-600 hover:text-red-700 transition-colors duration-300 border-b-2 border-red-200 pb-1 block">
+                                            {formatPrice(service.price)}
+                                        </span>
+
+                                    </div>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                </section>
+
+            </div>
         </div>
     );
 }

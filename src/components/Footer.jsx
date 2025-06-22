@@ -3,7 +3,7 @@ export default function Footer() {
         <footer className="bg-white border-t">
             {/* Đối Tác Hỗ Trợ */}
             <div className="max-w-7xl mx-auto px-4 py-6">
-                <h2 className="text-2xl font-semibold text-red-600 mb-6 flex items-center justify-center gap-2">
+                <h2 className="text-2xl font-bold text-red-600 mb-6 flex items-center justify-center gap-2">
                     Đối tác hỗ trợ
                 </h2>
 
