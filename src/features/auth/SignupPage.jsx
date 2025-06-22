@@ -11,14 +11,7 @@ export default function SignupPage() {
   });
   const [errors, setErrors] = useState({});
 
-  const currentDate = new Date().toLocaleString('vi-VN', {
-    hour: '2-digit',
-    minute: '2-digit',
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour12: false,
-  });
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -133,7 +126,6 @@ export default function SignupPage() {
                 Đăng nhập
               </Link>
             </p>
-            <p className="text-sm text-gray-500 text-center mt-2">Thời gian: {currentDate}</p>
           </form>
         </div>
       </div>

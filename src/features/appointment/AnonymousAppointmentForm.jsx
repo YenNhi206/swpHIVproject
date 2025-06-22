@@ -4,6 +4,7 @@ import { Calendar, Stethoscope, Clock, AlertCircle } from 'lucide-react';
 
 export default function AnonymousAppointmentForm() {
   const [formData, setFormData] = useState({
+    salutation: '', // Danh xưng
     gender: '',
     reason: '',
     date: '',
@@ -30,6 +31,7 @@ export default function AnonymousAppointmentForm() {
 
   const validateForm = () => {
     const newErrors = {};
+    if (!formData.salutation) newErrors.salutation = 'Vui lòng chọn danh xưng';
     if (!formData.gender) newErrors.gender = 'Giới tính là bắt buộc';
     if (!formData.reason) newErrors.reason = 'Vấn đề cần khám là bắt buộc';
     else if (formData.reason.length < 10) newErrors.reason = 'Vui lòng nhập chi tiết hơn (ít nhất 10 ký tự)';
@@ -53,7 +55,8 @@ export default function AnonymousAppointmentForm() {
   };
 
   const doctors = ['Dr. Nguyễn Văn A', 'Dr. Trần Thị B', 'Dr. Phạm Văn C'];
-  const genderOptions = ['Nam', 'Nữ', 'Khác'];
+  const genderOptions = ['Nữ', 'Nam', 'Khác'];
+  const salutationOptions = ['Ông', 'Bà', 'Cô', 'Anh', 'Chị'];
   const timeSlots = [
     { label: '08:00 - 09:00', value: '08:00' },
     { label: '09:00 - 10:00', value: '09:00' },
@@ -72,27 +75,54 @@ export default function AnonymousAppointmentForm() {
           <Stethoscope className="w-6 h-6" />
           Đặt lịch tư vấn ẩn danh
         </h2>
+
+        {/* Danh xưng */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Danh xưng</label>
             <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-              <AlertCircle className="w-5 h-5 text-gray-400 mx-3" />
               <select
-                name="gender"
-                value={formData.gender}
+                name="salutation"
+                value={formData.salutation}
                 onChange={handleChange}
                 className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none"
                 required
               >
-                <option value="">Chọn giới tính</option>
-                {genderOptions.map((option, idx) => (
-                  <option key={idx} value={option}>{option}</option>
+                <option value="">Chọn danh xưng</option>
+                {salutationOptions.map((item, idx) => (
+                  <option key={idx} value={item}>{item}</option>
                 ))}
               </select>
+            </div>
+            {errors.salutation && <p className="text-red-600 text-sm mt-1">{errors.salutation}</p>}
+          </div>
+
+          {/* Giới tính theo radio */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
+            <div className="flex gap-6">
+              {genderOptions.map((gender) => (
+                <label
+                  key={gender}
+                  className="inline-flex items-center cursor-pointer select-none"
+                >
+                  <input
+                    type="radio"
+                    name="gender"
+                    value={gender}
+                    checked={formData.gender === gender}
+                    onChange={handleChange}
+                    className="form-radio text-red-600"
+                    required
+                  />
+                  <span className="ml-2">{gender}</span>
+                </label>
+              ))}
             </div>
             {errors.gender && <p className="text-red-600 text-sm mt-1">{errors.gender}</p>}
           </div>
 
+          {/* Ngày hẹn */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Ngày hẹn</label>
             <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -109,6 +139,7 @@ export default function AnonymousAppointmentForm() {
             {errors.date && <p className="text-red-600 text-sm mt-1">{errors.date}</p>}
           </div>
 
+          {/* Giờ hẹn */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Giờ hẹn</label>
             <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -129,6 +160,7 @@ export default function AnonymousAppointmentForm() {
             {errors.time && <p className="text-red-600 text-sm mt-1">{errors.time}</p>}
           </div>
 
+          {/* Chọn bác sĩ */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Chọn bác sĩ</label>
             <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -149,7 +181,7 @@ export default function AnonymousAppointmentForm() {
             {errors.doctor && <p className="text-red-600 text-sm mt-1">{errors.doctor}</p>}
           </div>
 
-          {/* Vấn đề */}
+          {/* Vấn đề cần tư vấn */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả vấn đề cần tư vấn</label>
             <textarea
@@ -164,7 +196,7 @@ export default function AnonymousAppointmentForm() {
             {errors.reason && <p className="text-red-600 text-sm mt-1">{errors.reason}</p>}
           </div>
 
-
+          {/* Nút thao tác */}
           <div className="flex justify-between gap-6 mt-6">
             <button
               type="button"
