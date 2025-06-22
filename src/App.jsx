@@ -37,6 +37,7 @@ import StaffDasshboard from "./features/dashboard/StaffDashboard";
 import KnowledgePage from "./pages/KnowledgePage";
 import DoctorsPage from "./pages/DoctorsPage";
 import ServicesPage from "./pages/ServicesPage";
+import Footer from "./components/Footer";
 
 export default function App() {
   // State lưu thông tin user
@@ -82,6 +83,7 @@ export default function App() {
           element={
             <MainLayout>
               <DoctorsPage />
+              <Footer />
             </MainLayout>
           }
         />
@@ -99,6 +101,8 @@ export default function App() {
           element={
             <MainLayout>
               <KnowledgePage />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -107,6 +111,8 @@ export default function App() {
           element={
             <MainLayout>
               <TreatmentDetail />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -115,6 +121,8 @@ export default function App() {
           element={
             <MainLayout>
               <CreateTreatment />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -124,6 +132,8 @@ export default function App() {
           element={
             <MainLayout>
               <EditTreatment />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -149,6 +159,8 @@ export default function App() {
           element={
             <MainLayout>
               <Support />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -157,6 +169,8 @@ export default function App() {
           element={
             <MainLayout>
               <Reminder />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -191,6 +205,8 @@ export default function App() {
           element={
             <MainLayout>
               <HomePage />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -199,6 +215,8 @@ export default function App() {
           element={
             <MainLayout>
               <AboutPage />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -210,6 +228,8 @@ export default function App() {
             <MainLayout>
               {/* Truyền setUser để cập nhật user state khi login */}
               <LoginPage setUser={setUser} />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -218,6 +238,8 @@ export default function App() {
           element={
             <MainLayout>
               <SignupPage />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -226,6 +248,8 @@ export default function App() {
           element={
             <MainLayout>
               <AppointmentForm />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -242,6 +266,8 @@ export default function App() {
           element={
             <AuthLayout>
               <PaymentPage />
+              <Footer />
+
             </AuthLayout>
           }
         />
@@ -250,6 +276,8 @@ export default function App() {
           element={
             <MainLayout>
               <AnonymousAppointmentForm />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -266,6 +294,8 @@ export default function App() {
           element={
             <AuthLayout>
               <ServicesPage />
+              <Footer />
+
             </AuthLayout>
           }
         />
@@ -274,6 +304,8 @@ export default function App() {
           element={
             <AuthLayout>
               <UserAppointmentList />
+              <Footer />
+
             </AuthLayout>
           }
         />
@@ -284,6 +316,7 @@ export default function App() {
           element={
             <MainLayout>
               <NotFoundPage />
+
             </MainLayout>
           }
         />

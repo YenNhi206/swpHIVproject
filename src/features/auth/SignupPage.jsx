@@ -43,15 +43,69 @@ export default function SignupPage() {
   };
 
   const handleRegisterSubmit = async (e) => {
-  e.preventDefault();
-  if (validateRegisterForm()) {
+    e.preventDefault();
+    if (validateRegisterForm()) {
+      const payload = {
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+      };
+      console.log('Dữ liệu gửi tới /api/auth/register:', payload); // Log dữ liệu
+      try {
+        const response = await fetch('http://localhost:8080/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setMessage('Đăng ký thành công! Vui lòng nhập OTP được gửi đến email.');
+          setIsOtpStep(true);
+        } else {
+          setMessage(data.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+        }
+      } catch (error) {
+        setMessage('Lỗi kết nối. Vui lòng thử lại.');
+      }
+    }
+  };
+
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+    if (validateOtpForm()) {
+      const payload = {
+        email: formData.email,
+        otp: formData.otp,
+      };
+      console.log('Dữ liệu gửi tới /api/auth/register-verify-otp:', payload); // Log dữ liệu
+      try {
+        const response = await fetch('http://localhost:8080/api/auth/register-verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setMessage('Xác minh OTP thành công! Tài khoản đã được kích hoạt.');
+          setTimeout(() => navigate('/login'), 2000);
+        } else {
+          setMessage(data.message || 'Xác minh OTP thất bại. Vui lòng thử lại.');
+        }
+      } catch (error) {
+        setMessage('Lỗi kết nối. Vui lòng thử lại.');
+      }
+    }
+  };
+
+  const handleResendOtp = async () => {
     const payload = {
       fullName: formData.fullName,
       email: formData.email,
       password: formData.password,
       confirmPassword: formData.confirmPassword,
     };
-    console.log('Dữ liệu gửi tới /api/auth/register:', payload); // Log dữ liệu
+    console.log('Dữ liệu gửi tới /api/auth/register (gửi lại OTP):', payload); // Log dữ liệu
     try {
       const response = await fetch('http://localhost:8080/api/auth/register', {
         method: 'POST',
@@ -60,68 +114,14 @@ export default function SignupPage() {
       });
       const data = await response.json();
       if (response.ok) {
-        setMessage('Đăng ký thành công! Vui lòng nhập OTP được gửi đến email.');
-        setIsOtpStep(true);
+        setMessage('OTP mới đã được gửi đến email của bạn.');
       } else {
-        setMessage(data.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+        setMessage(data.message || 'Gửi lại OTP thất bại. Vui lòng thử lại.');
       }
     } catch (error) {
       setMessage('Lỗi kết nối. Vui lòng thử lại.');
     }
-  }
-};
-
- const handleOtpSubmit = async (e) => {
-  e.preventDefault();
-  if (validateOtpForm()) {
-    const payload = {
-      email: formData.email,
-      otp: formData.otp,
-    };
-    console.log('Dữ liệu gửi tới /api/auth/register-verify-otp:', payload); // Log dữ liệu
-    try {
-      const response = await fetch('http://localhost:8080/api/auth/register-verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setMessage('Xác minh OTP thành công! Tài khoản đã được kích hoạt.');
-        setTimeout(() => navigate('/login'), 2000);
-      } else {
-        setMessage(data.message || 'Xác minh OTP thất bại. Vui lòng thử lại.');
-      }
-    } catch (error) {
-      setMessage('Lỗi kết nối. Vui lòng thử lại.');
-    }
-  }
-};
-
-  const handleResendOtp = async () => {
-  const payload = {
-    fullName: formData.fullName,
-    email: formData.email,
-    password: formData.password,
-    confirmPassword: formData.confirmPassword,
   };
-  console.log('Dữ liệu gửi tới /api/auth/register (gửi lại OTP):', payload); // Log dữ liệu
-  try {
-    const response = await fetch('http://localhost:8080/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      setMessage('OTP mới đã được gửi đến email của bạn.');
-    } else {
-      setMessage(data.message || 'Gửi lại OTP thất bại. Vui lòng thử lại.');
-    }
-  } catch (error) {
-    setMessage('Lỗi kết nối. Vui lòng thử lại.');
-  }
-};
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex flex-col">
