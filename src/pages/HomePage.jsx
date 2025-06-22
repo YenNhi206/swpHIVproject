@@ -55,23 +55,23 @@ export default function HomePage() {
               HỆ THỐNG CHUYÊN SÂU ĐIỀU TRỊ HIV
             </p>
             <h2 className="text-4xl font-extrabold text-gray-900 mb-4 leading-snug">
-              🏥 Giới thiệu cơ sở y tế
+              Giới thiệu cơ sở y tế
             </h2>
             <p className="text-gray-700 text-lg leading-relaxed mb-6">
               Chúng tôi là cơ sở y tế chuyên sâu trong điều trị HIV, với đội ngũ bác sĩ giàu kinh nghiệm, tận tâm và hệ thống trang thiết bị hiện đại, bảo mật. Mục tiêu là mang lại hy vọng và sức khỏe bền vững cho bệnh nhân.
             </p>
             <ul className="space-y-3 mb-6">
               <li className="flex items-center text-gray-700">
-                ✅ Đội ngũ chuyên gia y tế hàng đầu về HIV/AIDS
+                Đội ngũ chuyên gia y tế hàng đầu về HIV/AIDS
               </li>
               <li className="flex items-center text-gray-700">
-                ✅ Cơ sở vật chất hiện đại, bảo mật thông tin
+                Cơ sở vật chất hiện đại, bảo mật thông tin
               </li>
               <li className="flex items-center text-gray-700">
-                ✅ Chương trình chăm sóc toàn diện, hỗ trợ tâm lý
+                Chương trình chăm sóc toàn diện, hỗ trợ tâm lý
               </li>
               <li className="flex items-center text-gray-700">
-                ✅ Đồng hành cùng bệnh nhân trong suốt quá trình điều trị
+                Đồng hành cùng bệnh nhân trong suốt quá trình điều trị
               </li>
             </ul>
           </div>
@@ -91,7 +91,7 @@ export default function HomePage() {
 
           <div className="flex flex-col justify-start space-y-6 h-full">
             <h2 className="text-3xl font-bold text-red-600 mb-4">
-              📘 Tài liệu giáo dục & giảm kỳ thị
+              Tài liệu giáo dục & giảm kỳ thị
             </h2>
 
             {[
@@ -136,7 +136,7 @@ export default function HomePage() {
         {/* Tin tức và bài báo */}
         <section>
           <h2 className="text-3xl font-bold text-red-600 mb-8 text-center">
-            📰 Tin tức & Bài báo về HIV
+            Tin tức & Bài báo về HIV
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -199,22 +199,19 @@ export default function HomePage() {
             {/* Cột 1: Hành động khi nghi nhiễm HIV */}
             <div className="bg-white p-8 object-cover rounded-xl shadow-md">
               <h2 className="text-3xl font-bold text-red-600 mb-8">
-                🧭 Nên làm gì khi có nghi vấn nhiễm HIV?
+                Nên làm gì khi có nghi vấn nhiễm HIV?
               </h2>
               <div className="space-y-6">
                 {[
                   {
-                    icon: "📍",
                     title: "Bước 1: Tìm cơ sở y tế",
                     desc: "Tìm một cơ sở y tế gần bạn hoặc trang y tế có cung cấp dịch vụ tư vấn và xét nghiệm HIV.",
                   },
                   {
-                    icon: "🧪",
                     title: "Bước 2: Xét nghiệm HIV",
                     desc: "Xét nghiệm là cách duy nhất để biết bạn có nhiễm HIV hay không. Hoàn toàn bảo mật.",
                   },
                   {
-                    icon: "💊",
                     title: "Bước 3: Điều trị & sống khỏe",
                     desc: "Nếu dương tính, bạn sẽ được điều trị ARV và hỗ trợ để sống khỏe mạnh như người bình thường.",
                   },
@@ -235,22 +232,19 @@ export default function HomePage() {
             {/* Cột 2: Tại sao chọn dịch vụ */}
             <div className="bg-white p-8 object-cover rounded-xl shadow-md">
               <h2 className="text-3xl font-bold text-red-600 mb-8">
-                ❤️ Tại sao chọn dịch vụ y tế của chúng tôi?
+                Tại sao chọn dịch vụ y tế của chúng tôi?
               </h2>
               <div className="space-y-6">
                 {[
                   {
-                    icon: "🩺",
                     title: "Đội ngũ y bác sĩ tận tâm",
                     desc: "Chúng tôi có đội ngũ chuyên gia nhiều năm kinh nghiệm trong chăm sóc và điều trị HIV, luôn lắng nghe và đồng hành cùng bạn.",
                   },
                   {
-                    icon: "🔒",
                     title: "Bảo mật tuyệt đối",
                     desc: "Mọi thông tin cá nhân và kết quả xét nghiệm của bạn được bảo mật nghiêm ngặt, đảm bảo quyền riêng tư tối đa.",
                   },
                   {
-                    icon: "💡",
                     title: "Giáo dục và hỗ trợ toàn diện",
                     desc: "Không chỉ điều trị, chúng tôi cung cấp tài liệu giáo dục, hỗ trợ tâm lý và cộng đồng để bạn sống tích cực và tự tin hơn.",
                   },
