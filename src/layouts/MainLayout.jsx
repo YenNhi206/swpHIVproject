@@ -9,7 +9,6 @@ export default function MainLayout({ children }) {
       <Navbar />
       <Breadcrumb />
       <main className="max-w-7xl mx-auto p-6">{children}</main>
-      <Footer />
     </div>
   );
 }
