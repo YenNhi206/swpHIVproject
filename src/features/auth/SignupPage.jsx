@@ -35,12 +35,15 @@ export default function SignupPage() {
   };
 
   const validateOtpForm = () => {
-    const newErrors = {};
-    if (!formData.otp) newErrors.otp = 'OTP là bắt buộc';
-    else if (!/^\d{6}$/.test(formData.otp)) newErrors.otp = 'OTP phải là 6 chữ số';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const newErrors = {};
+  if (!formData.otp) {
+    newErrors.otp = 'OTP là bắt buộc';
+  } else if (!/^[A-Z0-9]{6}$/.test(formData.otp)) {
+    newErrors.otp = 'OTP phải gồm 6 ký tự chữ in hoa và số';
+  }
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
