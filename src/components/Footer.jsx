@@ -4,7 +4,7 @@ export default function Footer() {
             {/* Đối Tác Hỗ Trợ */}
             <div className="max-w-7xl mx-auto px-4 py-6">
                 <h2 className="text-2xl font-semibold text-red-600 mb-6 flex items-center justify-center gap-2">
-                    🤝 Đối tác hỗ trợ
+                    Đối tác hỗ trợ
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -61,7 +61,7 @@ export default function Footer() {
                                 rel="noopener noreferrer"
                                 className="text-red-600 hover:underline text-sm font-medium mt-auto"
                             >
-                                👉 {partner.linkLabel}
+                                {partner.linkLabel}
                             </a>
                         </div>
                     ))}

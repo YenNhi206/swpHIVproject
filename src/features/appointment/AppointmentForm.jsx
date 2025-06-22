@@ -17,14 +17,7 @@ export default function AppointmentForm() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  const currentDate = new Date().toLocaleString('vi-VN', {
-    hour: '2-digit',
-    minute: '2-digit',
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour12: false,
-  });
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,7 +58,7 @@ export default function AppointmentForm() {
   };
 
   const doctors = ['Dr. Nguyễn Văn A', 'Dr. Trần Thị B', 'Dr. Phạm Văn C'];
-  const genderOptions = ['Nam', 'Nữ', 'Khác'];
+  const genderOptions = ['Nữ', 'Nam', 'Khác'];
   const timeSlots = [
     { label: '08:00 - 09:00', value: '08:00' },
     { label: '09:00 - 10:00', value: '09:00' },
@@ -78,8 +71,8 @@ export default function AppointmentForm() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white p-6">
-      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8 opacity-0 translate-y-4 animate-fade-in">
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white p-4">
+      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-10 opacity-0 translate-y-4 animate-fade-in">
         <h2 className="text-2xl font-bold text-red-700 mb-6 flex items-center gap-2">
           <Stethoscope className="w-6 h-6" />
           Đặt lịch hẹn
@@ -260,7 +253,6 @@ export default function AppointmentForm() {
             </button>
           </div>
 
-          <p className="text-sm text-gray-500 text-center mt-2">Thời gian: {currentDate}</p>
         </form>
       </div>
     </div>

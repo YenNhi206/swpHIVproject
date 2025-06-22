@@ -103,13 +103,11 @@ const treatmentGuides = [
     title: "Phác đồ điều trị ARV cơ bản",
     content:
       "Thuốc ARV giúp ngăn chặn sự phát triển của virus HIV trong cơ thể. Việc tuân thủ phác đồ điều trị rất quan trọng để duy trì sức khỏe và giảm nguy cơ lây nhiễm.",
-    icon: "💊",
   },
   {
     title: "Lời khuyên về dinh dưỡng và sinh hoạt",
     content:
       "Bổ sung đầy đủ dinh dưỡng, tập thể dục đều đặn, tránh căng thẳng và giữ tinh thần lạc quan giúp tăng cường hệ miễn dịch.",
-    icon: "🥗",
   },
 ];
 
@@ -134,9 +132,9 @@ export default function KnowledgePage() {
       </section>
 
       {/* Thống Kê Về HIV (Giả lập) */}
-np      <section className="mb-20 max-w-6xl mx-auto">
+      <section className="mb-20 max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2 animate-slide-in">
-          <span>📊</span> Thống Kê Về HIV tại Việt Nam
+          <span></span> Thống Kê Về HIV tại Việt Nam
         </h2>
 
         {/* Cards thống kê nhanh */}
@@ -184,13 +182,13 @@ np      <section className="mb-20 max-w-6xl mx-auto">
       {/* Kiến Thức Nền Tảng */}
       <section className="mb-20 max-w-6xl mx-auto px-4">
         <h3 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
-          🧠 Kiến thức nền tảng về HIV/AIDS
+          Kiến thức nền tảng về HIV/AIDS
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Card 1 */}
           <div className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200">
-            <span className="text-2xl">🧬</span>
+            <span className="text-2xl"></span>
             <div>
               <h4 className="text-lg font-semibold text-gray-900 mb-2">Các giai đoạn của HIV/AIDS</h4>
               <p className="text-sm text-gray-600 leading-relaxed">
@@ -201,7 +199,7 @@ np      <section className="mb-20 max-w-6xl mx-auto">
 
           {/* Card 2 */}
           <div className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200">
-            <span className="text-2xl">🧪</span>
+            <span className="text-2xl"></span>
             <div>
               <h4 className="text-lg font-semibold text-gray-900 mb-2">ARV là gì?</h4>
               <p className="text-sm text-gray-600 leading-relaxed">
@@ -212,7 +210,7 @@ np      <section className="mb-20 max-w-6xl mx-auto">
 
           {/* Card 3 */}
           <div className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200">
-            <span className="text-2xl">🧫</span>
+            <span className="text-2xl"></span>
             <div>
               <h4 className="text-lg font-semibold text-gray-900 mb-2">Cơ chế hoạt động của ARV</h4>
               <p className="text-sm text-gray-600 leading-relaxed">
@@ -223,7 +221,7 @@ np      <section className="mb-20 max-w-6xl mx-auto">
 
           {/* Card 4 */}
           <div className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200">
-            <span className="text-2xl">🧻</span>
+            <span className="text-2xl"></span>
             <div>
               <h4 className="text-lg font-semibold text-gray-900 mb-2">HIV khác gì với AIDS?</h4>
               <p className="text-sm text-gray-600 leading-relaxed">
@@ -237,7 +235,7 @@ np      <section className="mb-20 max-w-6xl mx-auto">
       {/* Hướng Dẫn Điều Trị*/}
       <section className="mb-16 max-w-5xl mx-auto">
         <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
-          <span>💉</span> Hướng Dẫn Điều Trị
+          <span></span> Hướng Dẫn Điều Trị
         </h2>
         <p className="text-base text-gray-700 mb-8 max-w-2xl mx-auto text-center leading-relaxed">
           Phương pháp điều trị HIV tiên tiến và lời khuyên thiết thực để sống tích cực, khỏe mạnh.
@@ -261,7 +259,7 @@ np      <section className="mb-20 max-w-6xl mx-auto">
       {/* Educational Library Section */}
       <section className="mb-16 max-w-5xl mx-auto">
         <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
-          <span>📚</span> Thư Viện Tài Liệu Giáo Dục
+          <span></span> Thư Viện Tài Liệu Giáo Dục
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {documents.map((doc, idx) => (
@@ -353,7 +351,7 @@ np      <section className="mb-20 max-w-6xl mx-auto">
       {/* FAQ Section */}
       <section className="mb-16 max-w-5xl mx-auto">
         <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
-          <span>❓</span> Câu Hỏi Thường Gặp (FAQ)
+          <span></span> Câu Hỏi Thường Gặp (FAQ)
         </h2>
         <div className="space-y-4 max-w-3xl mx-auto">
           {faqItems.map((faq, i) => (
@@ -390,7 +388,7 @@ np      <section className="mb-20 max-w-6xl mx-auto">
       {/* Blog Section */}
       <section className="mb-16 max-w-5xl mx-auto">
         <h2 className="text-3xl font-bold text-red-700 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
-          <span>✍️</span> Blog Chia Sẻ Kinh Nghiệm
+          <span></span> Blog Chia Sẻ Kinh Nghiệm
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {blogPosts.map(({ title, description, link }, idx) => (

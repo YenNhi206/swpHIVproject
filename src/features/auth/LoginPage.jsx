@@ -190,7 +190,7 @@ export default function LoginPage({ setUser }) {
               <p className="text-red-600 text-center mt-2">{errors.server}</p>
             )}
             <p
-              className="text-sm text-blue-600 text-center mt-2 cursor-pointer hover:underline"
+              className="text-sm text-red-600 text-center mt-2 cursor-pointer hover:underline"
               onClick={() => setIsModalOpen(true)}
             >
               Quên mật khẩu?

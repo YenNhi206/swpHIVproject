@@ -39,7 +39,7 @@ export default function AboutPage() {
           {/* Giới thiệu về hệ thống */}
           <div className="bg-white p-6 rounded-xl shadow-sm">
             <h2 className="text-2xl font-semibold text-red-600 mb-4 flex items-center gap-2">
-              🎯 Mục đích và Sứ mệnh
+              Mục đích và Sứ mệnh
             </h2>
             <p className="text-gray-700 text-base leading-relaxed">
               Hệ thống <strong className="text-red-700">HIV Treatment and Medical Services System </strong>
@@ -55,7 +55,7 @@ export default function AboutPage() {
 
           <div>
             <h2 className="text-2xl font-semibold text-red-600 mb-4 flex items-center gap-2">
-              🛠️ Chức năng chính
+              Chức năng chính
             </h2>
             <ul className="list-disc list-inside text-gray-800 space-y-2 leading-relaxed text-base">
               <li>
@@ -85,7 +85,7 @@ export default function AboutPage() {
 
           <div>
             <h2 className="text-2xl font-semibold text-red-600 mb-3 flex items-center gap-2">
-              👥 Đội ngũ phát triển
+              Đội ngũ phát triển
             </h2>
             <p className="text-gray-700 leading-relaxed">
               Nhóm phát triển gồm các chuyên gia công nghệ và bác sĩ có nhiều năm kinh nghiệm trong điều trị HIV/AIDS và phát triển phần mềm y tế.
@@ -95,7 +95,7 @@ export default function AboutPage() {
           {/* Đối tượng phục vụ */}
           <div>
             <h2 className="text-2xl font-semibold text-red-600 mb-6 flex items-center gap-2">
-              🎯 Đối tượng phục vụ
+              Đối tượng phục vụ
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-4">
@@ -105,7 +105,7 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Đối tượng 1 */}
               <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex items-start gap-4">
-                <div className="text-red-500 text-2xl">🧑‍⚕️</div>
+                <div className="text-red-500 text-2xl"></div>
                 <div>
                   <h4 className="font-semibold text-gray-800">Người sống chung với HIV/AIDS</h4>
                   <p className="text-sm text-gray-600">Hỗ trợ điều trị và theo dõi sức khỏe định kỳ.</p>
@@ -114,7 +114,7 @@ export default function AboutPage() {
 
               {/* Đối tượng 2 */}
               <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex items-start gap-4">
-                <div className="text-red-500 text-2xl">⚠️</div>
+                <div className="text-red-500 text-2xl"></div>
                 <div>
                   <h4 className="font-semibold text-gray-800">Người có nguy cơ cao</h4>
                   <p className="text-sm text-gray-600">
@@ -125,7 +125,7 @@ export default function AboutPage() {
 
               {/* Đối tượng 3 */}
               <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex items-start gap-4">
-                <div className="text-red-500 text-2xl">👨‍⚕️</div>
+                <div className="text-red-500 text-2xl"></div>
                 <div>
                   <h4 className="font-semibold text-gray-800">Cán bộ y tế, bác sĩ</h4>
                   <p className="text-sm text-gray-600">
@@ -136,7 +136,7 @@ export default function AboutPage() {
 
               {/* Đối tượng 4 */}
               <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex items-start gap-4">
-                <div className="text-red-500 text-2xl">🏡</div>
+                <div className="text-red-500 text-2xl"></div>
                 <div>
                   <h4 className="font-semibold text-gray-800">Cộng đồng và người thân</h4>
                   <p className="text-sm text-gray-600">
@@ -147,7 +147,7 @@ export default function AboutPage() {
 
               {/* Đối tượng 5 */}
               <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex items-start gap-4">
-                <div className="text-red-500 text-2xl">🏢</div>
+                <div className="text-red-500 text-2xl"></div>
                 <div>
                   <h4 className="font-semibold text-gray-800">Tổ chức & quản lý y tế</h4>
                   <p className="text-sm text-gray-600">
@@ -166,13 +166,13 @@ export default function AboutPage() {
           {/* Liên hệ */}
           <div>
             <h2 className="text-2xl font-semibold text-red-600 mb-6 flex items-center gap-2">
-              📞 Liên hệ
+              Liên hệ
             </h2>
 
             <div className="bg-white border border-gray-200 rounded-xl shadow-md p-6 grid sm:grid-cols-2 gap-6">
               {/* Địa chỉ */}
               <div className="flex items-start gap-4">
-                <div className="text-red-600 text-xl">📍</div>
+                <div className="text-red-600 text-xl"></div>
                 <div>
                   <h4 className="font-semibold text-gray-800">Địa chỉ</h4>
                   <p className="text-gray-700 text-sm">123 Đường ABC, Thành phố XYZ</p>
@@ -181,7 +181,7 @@ export default function AboutPage() {
 
               {/* Email */}
               <div className="flex items-start gap-4">
-                <div className="text-red-600 text-xl">✉️</div>
+                <div className="text-red-600 text-xl"></div>
                 <div>
                   <h4 className="font-semibold text-gray-800">Email</h4>
                   <a
@@ -195,7 +195,7 @@ export default function AboutPage() {
 
               {/* Điện thoại */}
               <div className="flex items-start gap-4">
-                <div className="text-red-600 text-xl">📞</div>
+                <div className="text-red-600 text-xl"></div>
                 <div>
                   <h4 className="font-semibold text-gray-800">Điện thoại</h4>
                   <a
@@ -209,7 +209,7 @@ export default function AboutPage() {
 
               {/* Giờ làm việc (thêm nếu muốn) */}
               <div className="flex items-start gap-4">
-                <div className="text-red-600 text-xl">⏰</div>
+                <div className="text-red-600 text-xl"></div>
                 <div>
                   <h4 className="font-semibold text-gray-800">Giờ làm việc</h4>
                   <p className="text-gray-700 text-sm">Thứ 2 – Thứ 6: 8h – 17h</p>
