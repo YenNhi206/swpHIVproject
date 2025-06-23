@@ -207,6 +207,15 @@ export default function App() {
             </MainLayout>
           }
         />
+
+        <Route
+          path="/patient"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <PatientDashboard />
+            </MainLayout>
+          }
+        />
         <Route
           path="/login"
           element={

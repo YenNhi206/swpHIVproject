@@ -79,11 +79,10 @@ export default function UserAppointmentList() {
                     <span>Giờ: {appt.time}</span>
                   </div>
                   <div
-                    className={`mt-3 text-sm font-medium italic ${
-                      appt.status === 'Đã xác nhận'
-                        ? 'text-green-600'
-                        : 'text-yellow-600'
-                    }`}
+                    className={`mt-3 text-sm font-medium italic ${appt.status === 'Đã xác nhận'
+                      ? 'text-green-600'
+                      : 'text-yellow-600'
+                      }`}
                   >
                     Trạng thái: {appt.status}
                   </div>
