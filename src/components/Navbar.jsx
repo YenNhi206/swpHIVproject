@@ -112,8 +112,8 @@ export default function Navbar() {
                 key={link.path}
                 to={link.path}
                 className={`flex items-center gap-2 py-2 px-4 rounded-t-lg transition-colors duration-300 ${isActive(link.path)
-                    ? 'text-red-700 border-b-2 border-red-700 font-semibold'
-                    : 'text-gray-700 hover:text-red-600 hover:border-b-2 hover:border-red-200'
+                  ? 'text-red-700 border-b-2 border-red-700 font-semibold'
+                  : 'text-gray-700 hover:text-red-600 hover:border-b-2 hover:border-red-200'
                   }`}
               >
                 <link.icon className="w-5 h-5" />
@@ -125,7 +125,7 @@ export default function Navbar() {
               <div className="flex items-center gap-4 ml-4">
                 <UserIcon className="w-6 h-6 text-red-700" />
                 <span className="font-semibold text-red-700">
-                  {user?.fullName ? `👤 ${user.fullName}` : '👤 Người dùng'}
+                  {user?.fullName ? ` ${user.fullName}` : ' Người dùng'}
                 </span>
                 <button
                   onClick={handleLogout}
@@ -140,8 +140,8 @@ export default function Navbar() {
                 <Link
                   to="/login"
                   className={`flex items-center gap-2 py-2 px-4 rounded-t-lg transition-colors duration-300 ${isActive('/login')
-                      ? 'text-red-700 border-b-2 border-red-700 font-semibold'
-                      : 'text-gray-700 hover:text-red-600 hover:border-b-2 hover:border-red-200'
+                    ? 'text-red-700 border-b-2 border-red-700 font-semibold'
+                    : 'text-gray-700 hover:text-red-600 hover:border-b-2 hover:border-red-200'
                     }`}
                 >
                   <LogIn className="w-5 h-5" />
@@ -150,8 +150,8 @@ export default function Navbar() {
                 <Link
                   to="/signup"
                   className={`flex items-center gap-2 py-2 px-4 rounded-t-lg transition-colors duration-300 ${isActive('/signup')
-                      ? 'text-red-700 border-b-2 border-red-700 font-semibold'
-                      : 'text-gray-700 hover:text-red-600 hover:border-b-2 hover:border-red-200'
+                    ? 'text-red-700 border-b-2 border-red-700 font-semibold'
+                    : 'text-gray-700 hover:text-red-600 hover:border-b-2 hover:border-red-200'
                     }`}
                 >
                   <UserPlus className="w-5 h-5" />
@@ -170,8 +170,8 @@ export default function Navbar() {
                   to={link.path}
                   onClick={() => setMenuOpen(false)}
                   className={`flex items-center gap-2 px-4 py-2 text-sm border-l-4 ${isActive(link.path)
-                      ? 'text-red-700 border-red-500 bg-red-100 font-semibold'
-                      : 'text-gray-700 border-transparent hover:bg-red-50 hover:text-red-600'
+                    ? 'text-red-700 border-red-500 bg-red-100 font-semibold'
+                    : 'text-gray-700 border-transparent hover:bg-red-50 hover:text-red-600'
                     }`}
                 >
                   <link.icon className="w-4 h-4" />
