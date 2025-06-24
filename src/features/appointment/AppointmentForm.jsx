@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Calendar as CalendarIcon, Mail, Phone, Clock, Stethoscope, AlertCircle } from 'lucide-react';
+import { User, Calendar as CalendarIcon, Mail, Phone, Clock, Stethoscope } from 'lucide-react';
 
 export default function AppointmentForm() {
   const [formData, setFormData] = useState({
@@ -10,25 +10,43 @@ export default function AppointmentForm() {
     phone: '',
     date: '',
     time: '',
-    reason: '',
-    doctor: '',
     gender: '',
+    service: '',
+    doctor: '',
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  const doctors = ['Dr. Nguyễn Văn A', 'Dr. Trần Thị B', 'Dr. Phạm Văn C'];
+  const genderOptions = ['Nữ', 'Nam', 'Khác'];
 
+  const firstVisitServices = [
+    'Khám HIV cơ bản',
+    'Xét nghiệm tải lượng virus HIV',
+    'Xét nghiệm CD4',
+    'Tư vấn và điều trị dự phòng',
+  ];
+
+  const followUpServices = [
+    'Khám tái khám HIV',
+    'Lấy thuốc ARV',
+  ];
+
+  const timeSlots = [
+    { label: '08:00 - 09:00', value: '08:00' },
+    { label: '09:00 - 10:00', value: '09:00' },
+    { label: '10:00 - 11:00', value: '10:00' },
+    { label: '11:00 - 12:00', value: '11:00' },
+    { label: '13:00 - 14:00', value: '13:00' },
+    { label: '14:00 - 15:00', value: '14:00' },
+    { label: '15:00 - 16:00', value: '15:00' },
+    { label: '16:00 - 17:00', value: '16:00' },
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: '' }));
-  };
-
-  const handleAnonymousChange = (e) => {
-    if (e.target.checked) {
-      navigate('/anonymous-appointment');
-    }
   };
 
   const validateForm = () => {
@@ -42,9 +60,9 @@ export default function AppointmentForm() {
     if (!formData.dob) newErrors.dob = 'Ngày sinh là bắt buộc';
     if (!formData.date) newErrors.date = 'Ngày hẹn là bắt buộc';
     if (!formData.time) newErrors.time = 'Giờ hẹn là bắt buộc';
-    if (!formData.reason) newErrors.reason = 'Lý do khám là bắt buộc';
-    if (!formData.doctor) newErrors.doctor = 'Bác sĩ là bắt buộc';
     if (!formData.gender) newErrors.gender = 'Giới tính là bắt buộc';
+    if (!formData.service) newErrors.service = 'Dịch vụ là bắt buộc';
+    if (!formData.doctor) newErrors.doctor = 'Bác sĩ là bắt buộc';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -57,19 +75,6 @@ export default function AppointmentForm() {
     }
   };
 
-  const doctors = ['Dr. Nguyễn Văn A', 'Dr. Trần Thị B', 'Dr. Phạm Văn C'];
-  const genderOptions = ['Nữ', 'Nam', 'Khác'];
-  const timeSlots = [
-    { label: '08:00 - 09:00', value: '08:00' },
-    { label: '09:00 - 10:00', value: '09:00' },
-    { label: '10:00 - 11:00', value: '10:00' },
-    { label: '11:00 - 12:00', value: '11:00' },
-    { label: '13:00 - 14:00', value: '13:00' },
-    { label: '14:00 - 15:00', value: '14:00' },
-    { label: '15:00 - 16:00', value: '15:00' },
-    { label: '16:00 - 17:00', value: '16:00' },
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white p-4">
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-10 opacity-0 translate-y-4 animate-fade-in">
@@ -79,6 +84,8 @@ export default function AppointmentForm() {
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* Họ tên */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Họ tên</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -86,15 +93,16 @@ export default function AppointmentForm() {
                 <input
                   type="text"
                   name="fullName"
-                  required
-                  className="w-full p-3 border-none rounded-lg focus:outline-none"
                   value={formData.fullName}
                   onChange={handleChange}
+                  required
+                  className="w-full p-3 border-none rounded-lg focus:outline-none"
                 />
               </div>
               {errors.fullName && <p className="text-red-600 text-sm mt-1">{errors.fullName}</p>}
             </div>
 
+            {/* Ngày sinh */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -102,15 +110,16 @@ export default function AppointmentForm() {
                 <input
                   type="date"
                   name="dob"
-                  required
-                  className="w-full p-3 border-none rounded-lg focus:outline-none"
                   value={formData.dob}
                   onChange={handleChange}
+                  required
+                  className="w-full p-3 border-none rounded-lg focus:outline-none"
                 />
               </div>
               {errors.dob && <p className="text-red-600 text-sm mt-1">{errors.dob}</p>}
             </div>
 
+            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -118,15 +127,16 @@ export default function AppointmentForm() {
                 <input
                   type="email"
                   name="email"
-                  required
-                  className="w-full p-3 border-none rounded-lg focus:outline-none"
                   value={formData.email}
                   onChange={handleChange}
+                  required
+                  className="w-full p-3 border-none rounded-lg focus:outline-none"
                 />
               </div>
               {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
             </div>
 
+            {/* Số điện thoại */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -134,15 +144,16 @@ export default function AppointmentForm() {
                 <input
                   type="tel"
                   name="phone"
-                  required
-                  className="w-full p-3 border-none rounded-lg focus:outline-none"
                   value={formData.phone}
                   onChange={handleChange}
+                  required
+                  className="w-full p-3 border-none rounded-lg focus:outline-none"
                 />
               </div>
               {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone}</p>}
             </div>
 
+            {/* Giới tính */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
               <div className="flex space-x-6 mt-1">
@@ -163,6 +174,7 @@ export default function AppointmentForm() {
               {errors.gender && <p className="text-red-600 text-sm mt-1">{errors.gender}</p>}
             </div>
 
+            {/* Ngày hẹn */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Ngày hẹn</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -170,15 +182,16 @@ export default function AppointmentForm() {
                 <input
                   type="date"
                   name="date"
-                  required
-                  className="w-full p-3 border-none rounded-lg focus:outline-none"
                   value={formData.date}
                   onChange={handleChange}
+                  required
+                  className="w-full p-3 border-none rounded-lg focus:outline-none"
                 />
               </div>
               {errors.date && <p className="text-red-600 text-sm mt-1">{errors.date}</p>}
             </div>
 
+            {/* Giờ hẹn */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Giờ hẹn</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -199,23 +212,37 @@ export default function AppointmentForm() {
               {errors.time && <p className="text-red-600 text-sm mt-1">{errors.time}</p>}
             </div>
 
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Vấn đề cần khám</label>
-              <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+            {/* Dịch vụ và Bác sĩ cùng hàng */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Dịch vụ</label>
+              <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500 relative z-10">
                 <Stethoscope className="w-5 h-5 text-gray-400 mx-3" />
-                <textarea
-                  name="reason"
-                  value={formData.reason}
+                <select
+                  name="service"
+                  value={formData.service}
                   onChange={handleChange}
-                  className="w-full p-3 border-none rounded-lg focus:outline-none resize-none h-24"
+                  className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none bg-white"
                   required
-                />
+                >
+                  <option value="">Chọn dịch vụ</option>
+                  <optgroup label="Khám lần đầu">
+                    {firstVisitServices.map((service, index) => (
+                      <option key={index} value={service}>{service}</option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Tái khám">
+                    {followUpServices.map((service, index) => (
+                      <option key={index} value={service}>{service}</option>
+                    ))}
+                  </optgroup>
+                </select>
               </div>
-              {errors.reason && <p className="text-red-600 text-sm mt-1">{errors.reason}</p>}
+
+              {errors.service && <p className="text-red-600 text-sm mt-1">{errors.service}</p>}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Chọn bác sĩ</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Bác sĩ</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                 <Stethoscope className="w-5 h-5 text-gray-400 mx-3" />
                 <select
@@ -234,25 +261,24 @@ export default function AppointmentForm() {
               {errors.doctor && <p className="text-red-600 text-sm mt-1">{errors.doctor}</p>}
             </div>
 
-
           </div>
 
+          {/* Nút bấm */}
           <div className="flex justify-between gap-6 mt-6">
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="flex-1 bg-white text-red-600 border border-red-600 px-4 py-3 rounded-lg hover:bg-red-50 transition-colors duration-300"
+              className="flex-1 bg-white text-red-600 border border-red-600 px-4 py-3 rounded-lg hover:bg-red-50 transition"
             >
               ← Trở lại
             </button>
             <button
               type="submit"
-              className="flex-1 bg-red-600 text-white border border-red-600 px-4 py-3 rounded-lg hover:bg-red-700 transition-colors duration-300"
+              className="flex-1 bg-red-600 text-white border border-red-600 px-4 py-3 rounded-lg hover:bg-red-700 transition"
             >
               Đặt lịch
             </button>
           </div>
-
         </form>
       </div>
     </div>
