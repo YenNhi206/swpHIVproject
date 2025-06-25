@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ArrowLeft, Share2, Download } from 'lucide-react';
+import Button from '../../components/Button';
 
 export default function TreatmentDetail() {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
 
-  // Giả lập dữ liệu chi tiết
   const treatmentData = {
     1: {
       name: 'TDF + 3TC + DTG',
@@ -261,85 +262,85 @@ export default function TreatmentDetail() {
   const treatment = treatmentData[id];
 
   useEffect(() => {
-    setTimeout(() => setIsLoading(false), 1000); // Giả lập loading
+    setTimeout(() => setIsLoading(false), 1000);
   }, [id]);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
 
   if (!treatment) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-6 animate-fade-in">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Phác đồ không tồn tại</h2>
+      <motion.div
+        className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-10 font-sans"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div
+          className="bg-white rounded-2xl shadow-lg p-6"
+          variants={itemVariants}
+        >
+          <motion.h2
+            className="text-2xl font-bold text-red-600 mb-4"
+            variants={itemVariants}
+          >
+            Phác đồ không tồn tại
+          </motion.h2>
           <Link
             to="/treatment"
-            className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 underline"
+            className="inline-flex items-center gap-2 text-red-600 hover:underline"
           >
             <ArrowLeft className="w-5 h-5" />
             Quay lại danh sách
           </Link>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Breadcrumb */}
-        <nav className="mb-6 animate-fade-in">
-          <Link to="/" className="text-gray-600 hover:text-red-600">
-            Trang chủ
-          </Link>
-          <span className="mx-2 text-gray-400">/</span>
-          <Link to="/treatment" className="text-gray-600 hover:text-red-600">
-            Phác đồ điều trị
-          </Link>
-          <span className="mx-2 text-gray-400">/</span>
-          <span className="text-red-600">{treatment.name}</span>
-        </nav>
-
-        <div className="bg-white rounded-2xl shadow-lg p-8 opacity-0 translate-y-4 animate-fade-in [animation-delay:0.2s]">
-          {isLoading ? (
-            <div className="space-y-6">
-              <div className="h-8 bg-gray-200 rounded w-3/4 animate-pulse"></div>
-              {[...Array(6)].map((_, idx) => (
-                <div key={idx} className="space-y-2 animate-pulse">
-                  <div className="h-6 bg-gray-200 rounded w-1/2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-full"></div>
-                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <>
-              <h1 className="text-3xl sm:text-4xl font-bold text-red-600 mb-6">{treatment.name}</h1>
-              {treatment.content}
-              <div className="flex flex-wrap gap-4 mt-8">
-                <Link
-                  to="/treatment"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-300"
-                >
-                  <ArrowLeft className="w-5 h-5" />
-                  Quay lại danh sách
-                </Link>
-                <button
-                  onClick={() => alert('Chức năng chia sẻ đang phát triển!')}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300"
-                >
-                  <Share2 className="w-5 h-5" />
-                  Chia sẻ phác đồ
-                </button>
-                <button
-                  onClick={() => alert('Chức năng tải PDF đang phát triển!')}
-                  className="inline-flex items-center gap-2 px-6 py-3 border border-red-600 text-red-600 rounded-lg hover:bg-red-100 transition-colors duration-300"
-                >
-                  <Download className="w-5 h-5" />
-                  Tải PDF
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
+          <>
+            <motion.h1
+              className="text-3xl sm:text-4xl font-bold text-red-600 mb-6"
+              variants={itemVariants}
+            >
+              {treatment.name}
+            </motion.h1>
+            {treatment.content}
+            <motion.div
+              className="flex flex-wrap gap-4 mt-8"
+              variants={containerVariants}
+            >
+              <Button
+                label="Quay lại danh sách"
+                onClick={() => navigate('/treatment')}
+                icon={<ArrowLeft className="w-5 h-5" />}
+              />
+              <Button
+                label="Chia sẻ phác đồ"
+                onClick={() => alert('Chức năng chia sẻ đang phát triển!')}
+                icon={<Share2 className="w-5 h-5" />}
+              />
+              <Button
+                label="Tải PDF"
+                onClick={() => alert('Chức năng tải PDF đang phát triển!')}
+                icon={<Download className="w-5 h-5" />}
+              />
+            </motion.div>
+          </>
+       
   );
 }
