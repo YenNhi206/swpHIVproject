@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import blogImg from "../assets/blog.jpg";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { FaUserPlus, FaSyringe, FaBullseye } from "react-icons/fa";
-
+import { Users, Syringe, Target, ChevronDown, FileText, X, ChevronRight } from 'lucide-react';
+import Button from '../components/Button';
 
 const documents = [
   {
@@ -119,45 +120,90 @@ export default function KnowledgePage() {
     setOpenFAQIndex(openFAQIndex === index ? null : index);
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 sm:px-6 lg:px-8 py-12">
+    <motion.main
+      className="min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8 py-12 font-sans"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Header Section */}
-      <section className="text-center mb-16 max-w-5xl mx-auto">
-        <h1 className="text-3xl font-extrabold text-red-700 mb-4 tracking-tight animate-slide-in">
+      <motion.section
+        className="text-center mb-16"
+        variants={itemVariants}
+      >
+        <h1 className="text-3xl font-extrabold text-red-700 mb-4 tracking-tight">
           Trang Kiến Thức HIV
         </h1>
         <p className="text-base text-gray-700 max-w-2xl mx-auto leading-relaxed font-medium">
           Thông tin chính xác, chuyên sâu và dễ tiếp cận về HIV, hỗ trợ người nhiễm, gia đình và cộng đồng để nâng cao nhận thức và giảm kỳ thị.
         </p>
-      </section>
+      </motion.section>
 
       {/* Thống Kê Về HIV (Giả lập) */}
-      <section className="mb-20 max-w-6xl mx-auto">
-        <h2 className="text-2xl font-bold text-red-600 mb-6 text-center flex items-center justify-center gap-2 animate-slide-in">
-          <span></span> Thống Kê Về HIV tại Việt Nam
+      <motion.section
+        className="mb-20"
+        variants={containerVariants}
+      >
+        <h2 className="text-2xl font-bold text-red-600 mb-6 text-center flex items-center justify-center gap-2">
+          <Users className="w-6 h-6" /> Thống Kê Về HIV tại Việt Nam
         </h2>
 
         {/* Cards thống kê nhanh */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center mb-10">
-          <div className="bg-white p-6 rounded-2xl shadow-md">
-            <FaUserPlus className="text-4xl text-red-500 mx-auto mb-2" />
+          <motion.div
+            className="bg-white p-6 rounded-2xl shadow-md"
+            variants={itemVariants}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Users className="text-4xl text-red-500 mx-auto mb-2" />
             <p className="text-3xl font-bold text-red-700">230.000+</p>
             <p className="text-sm text-gray-700 mt-1">Người đang sống với HIV</p>
-          </div>
-          <div className="bg-white p-6 rounded-2xl shadow-md">
-            <FaSyringe className="text-4xl text-red-500 mx-auto mb-2" />
+          </motion.div>
+          <motion.div
+            className="bg-white p-6 rounded-2xl shadow-md"
+            variants={itemVariants}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Syringe className="text-4xl text-red-500 mx-auto mb-2" />
             <p className="text-3xl font-bold text-red-700">80%</p>
             <p className="text-sm text-gray-700 mt-1">Tiếp cận điều trị ARV</p>
-          </div>
-          <div className="bg-white p-6 rounded-2xl shadow-md">
-            <FaBullseye className="text-4xl text-red-500 mx-auto mb-2" />
+          </motion.div>
+          <motion.div
+            className="bg-white p-6 rounded-2xl shadow-md"
+            variants={itemVariants}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Target className="text-4xl text-red-500 mx-auto mb-2" />
             <p className="text-3xl font-bold text-red-700">95-95-95</p>
             <p className="text-sm text-gray-700 mt-1">Mục tiêu quốc gia đến 2030</p>
-          </div>
+          </motion.div>
         </div>
 
         {/* Biểu đồ cải thiện nhờ ARV */}
-        <div className="bg-white p-6 rounded-2xl shadow-md">
+        <motion.div
+          className="bg-white p-6 rounded-2xl shadow-md"
+          variants={itemVariants}
+        >
           <h3 className="text-2xl font-bold text-center text-red-600 mb-4">Tỷ lệ điều trị ARV qua các năm</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={[
@@ -175,19 +221,25 @@ export default function KnowledgePage() {
               <Bar dataKey="rate" fill="#dc2626" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-        </div>
-      </section>
-
+        </motion.div>
+      </motion.section>
 
       {/* Kiến Thức Nền Tảng */}
-      <section className="mb-20 max-w-6xl mx-auto px-4">
-        <h3 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
-          Kiến thức nền tảng về HIV/AIDS
+      <motion.section
+        className="mb-20"
+        variants={containerVariants}
+      >
+        <h3 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
+          <FileText className="w-6 h-6" /> Kiến thức nền tảng về HIV/AIDS
         </h3>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Card 1 */}
-          <div className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200">
+          <motion.div
+            className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200"
+            variants={itemVariants}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
             <span className="text-2xl"></span>
             <div>
               <h4 className="text-lg font-semibold text-gray-900 mb-2">Các giai đoạn của HIV/AIDS</h4>
@@ -195,10 +247,15 @@ export default function KnowledgePage() {
                 HIV tiến triển qua 3 giai đoạn chính: <strong>Giai đoạn cấp tính</strong>, <strong>giai đoạn không triệu chứng</strong>, và <strong>AIDS</strong>. Nếu không điều trị, hệ miễn dịch sẽ suy yếu nghiêm trọng, dễ dẫn đến tử vong.
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 2 */}
-          <div className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200">
+          <motion.div
+            className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200"
+            variants={itemVariants}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
             <span className="text-2xl"></span>
             <div>
               <h4 className="text-lg font-semibold text-gray-900 mb-2">ARV là gì?</h4>
@@ -206,10 +263,15 @@ export default function KnowledgePage() {
                 ARV (thuốc kháng virus) giúp <strong>kiểm soát virus HIV</strong>, ngăn không cho virus nhân lên. Dùng ARV sớm và đều đặn giúp sống khỏe mạnh và giảm nguy cơ lây nhiễm.
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 3 */}
-          <div className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200">
+          <motion.div
+            className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200"
+            variants={itemVariants}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
             <span className="text-2xl"></span>
             <div>
               <h4 className="text-lg font-semibold text-gray-900 mb-2">Cơ chế hoạt động của ARV</h4>
@@ -217,10 +279,15 @@ export default function KnowledgePage() {
                 ARV ức chế enzyme cần thiết để HIV sao chép. Tuân thủ điều trị giúp <strong>tải lượng virus xuống mức không phát hiện</strong>, người nhiễm có thể sống như người bình thường.
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 4 */}
-          <div className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200">
+          <motion.div
+            className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200"
+            variants={itemVariants}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
             <span className="text-2xl"></span>
             <div>
               <h4 className="text-lg font-semibold text-gray-900 mb-2">HIV khác gì với AIDS?</h4>
@@ -228,44 +295,56 @@ export default function KnowledgePage() {
                 <strong>HIV</strong> là virus, còn <strong>AIDS</strong> là giai đoạn cuối của nhiễm HIV khi hệ miễn dịch bị phá hủy. Người có HIV không đồng nghĩa với việc đã mắc AIDS.
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Hướng Dẫn Điều Trị*/}
-      <section className="mb-16 max-w-5xl mx-auto">
-        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
-          <span></span> Hướng Dẫn Điều Trị
+      {/* Hướng Dẫn Điều Trị */}
+      <motion.section
+        className="mb-16"
+        variants={containerVariants}
+      >
+        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
+          <Syringe className="w-6 h-6" /> Hướng Dẫn Điều Trị
         </h2>
         <p className="text-base text-gray-700 mb-8 max-w-2xl mx-auto text-center leading-relaxed">
           Phương pháp điều trị HIV tiên tiến và lời khuyên thiết thực để sống tích cực, khỏe mạnh.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {treatmentGuides.map(({ title, content, icon }, idx) => (
-            <div
+          {treatmentGuides.map(({ title, content }, idx) => (
+            <motion.div
               key={idx}
               className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200"
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
             >
-              <span className="text-2xl">{icon}</span>
+              <span className="text-2xl"></span>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">{content}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Educational Library Section */}
-      <section className="mb-16 max-w-5xl mx-auto">
-        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
-          <span></span> Thư Viện Tài Liệu Giáo Dục
+      <motion.section
+        className="mb-16"
+        variants={containerVariants}
+      >
+        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
+          <FileText className="w-6 h-6" /> Thư Viện Tài Liệu Giáo Dục
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {documents.map((doc, idx) => (
-            <div
+            <motion.div
               key={idx}
-              className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer"
+              className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200 cursor-pointer"
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
               onClick={() => setSelectedDoc(doc.link)}
               role="button"
               tabIndex={0}
@@ -275,25 +354,31 @@ export default function KnowledgePage() {
             >
               <h3 className="text-lg font-semibold text-gray-900 mb-3">{doc.title}</h3>
               <p className="text-gray-600 mb-4 text-sm leading-relaxed">{doc.description}</p>
-              <button
-                className="inline-flex items-center px-3 py-1.5 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors font-medium text-sm"
+              <Button
+                label="Xem tài liệu"
+                icon={<FileText className="w-4 h-4" />}
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedDoc(doc.link);
                 }}
-              >
-                Xem tài liệu
-                <svg className="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
+              />
+            </motion.div>
           ))}
         </div>
 
         {selectedDoc && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm p-4 animate-fade-in">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden">
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <motion.div
+              className="bg-white rounded-2xl shadow-xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden"
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
               <header className="flex justify-between items-center bg-gradient-to-r from-red-700 to-red-800 text-white px-6 py-4 rounded-t-2xl">
                 <h3 className="text-lg font-semibold">Xem Tài Liệu</h3>
                 <button
@@ -301,9 +386,7 @@ export default function KnowledgePage() {
                   className="p-1.5 hover:bg-red-900 rounded-full transition"
                   aria-label="Đóng"
                 >
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  <X className="h-6 w-6" />
                 </button>
               </header>
               <div className="flex-1 p-6 bg-gray-50 overflow-auto">
@@ -326,38 +409,35 @@ export default function KnowledgePage() {
                 </object>
               </div>
               <footer className="flex justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-white">
-                <button
+                <Button
+                  label="Mở trong tab mới"
                   onClick={() => window.open(selectedDoc, "_blank")}
-                  className="px-4 py-1.5 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 flex items-center gap-1.5 transition font-medium text-sm"
-                >
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                    <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                  </svg>
-                  Mở trong tab mới
-                </button>
-                <button
+                  icon={<FileText className="w-4 h-4" />}
+                />
+                <Button
+                  label="Đóng"
                   onClick={() => setSelectedDoc(null)}
-                  className="px-4 py-1.5 bg-red-700 text-white rounded-lg hover:bg-red-800 transition font-medium text-sm"
-                >
-                  Đóng
-                </button>
+                />
               </footer>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         )}
-      </section>
+      </motion.section>
 
       {/* FAQ Section */}
-      <section className="mb-16 max-w-5xl mx-auto">
-        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
-          <span></span> Câu Hỏi Thường Gặp (FAQ)
+      <motion.section
+        className="mb-16"
+        variants={containerVariants}
+      >
+        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
+          <Users className="w-6 h-6" /> Câu Hỏi Thường Gặp (FAQ)
         </h2>
         <div className="space-y-4 max-w-3xl mx-auto">
           {faqItems.map((faq, i) => (
-            <div
+            <motion.div
               key={i}
               className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
+              variants={itemVariants}
             >
               <button
                 onClick={() => toggleFAQ(i)}
@@ -365,55 +445,53 @@ export default function KnowledgePage() {
                 aria-expanded={openFAQIndex === i}
               >
                 <span className="text-base">{faq.question}</span>
-                <svg
+                <ChevronDown
                   className={`w-5 h-5 transform transition-transform duration-200 ${openFAQIndex === i ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
+                />
               </button>
               {openFAQIndex === i && (
-                <div className="px-6 py-5 bg-red-50 text-gray-700 text-sm leading-relaxed animate-slide-down">
+                <motion.div
+                  className="px-6 py-5 bg-red-50 text-gray-700 text-sm leading-relaxed"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
                   {faq.detailedContent}
-                </div>
+                </motion.div>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Blog Section */}
-      <section className="mb-16 max-w-5xl mx-auto">
-        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2 animate-slide-in">
-          <span></span> Blog Chia Sẻ Kinh Nghiệm
+      <motion.section
+        className="mb-16"
+        variants={containerVariants}
+      >
+        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
+          <FileText className="w-6 h-6" /> Blog Chia Sẻ Kinh Nghiệm
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {blogPosts.map(({ title, description, link }, idx) => (
-            <article
+            <motion.article
               key={title}
-              className="bg-white rounded-2xl shadow-md p-5 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+              className="bg-white rounded-2xl shadow-md p-5 hover:shadow-lg transition-all duration-200"
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
             >
               <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{title}</h3>
               <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed">{description}</p>
-              <a
-                href={link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-3 py-1.5 bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors text-sm font-medium"
-              >
-                Đọc thêm
-                <svg className="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
-            </article>
+              <Button
+                label="Đọc thêm"
+                onClick={() => window.open(link, "_blank")}
+                icon={<ChevronRight className="w-4 h-4" />}
+              />
+            </motion.article>
           ))}
         </div>
-      </section>
-
-    </main>
+      </motion.section>
+    </motion.main>
   );
 }

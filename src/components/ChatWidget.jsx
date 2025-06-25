@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, RefreshCw } from 'lucide-react';
-import doctorImage from '../assets/doctor.png';
+import { motion } from 'framer-motion';
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -84,42 +84,54 @@ export default function ChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <motion.div
+      className="fixed bottom-4 right-4 z-50"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Nút mở chat */}
       {!open && (
-        <button
+        <motion.button
           onClick={() => setOpen(true)}
           className="bg-red-600 text-white p-4 rounded-full shadow-lg hover:bg-red-700 transition-all animate-pulse"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
         >
           <MessageCircle size={28} />
-        </button>
+        </motion.button>
       )}
 
       {/* Khung chat */}
       {open && (
-        <div
-          className="w-80 sm:w-96 h-[28rem] sm:h-[32rem] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200 animate-scale-fade-in"
+        <motion.div
+          className="w-80 sm:w-96 h-[28rem] sm:h-[32rem] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-100"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
         >
           {/* Header */}
           <div className="flex items-center justify-between bg-red-600 text-white p-3">
             <div className="flex items-center gap-2">
-              <img src={doctorImage} alt="Doctor" className="w-8 h-8 rounded-full" />
+              <img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png" alt="Doctor" className="w-8 h-8 rounded-full" />
               <span className="font-semibold">Tư vấn trực tuyến</span>
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
             </div>
             <div className="flex items-center gap-2">
-              <button
+              <motion.button
                 onClick={handleResetChat}
                 className="p-1 hover:bg-red-700 rounded-full transition-colors"
+                whileHover={{ scale: 1.1 }}
               >
                 <RefreshCw size={18} />
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 onClick={() => setOpen(false)}
                 className="p-1 hover:bg-red-700 rounded-full transition-colors"
+                whileHover={{ scale: 1.1 }}
               >
                 <X size={18} />
-              </button>
+              </motion.button>
             </div>
           </div>
 
@@ -143,14 +155,17 @@ export default function ChatWidget() {
             ) : (
               <>
                 {messages.map((msg, idx) => (
-                  <div
+                  <motion.div
                     key={idx}
                     className={`flex items-end gap-2 ${
                       msg.from === 'patient' ? 'justify-end' : 'justify-start'
-                    } animate-fade-in`}
+                    }`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
                   >
                     {msg.from === 'doctor' && (
-                      <img src={doctorImage} alt="Doctor" className="w-8 h-8 rounded-full" />
+                      <img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png" alt="Doctor" className="w-8 h-8 rounded-full" />
                     )}
                     <div
                       className={`max-w-[70%] px-4 py-2 rounded-3xl shadow-sm ${
@@ -174,11 +189,11 @@ export default function ChatWidget() {
                         className="w-8 h-8 rounded-full"
                       />
                     )}
-                  </div>
+                  </motion.div>
                 ))}
                 {typing && (
                   <div className="flex items-end gap-2 justify-start animate-pulse">
-                    <img src={doctorImage} alt="Doctor" className="w-8 h-8 rounded-full" />
+                    <img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png" alt="Doctor" className="w-8 h-8 rounded-full" />
                     <div className="max-w-[70%] px-4 py-2 rounded-3xl bg-gray-100 text-gray-800 shadow-sm text-sm">
                       Đang nhập...
                     </div>
@@ -202,15 +217,17 @@ export default function ChatWidget() {
               className="flex-1 border border-gray-300 rounded-3xl px-4 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-red-500 max-h-24"
               placeholder="Nhập nội dung..."
             />
-            <button
+            <motion.button
               onClick={handleSend}
-              className="bg-red-600 text-white p-3 rounded-full hover:bg-red-700 transition-colors duration-300 shadow flex items-center justify-center"
+              className="bg-red-600 text-white p-3 rounded-full hover:bg-red-700 transition-colors duration-300 shadow"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
               <Send size={18} />
-            </button>
+            </motion.button>
           </div>
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }
