@@ -20,7 +20,6 @@ import {
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
-
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -50,17 +49,25 @@ export default function Navbar() {
 
   return (
     <motion.header
-      className="w-full bg-red-50 shadow-sm"
+      className="w-full bg-red-50 shadow-sm font-sans"
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Top section with logo + hotline */}
-      <div className="max-w-7xl mx-auto px-4 pt-4 pb-2 flex justify-between items-start">
-        <Link to="/" className="text-red-700 text-3xl font-bold no-underline">
-          HIV Care+
+      {/* Top section */}
+      <div className="bg-red-100 px-10 pt-4 pb-2 flex justify-between items-start">
+        {/* Logo hình tròn */}
+        <Link
+          to="/"
+          className="text-3xl font-extrabold tracking-wider text-red-700 hover:text-red-400 transition-colors duration-300"
+        >
+          HIV&nbsp;CARE+
         </Link>
 
+
+
+
+        {/* Hotline + location */}
         <div className="flex flex-col items-end mt-2">
           <div className="flex gap-4 text-sm text-red-800 items-center">
             <div className="flex items-center gap-1">
@@ -73,14 +80,15 @@ export default function Navbar() {
             </div>
           </div>
 
+          {/* Nút hành động */}
           <div className="flex gap-3 mt-2">
             <div className="relative inline-block">
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md">
+              <span className="absolute -top-2 -right-2 bg-white text-red-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md">
                 HOT
               </span>
               <Link
                 to="/support"
-                className="flex items-center gap-2 bg-white border border-red-500 text-red-600 px-4 py-2 rounded-lg font-semibold text-sm hover:bg-red-600 hover:text-white shadow-md transition-all"
+                className="flex items-center gap-2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg font-semibold text-sm hover:bg-red-600 hover:text-white shadow-md transition-all"
               >
                 <Smartphone className="w-5 h-5" />
                 Phòng khám online
@@ -88,9 +96,9 @@ export default function Navbar() {
             </div>
             <Link
               to="/appointments"
-              className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm flex items-center gap-1"
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 text-sm flex items-center gap-2 shadow-md transition-all"
             >
-              <Calendar className="w-4 h-4" />
+              <Calendar className="w-5 h-5" />
               Đặt lịch khám
             </Link>
           </div>
@@ -98,9 +106,8 @@ export default function Navbar() {
       </div>
 
       {/* Main navbar */}
-      <nav className="bg-gradient-to-b from-red-100 to-white border-t border-red-100">
-        <div className="max-w-7xl mx-auto px-4">
-          {/* Desktop menu */}
+      <nav className="bg-gradient-to-r from-red-500 via-red-600 to-red-700 border-t border-red-300">
+        <div className="px-10">
           <div className="flex justify-center items-center py-3 space-x-6">
             {navLinks.map((link) => (
               <motion.div
@@ -113,6 +120,7 @@ export default function Navbar() {
                   className={`flex items-center gap-2 py-2 px-4 rounded-t-lg transition-colors duration-300 ${isActive(link.path)
                     ? 'text-red-700 border-b-4 border-red-700 bg-red-100 font-bold'
                     : 'text-gray-700 hover:text-red-600 hover:bg-red-50 hover:border-b-2 hover:border-red-200'
+
                     }`}
                 >
                   <link.icon className="w-5 h-5" />
@@ -122,14 +130,14 @@ export default function Navbar() {
             ))}
 
             {user ? (
-              <div className="flex items-center gap-4 ml-4">
-                <UserIcon className="w-6 h-6 text-red-700" />
-                <span className="font-semibold text-red-700">
+              <div className="flex items-center gap-4 ml-4 text-white">
+                <UserIcon className="w-6 h-6" />
+                <span className="font-semibold">
                   {user?.fullName ? ` ${user.fullName}` : ' Người dùng'}
                 </span>
                 <motion.button
                   onClick={handleLogout}
-                  className="flex items-center gap-1 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
+                  className="flex items-center gap-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 text-sm transition-all"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -157,6 +165,7 @@ export default function Navbar() {
                     className={`flex items-center gap-2 py-2 px-4 rounded-t-lg transition-colors duration-300 ${isActive('/signup')
                       ? 'text-red-700 border-b-4 border-red-700 bg-red-100 font-bold'
                       : 'text-gray-700 hover:text-red-600 hover:bg-red-50 hover:border-b-2 hover:border-red-200'
+
                       }`}
                   >
                     <UserPlus className="w-5 h-5" />

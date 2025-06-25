@@ -78,7 +78,7 @@ export default function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="bg-red-700 text-white py-5 mt-6 shadow-inner text-sm">
+      <div className="bg-red-600 text-white py-5 mt-6 shadow-inner text-sm">
         <div className="max-w-5xl mx-auto px-4 text-center space-y-2">
           <p>
             <strong>© 2025 Hệ thống Dịch vụ Y tế và Điều trị HIV - Bộ Y Tế</strong>

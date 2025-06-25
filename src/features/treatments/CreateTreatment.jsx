@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
+import Button from '../../components/Button';
 
 export default function CreateTreatment() {
   const navigate = useNavigate();
@@ -23,13 +25,11 @@ export default function CreateTreatment() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const newTreatment = {
       id: Date.now(),
       ...form,
-      moTa: form.category, // sử dụng 'category' làm mô tả
+      moTa: form.category,
     };
-
     navigate('/treatment', { state: { newTreatment } });
   };
 
@@ -37,13 +37,42 @@ export default function CreateTreatment() {
     navigate('/treatment');
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
   return (
-    <div className="min-h-screen bg-white py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-red-600 mb-6">Tạo phác đồ mới</h2>
+    <motion.div
+      className="min-h-screen bg-gradient-to-b from-red-50 to-white py-10 px-10 font-sans"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div
+        className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+        variants={itemVariants}
+      >
+        <motion.h2
+          className="text-2xl font-bold text-red-600 mb-6"
+          variants={itemVariants}
+        >
+          Tạo phác đồ mới
+        </motion.h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+          <motion.div variants={itemVariants}>
             <label className="block text-sm font-medium text-gray-700">Tên phác đồ</label>
             <input
               type="text"
@@ -51,18 +80,18 @@ export default function CreateTreatment() {
               value={form.name}
               onChange={handleChange}
               required
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-red-500"
             />
-          </div>
+          </motion.div>
 
-          <div>
+          <motion.div variants={itemVariants}>
             <label className="block text-sm font-medium text-gray-700">Đối tượng</label>
             <select
               name="category"
               value={form.category}
               onChange={handleChange}
               required
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-red-500"
             >
               <option value="">-- Chọn đối tượng áp dụng --</option>
               <option value="Người lớn">Người lớn</option>
@@ -71,92 +100,44 @@ export default function CreateTreatment() {
               <option value="Người điều trị lần đầu">Người điều trị lần đầu</option>
               <option value="Người kháng thuốc">Người kháng thuốc</option>
             </select>
-          </div>
+          </motion.div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Thành phần thuốc</label>
-            <textarea
-              name="ingredients"
-              value={form.ingredients}
-              onChange={handleChange}
-              rows={2}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
+          {[
+            ['Thành phần thuốc', 'ingredients'],
+            ['Liều dùng', 'dosage'],
+            ['Chỉ định', 'indication'],
+            ['Tác dụng phụ', 'sideEffects'],
+            ['Theo dõi hiệu quả', 'monitoring'],
+            ['Lưu ý', 'precautions'],
+          ].map(([label, name], idx) => (
+            <motion.div key={name} variants={itemVariants}>
+              <label className="block text-sm font-medium text-gray-700">{label}</label>
+              <textarea
+                name={name}
+                value={form[name]}
+                onChange={handleChange}
+                rows={2}
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-red-500"
+              />
+            </motion.div>
+          ))}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Liều dùng</label>
-            <textarea
-              name="dosage"
-              value={form.dosage}
-              onChange={handleChange}
-              rows={2}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Chỉ định</label>
-            <textarea
-              name="indication"
-              value={form.indication}
-              onChange={handleChange}
-              rows={2}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Tác dụng phụ</label>
-            <textarea
-              name="sideEffects"
-              value={form.sideEffects}
-              onChange={handleChange}
-              rows={2}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Theo dõi hiệu quả</label>
-            <textarea
-              name="monitoring"
-              value={form.monitoring}
-              onChange={handleChange}
-              rows={2}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Lưu ý</label>
-            <textarea
-              name="precautions"
-              value={form.precautions}
-              onChange={handleChange}
-              rows={2}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-
-          <div className="flex justify-end space-x-3 pt-6">
-            <button
-              type="button"
+          <motion.div
+            className="flex justify-end space-x-3 pt-6"
+            variants={itemVariants}
+          >
+            <Button
+              label="Quay lại danh sách"
               onClick={handleBack}
-              className="flex items-center border border-red-600 text-red-600 hover:bg-red-50 px-4 py-1.5 rounded-md transition"
-            >
-              <ArrowLeft className="w-4 h-4 mr-1" />
-              Quay lại danh sách
-            </button>
-            <button
+              icon={<ArrowLeft className="w-4 h-4" />}
+            />
+            <Button
+              label="Lưu phác đồ"
               type="submit"
-              className="bg-red-600 text-white px-5 py-1.5 rounded-md hover:bg-red-700 transition"
-            >
-              Lưu phác đồ
-            </button>
-          </div>
+            />
+          </motion.div>
         </form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
