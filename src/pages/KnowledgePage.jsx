@@ -1,9 +1,49 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import blogImg from "../assets/blog.jpg";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { Users, Syringe, Target, ChevronDown, FileText, X, ChevronRight } from 'lucide-react';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+} from "recharts";
+import {
+  Users, Syringe, Target, ChevronDown, FileText, X, ChevronRight,
+} from 'lucide-react';
 import Button from '../components/Button';
+const basicKnowledge = [
+  {
+    title: "Biểu hiện của HIV theo từng giai đoạn",
+    description: "Virus HIV có thể lây truyền ở bất kỳ giai đoạn nào trong quá trình nhiễm bệnh và nó sẽ phá hủy dần dần hệ thống miễn dịch của cơ thể. Do vậy, việc phòng chống lây nhiễm HIV và điều trị sớm là rất quan trọng. Ở mỗi giai đoạn, HIV lại có những biểu hiện bệnh khác nhau, chúng ta cần tìm hiểu để có phương pháp điều trị kịp thời.",
+    link: "https://www.vinmec.com/vie/bai-viet/bieu-hien-cua-hiv-theo-tung-giai-doan-vi"
+  },
+  {
+    title: "Điều trị ARV = Dự phòng HIV",
+    description: "Tỷ lệ tuân thủ điều trị ARV sau 12 tháng đạt 88%. Tải lượng vi rút dưới ngưỡng ức chế (<1.000 bản sao/ml máu) đạt 96%, dưới ngưỡng phát hiện (200 bản sao/ml máu) đạt 94%. Với tải lượng vi rút như vậy sẽ không chỉ giúp người nhiễm HIV sống khỏe mạnh mà còn góp phần giảm lây nhiễm HIV trong cộng đồng.",
+    link: "https://vaac.gov.vn/dieu-tri-arv-du-phong-hiv.html"
+  },
+  {
+    title: "Những điều cần biết về thuốc ARV - thuốc điều trị và dự phòng HIV",
+    description: "ARV là từ viết tắt của Antiretroviral, dùng để chỉ một nhóm gồm nhiều loại thuốc có tác dụng kháng HIV. HIV là virus gây suy giảm miễn dịch ở người. Khi HIV nhiễm vào cơ thể sẽ tấn công vào hệ thống miễn dịch khiến người bệnh dễ mắc các bệnh nhiễm trùng khác như lao, và một số bệnh ung thư,.. ",
+    link: "https://hellobacsi.com/thuoc/thuoc-arv/"
+  },
+  {
+    title: "HIV và AIDS có khác nhau?",
+    description: "HIV/AIDS là căn bệnh thế kỷ có khả năng tấn công và phá hủy hệ miễn dịch của cơ thể. Đặc biệt đây là bệnh truyền nhiễm nguy hiểm có thể tấn công bất kì ai, lây nhiễm HIV không phân biệt tuổi tác, gia đình, nghề nghiệp, địa vị xã hội ...",
+    link: "https://www.vinmec.com/vie/bai-viet/hiv-va-aids-co-khac-nhau-vi"
+  },
+];
+const treatmentArticles = [
+  {
+    title: " Tuân thủ trong điều trị HIV/AIDS",
+    description:
+      "Tuân thủ là điều cốt lõi cho sự thành công của điều trị thuốc ARV đem lại hiệu quả cho điều trị và điều trị dự phòng các nhiễm trùng cơ hội..",
+    link: "https://cdcvinhphuc.vn/vai-tro-cua-tuan-thu-trong-dieu-tri-hiv-aids-va-mot-so-giai-phap-giup-tuan-thu/",
+  },
+  {
+    title: "Dinh dưỡng cho bệnh nhân đang điều trị HIV",
+    description:
+      "Thiết lập chế độ ăn uống lành mạnh và dinh dưỡng trong quá trình điều trị HIV sẽ giúp bệnh nhân tăng cường hệ miễn dịch, đồng thời đẩy lùi nguy cơ mắc các biến chứng do virus HIV gây ra.",
+    link: "https://www.vinmec.com/vie/bai-viet/dinh-duong-cho-benh-nhan-dang-dieu-tri-hiv-vi",
+  },
+];
 
 const documents = [
   {
@@ -99,18 +139,7 @@ const faqItems = [
   },
 ];
 
-const treatmentGuides = [
-  {
-    title: "Phác đồ điều trị ARV cơ bản",
-    content:
-      "Thuốc ARV giúp ngăn chặn sự phát triển của virus HIV trong cơ thể. Việc tuân thủ phác đồ điều trị rất quan trọng để duy trì sức khỏe và giảm nguy cơ lây nhiễm.",
-  },
-  {
-    title: "Lời khuyên về dinh dưỡng và sinh hoạt",
-    content:
-      "Bổ sung đầy đủ dinh dưỡng, tập thể dục đều đặn, tránh căng thẳng và giữ tinh thần lạc quan giúp tăng cường hệ miễn dịch.",
-  },
-];
+
 
 export default function KnowledgePage() {
   const [selectedDoc, setSelectedDoc] = useState(null);
@@ -225,109 +254,59 @@ export default function KnowledgePage() {
       </motion.section>
 
       {/* Kiến Thức Nền Tảng */}
-      <motion.section
-        className="mb-20"
-        variants={containerVariants}
+      <motion.section className="mb-20" variants={containerVariants}>
+  <h3 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
+    <FileText className="w-6 h-6" /> Kiến thức nền tảng về HIV/AIDS
+  </h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {basicKnowledge.map(({ title, description, link }, idx) => (
+      <motion.article
+        key={idx}
+        className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200"
+        variants={itemVariants}
+        whileHover={{ scale: 1.02 }}
+        transition={{ duration: 0.3 }}
       >
-        <h3 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
-          <FileText className="w-6 h-6" /> Kiến thức nền tảng về HIV/AIDS
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Card 1 */}
-          <motion.div
-            className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200"
-            variants={itemVariants}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-          >
-            <span className="text-2xl"></span>
-            <div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">Các giai đoạn của HIV/AIDS</h4>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                HIV tiến triển qua 3 giai đoạn chính: <strong>Giai đoạn cấp tính</strong>, <strong>giai đoạn không triệu chứng</strong>, và <strong>AIDS</strong>. Nếu không điều trị, hệ miễn dịch sẽ suy yếu nghiêm trọng, dễ dẫn đến tử vong.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Card 2 */}
-          <motion.div
-            className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200"
-            variants={itemVariants}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-          >
-            <span className="text-2xl"></span>
-            <div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">ARV là gì?</h4>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                ARV (thuốc kháng virus) giúp <strong>kiểm soát virus HIV</strong>, ngăn không cho virus nhân lên. Dùng ARV sớm và đều đặn giúp sống khỏe mạnh và giảm nguy cơ lây nhiễm.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Card 3 */}
-          <motion.div
-            className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200"
-            variants={itemVariants}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-          >
-            <span className="text-2xl"></span>
-            <div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">Cơ chế hoạt động của ARV</h4>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                ARV ức chế enzyme cần thiết để HIV sao chép. Tuân thủ điều trị giúp <strong>tải lượng virus xuống mức không phát hiện</strong>, người nhiễm có thể sống như người bình thường.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Card 4 */}
-          <motion.div
-            className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200"
-            variants={itemVariants}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-          >
-            <span className="text-2xl"></span>
-            <div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">HIV khác gì với AIDS?</h4>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                <strong>HIV</strong> là virus, còn <strong>AIDS</strong> là giai đoạn cuối của nhiễm HIV khi hệ miễn dịch bị phá hủy. Người có HIV không đồng nghĩa với việc đã mắc AIDS.
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
+        <h4 className="text-lg font-semibold text-gray-900 mb-2">{title}</h4>
+        <p className="text-sm text-gray-600 leading-relaxed mb-4">{description}</p>
+        <Button
+          label="Xem chi tiết"
+          onClick={() => window.open(link, "_blank")}
+          icon={<ChevronRight className="w-4 h-4" />}
+        />
+      </motion.article>
+    ))}
+  </div>
+</motion.section>
 
       {/* Hướng Dẫn Điều Trị */}
-      <motion.section
-        className="mb-16"
-        variants={containerVariants}
+      <motion.section className="mb-16" variants={containerVariants}>
+  <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
+    <Syringe className="w-6 h-6" /> Hướng Dẫn Điều Trị HIV
+  </h2>
+  <p className="text-base text-gray-700 mb-8 max-w-2xl mx-auto text-center leading-relaxed">
+    Những bài viết cung cấp kiến thức thực tế và lời khuyên giúp bạn điều trị hiệu quả và sống khỏe mạnh cùng HIV.
+  </p>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {treatmentArticles.map(({ title, description, link }, idx) => (
+      <motion.article
+        key={idx}
+        className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200"
+        variants={itemVariants}
+        whileHover={{ scale: 1.02 }}
+        transition={{ duration: 0.3 }}
       >
-        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
-          <Syringe className="w-6 h-6" /> Hướng Dẫn Điều Trị
-        </h2>
-        <p className="text-base text-gray-700 mb-8 max-w-2xl mx-auto text-center leading-relaxed">
-          Phương pháp điều trị HIV tiên tiến và lời khuyên thiết thực để sống tích cực, khỏe mạnh.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {treatmentGuides.map(({ title, content }, idx) => (
-            <motion.div
-              key={idx}
-              className="bg-white rounded-2xl shadow-md p-6 flex items-start gap-3 hover:shadow-lg transition-all duration-200"
-              variants={itemVariants}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-            >
-              <span className="text-2xl"></span>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{content}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
+        <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{title}</h3>
+        <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed">{description}</p>
+        <Button
+          label="Đọc thêm"
+          onClick={() => window.open(link, "_blank")}
+          icon={<ChevronRight className="w-4 h-4" />}
+        />
+      </motion.article>
+    ))}
+  </div>
+</motion.section>
 
       {/* Educational Library Section */}
       <motion.section
@@ -472,6 +451,7 @@ export default function KnowledgePage() {
         <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
           <FileText className="w-6 h-6" /> Blog Chia Sẻ Kinh Nghiệm
         </h2>
+          <img src={blogImg} alt="HIV Info" className="w-full h-65 object-cover" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {blogPosts.map(({ title, description, link }, idx) => (
             <motion.article
@@ -481,6 +461,7 @@ export default function KnowledgePage() {
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
+              
               <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{title}</h3>
               <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed">{description}</p>
               <Button
