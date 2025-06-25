@@ -156,7 +156,6 @@ export default function KnowledgePage() {
         </p>
       </motion.section>
 
-      {/* Thống Kê Về HIV (Giả lập) */}
       <motion.section
         className="mb-20"
         variants={containerVariants}
