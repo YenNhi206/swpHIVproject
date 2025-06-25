@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Stethoscope, Clock, AlertCircle, User } from 'lucide-react';
+import { Calendar, Stethoscope, Clock, AlertCircle, User, Phone } from 'lucide-react';
 
 export default function AnonymousAppointmentForm() {
   const [formData, setFormData] = useState({
@@ -52,7 +52,8 @@ export default function AnonymousAppointmentForm() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white p-6">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 opacity-0 translate-y-4 animate-fade-in">
-        <h2 className="text-2xl font-bold text-red-700 mb-6 flex items-center gap-2">
+        <h2 className="text-2xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2">
+
           <Stethoscope className="w-6 h-6" />
           Đặt lịch tư vấn trực tuyến ẩn danh
         </h2>
@@ -79,15 +80,17 @@ export default function AnonymousAppointmentForm() {
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                <span className="mx-3 text-gray-400">Nhập số điện thoại</span>
+                <Phone className="w-5 h-5 text-gray-400 mx-3" />
                 <input
                   type="tel"
                   name="phone"
+                  placeholder="Nhập số điện thoại"
                   value={formData.phone}
                   onChange={handleChange}
                   className="w-full p-3 border-none rounded-lg focus:outline-none"
                 />
               </div>
+
             </div>
           </div>
 

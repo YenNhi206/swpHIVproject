@@ -38,11 +38,12 @@ export default function Footer() {
               linkLabel: "unaids.org",
             },
             {
-              name: "Trung tâm HIV/AIDS TP XYZ",
-              image: "https://cdn-icons-png.flaticon.com/512/3022/3022256.png",
+              name: "Trung tâm HIV/AIDS TP HCM",
+              image: "https://keangnamkorea.com/wp-content/uploads/2025/02/Logo-So-Y-Te-TPHCM-Department-of-Healt-of-HCM-City.webp",
               description: "Đơn vị trực thuộc Sở Y tế địa phương, cung cấp dịch vụ tư vấn & điều trị.",
               link: "#",
-              linkLabel: "Trang chủ đang cập nhật",
+              linkLabel: "medinet.hochiminhcity.gov.vn"
+
             },
           ].map((partner, index) => (
             <motion.div

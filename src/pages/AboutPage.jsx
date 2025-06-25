@@ -47,11 +47,13 @@ export default function AboutPage() {
 
   return (
     <motion.div
+
       className="w-full px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 font-sans"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
+
       <motion.div
         className="mb-12 overflow-hidden rounded-xl shadow-lg"
         variants={itemVariants}
@@ -62,30 +64,119 @@ export default function AboutPage() {
           alt="Healthcare"
           className="w-full h-64 object-cover"
         />
+
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+          <h1 className="text-white text-3xl font-bold">Giới thiệu về HIVCare+</h1>
+        </div>
+
       </motion.div>
 
       <section className="mb-16 space-y-8">
+
+
         <motion.h1
           className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4"
           variants={itemVariants}
         >
-          Giới thiệu về HIV Care+
+          Chúng tôi khác biệt
         </motion.h1>
+        <div className="space-y-12 py-12">
 
-        {/* Mục đích và Sứ mệnh */}
+          <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
+            <img
+              src="https://phongkhamdakhoaphuduc.com/wp-content/uploads/2022/07/kham-benh-online.jpg"
+              alt="Tâm đức"
+              className="w-full h-auto rounded-xl shadow"
+            />
+            <div>
+              <h3 className="text-xl font-bold text-red-600 mb-4">TÂM ĐỨC</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Trong mọi hành động và suy nghĩ, chúng tôi đặt tâm đức làm trọng tâm nhằm mang đến dịch vụ chăm sóc sức khỏe toàn diện dành cho cộng đồng.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-red-100 py-8 px-4 rounded-xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
+              <div>
+                <h3 className="text-xl font-bold text-red-600 mb-4">CHUYÊN NGHIỆP</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Với tinh thần sẵn sàng thay đổi để thích ứng, chúng tôi cam kết không ngừng chuyên mình để đáp ứng tốt nhất nhu cầu chăm sóc sức khỏe của khách hàng.
+                </p>
+              </div>
+              <img
+                src="https://nutrihome.vn/wp-content/uploads/2020/08/lay-mau-xet-nghiem.jpg"
+                alt="Chuyên nghiệp"
+                className="w-full h-auto rounded-xl shadow"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
+            <img
+              src="http://image.congan.com.vn/thumbnail/CATP-2048-2022-12-17/hp76886.jpg"
+              alt="Ân cần"
+              className="w-full h-80 rounded-xl shadow object-cover"
+            />
+            <div>
+              <h3 className="text-xl font-bold text-red-600 mb-4">ÂN CẦN</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Kiến tạo một tổ chức cho cộng đồng và vì cộng đồng. Đó chính là cam kết duy nhất của chúng tôi suốt hơn 1 thập niên không ngừng chuyên mình.
+              </p>
+            </div>
+          </div>
+
+
+        </div>
+
         <motion.div
-          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+          className="bg-red-100 p-6 rounded-xl shadow-sm border border-gray-100"
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.3 }}
         >
-          <h2 className="text-2xl font-bold text-red-600 mb-4 flex items-center gap-2">
-            <Heart className="w-6 h-6 text-red-500" />
-            Sứ mệnh
-          </h2>
-          <p className="text-gray-700 text-base leading-relaxed">
-            HIV Care+ cam kết cung cấp dịch vụ y tế và điều trị HIV hiệu quả, bảo mật, và minh bạch, đồng hành cùng người bệnh để sống khỏe mạnh.
-          </p>
+          <div >
+            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-800">
+
+              {/* Tầm nhìn */}
+              <div>
+                <h2 className="text-xl font-bold text-red-600 mb-4">TẦM NHÌN</h2>
+                <p>
+                  HIVCare+ là một thương hiệu uy tín, trách nhiệm trong lĩnh vực chăm sóc sức khoẻ, an sinh cho cộng đồng, tạo cơ hội và hỗ trợ cộng đồng trong khởi nghiệp đa dịch vụ, góp phần khẳng định vị thế của cộng đồng trong xã hội.
+                </p>
+              </div>
+
+              {/* Sứ mệnh */}
+              <div>
+                <h2 className="text-xl font-bold text-red-600 mb-4">SỨ MỆNH</h2>
+                <ul className="list-disc list-inside space-y-2">
+                  <li>
+                    <strong>Kiến tạo</strong> hệ sinh thái chăm sóc sức khỏe cộng đồng, đa dạng dịch vụ, tối ưu trải nghiệm và chuẩn hoá chất lượng.
+                  </li>
+                  <li>
+                    <strong>Khai phóng</strong>, đầu tư và trao quyền cho các lãnh đạo cộng đồng hiện thực hóa ý tưởng kinh doanh bền vững tạo tác động xã hội.
+                  </li>
+                  <li>
+                    <strong>Khẳng định</strong> vai trò, trách nhiệm của cộng đồng trong việc nhận thức nâng cao sức khỏe cho chính mình và xã hội.
+                  </li>
+                </ul>
+              </div>
+
+              {/* Giá trị cốt lõi */}
+              <div>
+                <h2 className="text-xl font-bold text-red-600 mb-4">GIÁ TRỊ CỐT LÕI</h2>
+                <ul className="list-disc list-inside space-y-2">
+                  <li><strong>Gắn kết</strong></li>
+                  <li><strong>Lắng nghe</strong></li>
+                  <li><strong>In dấu</strong></li>
+                  <li><strong>Nhiệt tâm</strong></li>
+                  <li><strong>Khai phóng</strong></li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+
         </motion.div>
 
         {/* Chức năng chính */}
