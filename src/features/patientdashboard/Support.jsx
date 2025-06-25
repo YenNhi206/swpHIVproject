@@ -63,15 +63,6 @@ export default function Support() {
 
     }, 1000);
   };
-  const currentDate = new Date().toLocaleString('vi-VN', {
-    hour: '2-digit',
-    minute: '2-digit',
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour12: false,
-  });
-
   const handleReset = () => {
     setFormData({
       name: '',
@@ -247,7 +238,6 @@ export default function Support() {
                 <span>Bạn muốn đặt lịch ẩn danh? </span>
                 <a href="/anonymous-appointment" className="text-red-600 hover:underline">Đặt lịch ẩn danh tại đây</a>
               </div>
-              <p className="text-sm text-gray-500 text-center mt-2">Thời gian: {currentDate}</p>
 
             </form>
           )}

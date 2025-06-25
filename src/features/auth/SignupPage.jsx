@@ -35,15 +35,15 @@ export default function SignupPage() {
   };
 
   const validateOtpForm = () => {
-  const newErrors = {};
-  if (!formData.otp) {
-    newErrors.otp = 'OTP là bắt buộc';
-  } else if (!/^[A-Z0-9]{6}$/.test(formData.otp)) {
-    newErrors.otp = 'OTP phải gồm 6 ký tự chữ in hoa và số';
-  }
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
+    const newErrors = {};
+    if (!formData.otp) {
+      newErrors.otp = 'OTP là bắt buộc';
+    } else if (!/^[A-Z0-9]{6}$/.test(formData.otp)) {
+      newErrors.otp = 'OTP phải gồm 6 ký tự chữ in hoa và số';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
@@ -128,8 +128,9 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex flex-col">
-      <div className="flex items-center justify-center flex-grow px-4">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 opacity-0 translate-y-4 animate-fade-in">
+      <div className="flex items-center justify-center flex-grow px-4 mt-[-100px]">
+        <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8 opacity-0 translate-y-4 animate-fade-in">
+
           <h2 className="text-2xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2">
             {isOtpStep ? (
               <>
