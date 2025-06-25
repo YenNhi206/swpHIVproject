@@ -11,6 +11,7 @@ import img1 from "../assets/DYT.jpg";
 import img2 from "../assets/hiv2.jpg";
 import img3 from "../assets/doctor1.jpg";
 
+
 const carouselImages = [
   { src: img1, alt: 'HIV Care 1' },
   { src: img2, alt: 'HIV Care 2' },
@@ -27,8 +28,10 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
+
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
+
 
   const containerVariants = {
     hidden: { opacity: 0 },
