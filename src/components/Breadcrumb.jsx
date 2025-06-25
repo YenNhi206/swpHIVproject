@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 
 export default function Breadcrumb() {
@@ -57,22 +58,31 @@ export default function Breadcrumb() {
     acc.push({ path: pathSoFar, label });
     return acc;
   }, [{ path: '/', label: 'Trang chủ' }]);
+
   return (
-    <div className="w-full bg-gradient-to-b from-gray-100 to-white py-2 px-6 shadow-sm">
+    <motion.div
+      className="w-full bg-gradient-to-b from-gray-50 to-white py-3 px-6 shadow-sm"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="max-w-7xl mx-auto flex items-center space-x-2 text-lg">
         {breadcrumbItems.map((item, index) => (
           <React.Fragment key={item.path}>
-            <Link
-              to={item.path}
-              className={`hover:text-red-600 transition-colors duration-200 ${index === breadcrumbItems.length - 1 ? 'text-red-700 font-semibold' : 'text-gray-700'
+            <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
+              <Link
+                to={item.path}
+                className={`hover:text-red-600 transition-colors duration-200 ${
+                  index === breadcrumbItems.length - 1 ? 'text-red-700 font-semibold' : 'text-gray-700'
                 }`}
-            >
-              {item.label}
-            </Link>
-            {index < breadcrumbItems.length - 1 && <ChevronRight className="w-5 h-5 text-gray-500" />}
+              >
+                {item.label}
+              </Link>
+            </motion.div>
+            {index < breadcrumbItems.length - 1 && <ChevronRight className="w-5 h-5 text-gray-400" />}
           </React.Fragment>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
