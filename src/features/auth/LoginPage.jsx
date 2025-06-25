@@ -214,9 +214,11 @@ export default function LoginPage({ setUser }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex flex-col">
-      <div className="flex-1 flex items-start justify-center px-4 pt-8">
+      <div className="flex items-center justify-center px-4 mt-4 mb-8">
+
         <div className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl p-8 opacity-0 translate-y-4 animate-fade-in">
-          <h2 className="text-2xl font-bold text-red-700 mb-6 flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2">
+
             <User className="w-6 h-6" />
             Đăng nhập
           </h2>

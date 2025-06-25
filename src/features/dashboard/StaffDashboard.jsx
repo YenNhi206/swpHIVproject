@@ -4,10 +4,13 @@ import {
   XCircle,
   PlusCircle,
   User,
-  Clock
+  Clock,
+  Stethoscope,
 } from "lucide-react";
 
 import { Button, Col, Input, Row, Select, Form } from "antd";
+
+const { Option } = Select;
 
 const mockAppointments = [
   {
@@ -17,7 +20,6 @@ const mockAppointments = [
     time: "09:00-10:00",
     doctorName: "BS. Trần Văn B",
     service: "Tư vấn điều trị",
-    serviceType: "Khám mới",
     status: "Chưa đến",
   },
   {
@@ -27,7 +29,6 @@ const mockAppointments = [
     time: "10:00-11:00",
     doctorName: "BS. Nguyễn Văn C",
     service: "Lấy thuốc ARV",
-    serviceType: "Tái khám",
     status: "Đã đến",
   },
 ];
@@ -35,70 +36,30 @@ const mockAppointments = [
 const TABS = ["Tất cả", "Chưa đến", "Đã đến", "Đang khám", "Hoàn tất", "Vắng"];
 const STATUS_FLOW = ["Chưa đến", "Đã đến", "Đang khám", "Hoàn tất"];
 
+const doctors = [
+  "BS. Trần Văn B",
+  "BS. Nguyễn Văn C",
+  "BS. Phạm Thị D",
+];
+
+const timeSlots = [
+  { value: "08:00-09:00", label: "08:00-09:00" },
+  { value: "09:00-10:00", label: "09:00-10:00" },
+  { value: "10:00-11:00", label: "10:00-11:00" },
+  { value: "13:00-14:00", label: "13:00-14:00" },
+  { value: "14:00-15:00", label: "14:00-15:00" },
+];
+
 export default function StaffAppointmentPage() {
   const [appointments, setAppointments] = useState([]);
   const [selectedTab, setSelectedTab] = useState("Tất cả");
   const [selectedDate, setSelectedDate] = useState("");
-
-  const [newPatient, setNewPatient] = useState({
-    fullName: "",
-    date: "",
-    time: "",
-    doctorName: "",
-    service: "",
-    serviceType: "",
-  });
-  const [errorNewPatient, setErrorNewPatient] = useState("");
 
   useEffect(() => {
     setAppointments(mockAppointments);
     const today = new Date().toISOString().split("T")[0];
     setSelectedDate(today);
   }, []);
-
-  const handleNewPatientChange = (e) => {
-    const { name, value } = e.target;
-    setNewPatient((prev) => ({ ...prev, [name]: value }));
-    setErrorNewPatient("");
-  };
-  const timeSlots = [
-    { value: "08:00-09:00", label: "08:00-09:00" },
-    { value: "09:00-10:00", label: "09:00-10:00" },
-    { value: "10:00-11:00", label: "10:00-11:00" },
-    { value: "13:00-14:00", label: "13:00-14:00" },
-    { value: "14:00-15:00", label: "14:00-15:00" },
-  ];
-
-  const handleAddNewPatient = () => {
-    if (
-      !newPatient.fullName ||
-      !newPatient.date ||
-      !newPatient.time ||
-      !newPatient.service ||
-      !newPatient.doctorName ||
-      !newPatient.serviceType
-    ) {
-      setErrorNewPatient("Vui lòng điền đầy đủ thông tin.");
-      return;
-    }
-
-    const newId = appointments.length > 0 ? Math.max(...appointments.map((a) => a.id)) + 1 : 1;
-    const newAppt = {
-      id: newId,
-      ...newPatient,
-      status: "Chưa đến",
-    };
-
-    setAppointments((prev) => [...prev, newAppt]);
-    setNewPatient({
-      fullName: "",
-      date: "",
-      time: "",
-      doctorName: "",
-      service: "",
-      serviceType: "",
-    });
-  };
 
   const handleUpdateStatus = (id) => {
     setAppointments((prev) =>
@@ -148,8 +109,8 @@ export default function StaffAppointmentPage() {
             key={tab}
             onClick={() => setSelectedTab(tab)}
             className={`px-4 py-2 rounded-full font-medium border ${selectedTab === tab
-              ? "bg-red-600 text-white"
-              : "bg-white text-red-700 border-red-500"
+                ? "bg-red-600 text-white"
+                : "bg-white text-red-700 border-red-500"
               }`}
           >
             {tab}
@@ -160,7 +121,9 @@ export default function StaffAppointmentPage() {
       {/* Danh sách lịch hẹn */}
       <div className="overflow-x-auto">
         {filteredAppointments.length === 0 ? (
-          <p className="text-center text-red-600 font-medium mt-4">Không có lịch hẹn.</p>
+          <p className="text-center text-red-600 font-medium mt-4">
+            Không có lịch hẹn.
+          </p>
         ) : (
           <table className="w-full table-auto bg-white border border-red-300 rounded shadow">
             <thead className="bg-red-600 text-white">
@@ -169,25 +132,26 @@ export default function StaffAppointmentPage() {
                 <th className="p-3">Giờ</th>
                 <th className="p-3">Bác sĩ</th>
                 <th className="p-3">Dịch vụ</th>
-                <th className="p-3">Loại</th>
                 <th className="p-3">Trạng thái</th>
                 <th className="p-3">Cập nhật</th>
               </tr>
             </thead>
             <tbody>
               {filteredAppointments.map((appt) => (
-                <tr key={appt.id} className="border-t text-center hover:bg-red-50">
+                <tr
+                  key={appt.id}
+                  className="border-t text-center hover:bg-red-50"
+                >
                   <td className="p-3">{appt.fullName}</td>
                   <td className="p-3">{appt.time}</td>
                   <td className="p-3">{appt.doctorName}</td>
                   <td className="p-3">{appt.service}</td>
-                  <td className="p-3">{appt.serviceType}</td>
                   <td
                     className={`p-3 font-semibold ${appt.status === "Vắng"
-                      ? "text-red-600"
-                      : appt.status === "Hoàn tất"
-                        ? "text-green-600"
-                        : "text-gray-600"
+                        ? "text-red-600"
+                        : appt.status === "Hoàn tất"
+                          ? "text-green-600"
+                          : "text-gray-600"
                       }`}
                   >
                     {appt.status}
@@ -237,7 +201,6 @@ export default function StaffAppointmentPage() {
             const newAppt = {
               id: newId,
               ...values,
-              doctorName: values.doctor,
               status: "Chưa đến",
             };
             setAppointments((prev) => [...prev, newAppt]);
@@ -309,17 +272,20 @@ export default function StaffAppointmentPage() {
           <Row gutter={24}>
             <Col span={12}>
               <Form.Item
-                label="Loại khám"
-                name="serviceType"
-                rules={[{ required: true, message: "Loại khám là bắt buộc" }]}
+                label="Bác sĩ phụ trách"
+                name="doctorName"
+                rules={[{ required: true, message: "Vui lòng chọn bác sĩ" }]}
               >
                 <Select
-                  placeholder="Chọn loại khám"
+                  placeholder="Chọn bác sĩ"
                   className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   style={{ height: "42px" }}
                 >
-                  <Option value="Khám mới">Khám mới</Option>
-                  <Option value="Tái khám">Tái khám</Option>
+                  {doctors.map((doc) => (
+                    <Option key={doc} value={doc}>
+                      {doc}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
@@ -330,20 +296,39 @@ export default function StaffAppointmentPage() {
                 name="service"
                 rules={[{ required: true, message: "Dịch vụ là bắt buộc" }]}
               >
-                <Select
-                  placeholder="Chọn dịch vụ"
-                  className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                  style={{ height: "42px" }}
-                >
-                  <Option value="Khám HIV cơ bản">Khám HIV cơ bản</Option>
-                  <Option value="Xét nghiệm tải lượng virus HIV">Xét nghiệm tải lượng virus HIV</Option>
-                  <Option value="Xét nghiệm CD4">Xét nghiệm CD4</Option>
-                  <Option value="Tư vấn và điều trị dự phòng">Tư vấn và điều trị dự phòng</Option>
-                </Select>
+                <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500 relative z-10 h-[42px] px-3">
+                  <Stethoscope className="w-5 h-5 text-gray-400 mr-2" />
+                  <Select
+                    placeholder="Chọn dịch vụ"
+                    bordered={false}
+                    className="w-full focus:outline-none rounded-lg shadow-none"
+                    dropdownStyle={{ zIndex: 1050 }}
+                  >
+                    <Select.OptGroup label="Khám lần đầu">
+                      <Select.Option value="Khám HIV cơ bản">
+                        Khám HIV cơ bản
+                      </Select.Option>
+                      <Select.Option value="Xét nghiệm tải lượng virus HIV">
+                        Xét nghiệm tải lượng virus HIV
+                      </Select.Option>
+                      <Select.Option value="Xét nghiệm CD4">
+                        Xét nghiệm CD4
+                      </Select.Option>
+                      <Select.Option value="Tư vấn và điều trị dự phòng">
+                        Tư vấn và điều trị dự phòng
+                      </Select.Option>
+                    </Select.OptGroup>
+                    <Select.OptGroup label="Tái khám">
+                      <Select.Option value="Khám tái khám HIV">
+                        Khám tái khám HIV
+                      </Select.Option>
+                      <Select.Option value="Lấy thuốc ARV">Lấy thuốc ARV</Select.Option>
+                    </Select.OptGroup>
+                  </Select>
+                </div>
               </Form.Item>
             </Col>
           </Row>
-
 
           <Form.Item>
             <button
@@ -357,11 +342,9 @@ export default function StaffAppointmentPage() {
             >
               Thêm bệnh nhân
             </button>
-
           </Form.Item>
         </Form>
       </div>
-
     </div>
   );
 }

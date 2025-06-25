@@ -77,8 +77,9 @@ export default function AppointmentForm() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white p-4">
-      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-10 opacity-0 translate-y-4 animate-fade-in">
-        <h2 className="text-2xl font-bold text-red-700 mb-6 flex items-center gap-2">
+      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-10 opacity-0 translate-y-4 animate-fade-in">
+        <h2 className="text-2xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2">
+
           <Stethoscope className="w-6 h-6" />
           Đặt lịch hẹn
         </h2>
@@ -101,6 +102,7 @@ export default function AppointmentForm() {
               </div>
               {errors.fullName && <p className="text-red-600 text-sm mt-1">{errors.fullName}</p>}
             </div>
+
 
             {/* Ngày sinh */}
             <div>

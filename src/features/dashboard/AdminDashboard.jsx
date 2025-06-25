@@ -118,7 +118,7 @@ export default function AdminDashboard() {
           </div>
           <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
             <Calendar className="w-8 h-8 text-red-500 mx-auto mb-2" />
-            <p className="text-gray-500">Cuộc hẹn chờ duyệt</p>
+            <p className="text-gray-500">Cuộc hẹn đang chờ</p>
             <p className="text-2xl font-semibold">{appointmentsPending.toLocaleString()}</p>
           </div>
           <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
