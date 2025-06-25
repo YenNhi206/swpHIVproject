@@ -22,13 +22,13 @@ export default function Breadcrumb() {
     '/treatment/:create': 'Tạo phác đồ',
     '/treatment/:id/edit': 'Sửa phác đồ',
     '/patient': 'Bảng điều khiển bệnh nhân',
-    '/support': 'Hỗ trợ',
+    '/support': 'Kết nối cùng HIVCare+',
     '/reminder': 'Nhắc nhở',
     '/history': 'Lịch sử',
     '/admin': 'Bảng điều khiển admin',
     '/doctorappointments': 'Lịch hẹn bác sĩ',
     '/userappointments': 'Lịch hẹn người dùng',
-    '/anonymous-appointment': 'Đặt lịch ẩn danh',
+    '/anonymous-appointment': 'Kết nối cùng HIVCare+',
     '/knowledge': 'Kiến thức',
     '/listdoctor': 'Chuyên gia - Bác sĩ',
     '/services': 'Dịch vụ - Giá tiền',
@@ -72,9 +72,8 @@ export default function Breadcrumb() {
             <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
               <Link
                 to={item.path}
-                className={`hover:text-red-600 transition-colors duration-200 ${
-                  index === breadcrumbItems.length - 1 ? 'text-red-700 font-semibold' : 'text-gray-700'
-                }`}
+                className={`hover:text-red-600 transition-colors duration-200 ${index === breadcrumbItems.length - 1 ? 'text-red-700 font-semibold' : 'text-gray-700'
+                  }`}
               >
                 {item.label}
               </Link>

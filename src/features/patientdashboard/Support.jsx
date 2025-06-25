@@ -63,6 +63,8 @@ export default function Support() {
 
     }, 1000);
   };
+  const genderOptions = ['Nữ', 'Nam', 'Khác'];
+
   const handleReset = () => {
     setFormData({
       name: '',
@@ -77,26 +79,18 @@ export default function Support() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-xl mx-auto">
-        <h1 className="text-3xl sm:text-4xl font-bold text-red-600 mb-8 text-center animate-fade-in">
-          Đặt lịch tư vấn trực tuyến về HIV
-        </h1>
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex flex-col">
+      <div className="flex items-center justify-center px-4 mt-4 mb-8 w-full">
+        <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-8 animate-fade-in">
+          <h2 className="text-2xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2">
+            <Stethoscope className="w-6 h-6" />
 
-        <div className="bg-white rounded-2xl shadow-lg p-8 opacity-0 translate-y-4 animate-fade-in [animation-delay:0.2s]">
-          {isLoading ? (
-            <div className="space-y-4">
-              {[...Array(5)].map((_, idx) => (
-                <div key={idx} className="animate-pulse">
-                  <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-                  <div className="h-10 bg-gray-200 rounded"></div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Họ và tên */}
-              <div>
+            Đặt lịch tư vấn trực tuyến về HIV
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Họ và tên & Email */}
+            <div className="flex gap-x-6">
+              <div className="flex-1">
                 <label className="block text-sm font-semibold text-gray-600 mb-1">Họ và tên</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                   <User className="w-5 h-5 text-gray-400 mx-3" />
@@ -112,8 +106,7 @@ export default function Support() {
                 {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
               </div>
 
-              {/* Email */}
-              <div>
+              <div className="flex-1">
                 <label className="block text-sm font-semibold text-gray-600 mb-1">Email</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                   <Mail className="w-5 h-5 text-gray-400 mx-3" />
@@ -128,9 +121,34 @@ export default function Support() {
                 </div>
                 {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
               </div>
+            </div>
 
-              {/* Phone */}
-              <div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
+              <div className="flex gap-6">
+                {genderOptions.map((gender) => (
+                  <label
+                    key={gender}
+                    className="inline-flex items-center cursor-pointer select-none"
+                  >
+                    <input
+                      type="radio"
+                      name="gender"
+                      value={gender}
+                      checked={formData.gender === gender}
+                      onChange={handleChange}
+                      className="form-radio text-red-600"
+                      required
+                    />
+                    <span className="ml-2">{gender}</span>
+                  </label>
+                ))}
+              </div>
+              {errors.gender && <p className="text-red-600 text-sm mt-1">{errors.gender}</p>}
+            </div>
+
+            <div className="flex gap-x-6">
+              <div className="flex-1">
                 <label className="block text-sm font-semibold text-gray-600 mb-1">Số điện thoại</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                   <Phone className="w-5 h-5 text-gray-400 mx-3" />
@@ -146,8 +164,7 @@ export default function Support() {
                 {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone}</p>}
               </div>
 
-              {/* Date */}
-              <div>
+              <div className="flex-1">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Ngày hẹn</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                   <Calendar className="w-5 h-5 text-gray-400 mx-3" />
@@ -161,86 +178,48 @@ export default function Support() {
                 </div>
                 {errors.date && <p className="text-red-600 text-sm mt-1">{errors.date}</p>}
               </div>
+            </div>
 
-              {/* Time */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Giờ hẹn</label>
-                <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                  <Clock className="w-5 h-5 text-gray-400 mx-3" />
-                  <select
-                    name="time"
-                    value={formData.time}
-                    onChange={handleChange}
-                    className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none"
-                  >
-                    <option value="">Chọn giờ</option>
-                    {timeSlots.map((slot, idx) => (
-                      <option key={idx} value={slot.value}>{slot.label}</option>
-                    ))}
-                  </select>
-                </div>
-                {errors.time && <p className="text-red-600 text-sm mt-1">{errors.time}</p>}
-              </div>
 
-              {/* Doctor */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Chọn bác sĩ</label>
-                <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                  <Stethoscope className="w-5 h-5 text-gray-400 mx-3" />
-                  <select
-                    name="doctor"
-                    value={formData.doctor}
-                    onChange={handleChange}
-                    className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none"
-                  >
-                    <option value="">Chọn bác sĩ</option>
-                    {doctors.map((doctor, index) => (
-                      <option key={index} value={doctor}>{doctor}</option>
-                    ))}
-                  </select>
-                </div>
-                {errors.doctor && <p className="text-red-600 text-sm mt-1">{errors.doctor}</p>}
-              </div>
+            {/* Vấn đề sức khỏe */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Vấn đề sức khỏe</label>
+              <textarea
+                name="problem"
+                placeholder="Mô tả vấn đề bạn đang gặp phải"
+                value={formData.problem}
+                onChange={handleChange}
+                rows={4}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              ></textarea>
+              {errors.problem && <p className="text-red-600 text-sm mt-1">{errors.problem}</p>}
+            </div>
 
-              {/* Problem description */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Vấn đề sức khỏe</label>
-                <textarea
-                  name="problem"
-                  placeholder="Mô tả vấn đề bạn đang gặp phải"
-                  value={formData.problem}
-                  onChange={handleChange}
-                  rows={4}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                ></textarea>
-                {errors.problem && <p className="text-red-600 text-sm mt-1">{errors.problem}</p>}
-              </div>
+            {/* Buttons */}
+            <div className="flex gap-4">
+              <button
+                type="submit"
+                className="flex-1 bg-red-600 text-white font-semibold py-3 rounded-lg hover:bg-red-700 transition-colors duration-300"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Đang xử lý...' : 'Đặt lịch tư vấn'}
+              </button>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="flex-1 border border-red-600 text-red-600 font-semibold py-3 rounded-lg hover:bg-red-100 transition-colors duration-300"
+              >
+                Hủy
+              </button>
+            </div>
 
-              {/* Buttons */}
-              <div className="flex gap-4">
-                <button
-                  type="submit"
-                  className="flex-1 bg-red-600 text-white font-semibold py-3 rounded-lg hover:bg-red-700 transition-colors duration-300"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Đang xử lý...' : 'Đặt lịch tư vấn'}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleReset}
-                  className="flex-1 border border-red-600 text-red-600 font-semibold py-3 rounded-lg hover:bg-red-100 transition-colors duration-300"
-                >
-                  Hủy
-                </button>
-              </div>
+            <div className="text-sm text-center mt-4">
+              <span>Bạn muốn đặt lịch ẩn danh? </span>
+              <a href="/anonymous-appointment" className="text-red-600 hover:underline">Đặt lịch ẩn danh tại đây</a>
+            </div>
+          </form>
 
-              <div className="text-sm text-center mt-4">
-                <span>Bạn muốn đặt lịch ẩn danh? </span>
-                <a href="/anonymous-appointment" className="text-red-600 hover:underline">Đặt lịch ẩn danh tại đây</a>
-              </div>
 
-            </form>
-          )}
         </div>
       </div>
     </div>

@@ -12,7 +12,7 @@ export default function SignupPage() {
   });
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState('');
-  const [isOtpStep, setIsOtpStep] = useState(false); // Trạng thái để chuyển sang bước OTP
+  const [isOtpStep, setIsOtpStep] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -54,7 +54,6 @@ export default function SignupPage() {
         password: formData.password,
         confirmPassword: formData.confirmPassword,
       };
-      console.log('Dữ liệu gửi tới /api/auth/register:', payload); // Log dữ liệu
       try {
         const response = await fetch('http://localhost:8080/api/auth/register', {
           method: 'POST',
@@ -81,7 +80,6 @@ export default function SignupPage() {
         email: formData.email,
         otp: formData.otp,
       };
-      console.log('Dữ liệu gửi tới /api/auth/register-verify-otp:', payload); // Log dữ liệu
       try {
         const response = await fetch('http://localhost:8080/api/auth/register-verify-otp', {
           method: 'POST',
@@ -108,7 +106,6 @@ export default function SignupPage() {
       password: formData.password,
       confirmPassword: formData.confirmPassword,
     };
-    console.log('Dữ liệu gửi tới /api/auth/register (gửi lại OTP):', payload); // Log dữ liệu
     try {
       const response = await fetch('http://localhost:8080/api/auth/register', {
         method: 'POST',
@@ -128,9 +125,9 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex flex-col">
-      <div className="flex items-center justify-center flex-grow px-4 mt-[-100px]">
-        <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8 opacity-0 translate-y-4 animate-fade-in">
+      <div className="flex items-center justify-center px-4 mt-4 mb-8">
 
+        <div className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl p-8 animate-fade-in">
           <h2 className="text-2xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2">
             {isOtpStep ? (
               <>
@@ -144,13 +141,16 @@ export default function SignupPage() {
               </>
             )}
           </h2>
+
           {message && (
             <p className={`text-center mb-4 ${message.includes('thành công') ? 'text-green-600' : 'text-red-600'}`}>
               {message}
             </p>
           )}
+
           {!isOtpStep ? (
             <form onSubmit={handleRegisterSubmit} className="space-y-6">
+              {/* Họ tên */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Họ tên</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -167,6 +167,7 @@ export default function SignupPage() {
                 {errors.fullName && <p className="text-red-600 text-sm mt-1">{errors.fullName}</p>}
               </div>
 
+              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -183,36 +184,39 @@ export default function SignupPage() {
                 {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
-                <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                  <Lock className="w-5 h-5 text-gray-400 mx-3" />
-                  <input
-                    type="password"
-                    name="password"
-                    required
-                    className="w-full p-3 border-none rounded-lg focus:outline-none"
-                    value={formData.password}
-                    onChange={handleChange}
-                  />
+              {/* Mật khẩu + Xác nhận mật khẩu ngang hàng */}
+              <div className="flex gap-4">
+                <div className="w-1/2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
+                  <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                    <Lock className="w-5 h-5 text-gray-400 mx-3" />
+                    <input
+                      type="password"
+                      name="password"
+                      required
+                      className="w-full p-3 border-none rounded-lg focus:outline-none"
+                      value={formData.password}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
                 </div>
-                {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Xác nhận mật khẩu</label>
-                <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                  <Lock className="w-5 h-5 text-gray-400 mx-3" />
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    required
-                    className="w-full p-3 border-none rounded-lg focus:outline-none"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                  />
+                <div className="w-1/2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Xác nhận mật khẩu</label>
+                  <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                    <Lock className="w-5 h-5 text-gray-400 mx-3" />
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      required
+                      className="w-full p-3 border-none rounded-lg focus:outline-none"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  {errors.confirmPassword && <p className="text-red-600 text-sm mt-1">{errors.confirmPassword}</p>}
                 </div>
-                {errors.confirmPassword && <p className="text-red-600 text-sm mt-1">{errors.confirmPassword}</p>}
               </div>
 
               <button
@@ -224,22 +228,23 @@ export default function SignupPage() {
             </form>
           ) : (
             <form onSubmit={handleOtpSubmit} className="space-y-6">
+              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                <div className="flex items-center border border-gray-300 rounded-lg bg-gray-100">
                   <Mail className="w-5 h-5 text-gray-400 mx-3" />
                   <input
                     type="email"
                     name="email"
                     required
-                    className="w-full p-3 border-none rounded-lg focus:outline-none bg-gray-100"
-                    value={formData.email}
                     readOnly
+                    className="w-full p-3 border-none rounded-lg focus:outline-none"
+                    value={formData.email}
                   />
                 </div>
-                {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
               </div>
 
+              {/* OTP */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Mã OTP</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">

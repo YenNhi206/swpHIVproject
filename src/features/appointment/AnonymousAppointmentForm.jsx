@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Stethoscope, Clock, AlertCircle } from 'lucide-react';
+import { Calendar, Stethoscope, Clock, AlertCircle, User } from 'lucide-react';
 
 export default function AnonymousAppointmentForm() {
   const [formData, setFormData] = useState({
@@ -10,18 +10,10 @@ export default function AnonymousAppointmentForm() {
     date: '',
     time: '',
     doctor: '',
+    phone: '',
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-
-  const currentDate = new Date().toLocaleString('vi-VN', {
-    hour: '2-digit',
-    minute: '2-digit',
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour12: false,
-  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,9 +27,9 @@ export default function AnonymousAppointmentForm() {
     if (!formData.gender) newErrors.gender = 'Giới tính là bắt buộc';
     if (!formData.reason) newErrors.reason = 'Vấn đề cần khám là bắt buộc';
     else if (formData.reason.length < 10) newErrors.reason = 'Vui lòng nhập chi tiết hơn (ít nhất 10 ký tự)';
-    if (!formData.date) newErrors.date = 'Ngày hẹn là bắt buộc';
-    if (!formData.time) newErrors.time = 'Giờ hẹn là bắt buộc';
-    if (!formData.doctor) newErrors.doctor = 'Bác sĩ là bắt buộc';
+    if (!formData.phone) newErrors.phone = 'Số điện thoại là bắt buộc';
+    else if (!/^[0-9]{9,11}$/.test(formData.phone)) newErrors.phone = 'Số điện thoại không hợp lệ';
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -54,50 +46,53 @@ export default function AnonymousAppointmentForm() {
     }
   };
 
-  const doctors = ['Dr. Nguyễn Văn A', 'Dr. Trần Thị B', 'Dr. Phạm Văn C'];
   const genderOptions = ['Nữ', 'Nam', 'Khác'];
-  const salutationOptions = ['Ông', 'Bà', 'Cô', 'Anh', 'Chị'];
-  const timeSlots = [
-    { label: '08:00 - 09:00', value: '08:00' },
-    { label: '09:00 - 10:00', value: '09:00' },
-    { label: '10:00 - 11:00', value: '10:00' },
-    { label: '11:00 - 12:00', value: '11:00' },
-    { label: '13:00 - 14:00', value: '13:00' },
-    { label: '14:00 - 15:00', value: '14:00' },
-    { label: '15:00 - 16:00', value: '15:00' },
-    { label: '16:00 - 17:00', value: '16:00' },
-  ];
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white p-6">
-      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-8 opacity-0 translate-y-4 animate-fade-in">
+      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 opacity-0 translate-y-4 animate-fade-in">
         <h2 className="text-2xl font-bold text-red-700 mb-6 flex items-center gap-2">
           <Stethoscope className="w-6 h-6" />
-          Đặt lịch tư vấn ẩn danh
+          Đặt lịch tư vấn trực tuyến ẩn danh
         </h2>
 
-        {/* Danh xưng */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Danh xưng</label>
-            <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-              <select
-                name="salutation"
-                value={formData.salutation}
-                onChange={handleChange}
-                className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none"
-                required
-              >
-                <option value="">Chọn danh xưng</option>
-                {salutationOptions.map((item, idx) => (
-                  <option key={idx} value={item}>{item}</option>
-                ))}
-              </select>
+          <div className="flex gap-4">
+            {/* Tên gọi */}
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Tên gọi</label>
+              <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                <User className="w-5 h-5 text-gray-400 mx-3" />
+                <input
+                  type="text"
+                  name="salutation"
+                  value={formData.salutation}
+                  onChange={handleChange}
+                  className="w-full p-3 border-none rounded-lg focus:outline-none"
+                />
+              </div>
+              {errors.salutation && <p className="text-red-600 text-sm mt-1">{errors.salutation}</p>}
             </div>
-            {errors.salutation && <p className="text-red-600 text-sm mt-1">{errors.salutation}</p>}
+
+            {/* Số điện thoại */}
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
+              <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                <span className="mx-3 text-gray-400">Nhập số điện thoại</span>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="w-full p-3 border-none rounded-lg focus:outline-none"
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Giới tính theo radio */}
+
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
             <div className="flex gap-6">
@@ -122,64 +117,7 @@ export default function AnonymousAppointmentForm() {
             {errors.gender && <p className="text-red-600 text-sm mt-1">{errors.gender}</p>}
           </div>
 
-          {/* Ngày hẹn */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ngày hẹn</label>
-            <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-              <Calendar className="w-5 h-5 text-gray-400 mx-3" />
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                className="w-full p-3 border-none rounded-lg focus:outline-none"
-                required
-              />
-            </div>
-            {errors.date && <p className="text-red-600 text-sm mt-1">{errors.date}</p>}
-          </div>
 
-          {/* Giờ hẹn */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Giờ hẹn</label>
-            <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-              <Clock className="w-5 h-5 text-gray-400 mx-3" />
-              <select
-                name="time"
-                value={formData.time}
-                onChange={handleChange}
-                className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none"
-                required
-              >
-                <option value="">Chọn giờ</option>
-                {timeSlots.map((slot, idx) => (
-                  <option key={idx} value={slot.value}>{slot.label}</option>
-                ))}
-              </select>
-            </div>
-            {errors.time && <p className="text-red-600 text-sm mt-1">{errors.time}</p>}
-          </div>
-
-          {/* Chọn bác sĩ */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Chọn bác sĩ</label>
-            <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-              <Stethoscope className="w-5 h-5 text-gray-400 mx-3" />
-              <select
-                name="doctor"
-                value={formData.doctor}
-                onChange={handleChange}
-                className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none"
-                required
-              >
-                <option value="">Chọn bác sĩ</option>
-                {doctors.map((doctor, index) => (
-                  <option key={index} value={doctor}>{doctor}</option>
-                ))}
-              </select>
-            </div>
-            {errors.doctor && <p className="text-red-600 text-sm mt-1">{errors.doctor}</p>}
-          </div>
 
           {/* Vấn đề cần tư vấn */}
           <div>
@@ -213,7 +151,6 @@ export default function AnonymousAppointmentForm() {
             </button>
           </div>
 
-          <p className="text-sm text-gray-500 text-center mt-2">Thời gian: {currentDate}</p>
         </form>
       </div>
     </div>

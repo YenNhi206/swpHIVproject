@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 const mockHistory = [
   { id: 1, date: "2025-04-10", type: "Khám định kỳ", description: "Khám sức khỏe tổng quát, xét nghiệm CD4 và tải lượng virus." },
@@ -14,115 +14,76 @@ const mockHistory = [
 ];
 
 export default function History() {
-  const today = new Date().toISOString().split("T")[0];
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const availableYears = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    const startYear = currentYear - 10;
+    const years = [];
+    for (let y = currentYear; y >= startYear; y--) {
+      years.push(y);
+    }
+    return years;
+  }, []);
+
+
+  const [selectedYear, setSelectedYear] = useState(availableYears[0] || new Date().getFullYear());
   const [searchInput, setSearchInput] = useState("");
-  const [isFiltered, setIsFiltered] = useState(false);
 
-  const isInvalidRange = toDate && new Date(toDate) > new Date(today);
-
-  const updateFilterState = (from, to, search) => {
-    setIsFiltered(from.trim() !== "" || to.trim() !== "" || search.trim() !== "");
-  };
-
-  const handleFilterChange = (setter, field) => (e) => {
-    const value = e.target.value;
-    setter(value);
-    updateFilterState(
-      field === "from" ? value : fromDate,
-      field === "to" ? value : toDate,
-      searchInput
-    );
-  };
-
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchInput(value);
-    updateFilterState(fromDate, toDate, value);
-  };
-
-  const filterByDateAndSearch = (entries) => {
-    return entries.filter((entry) => {
-      const entryDate = new Date(entry.date);
-      const inRange =
-        (!fromDate || entryDate >= new Date(fromDate)) &&
-        (!toDate || entryDate <= new Date(toDate));
-      const trimmedSearch = searchInput.trim();
-      if (trimmedSearch !== "") {
-        const matchesSearch =
-          entry.id.toString() === trimmedSearch || entry.date === trimmedSearch;
-        return inRange && matchesSearch;
-      }
-      return inRange;
-    });
-  };
-
-  const filteredData = isInvalidRange ? null : filterByDateAndSearch(mockHistory);
+  const filteredData = useMemo(() => {
+    return mockHistory
+      .filter(item => new Date(item.date).getFullYear() === selectedYear)
+      .filter(item => {
+        const search = searchInput.trim().toLowerCase();
+        if (!search) return true;
+        return (
+          item.id.toString() === search ||
+          item.date.includes(search) ||
+          item.type.toLowerCase().includes(search) ||
+          item.description.toLowerCase().includes(search)
+        );
+      })
+      .sort((a, b) => new Date(b.date) - new Date(a.date)); // sắp xếp mới nhất lên trước
+  }, [selectedYear, searchInput]);
 
   return (
     <div className="max-w-4xl mx-auto p-6 font-sans text-[15px]">
       <h2 className="text-3xl font-bold mb-1" style={{ color: "oklch(0.577 0.245 27.325)" }}>
         Lịch sử khám & điều trị
       </h2>
-      <p className="text-gray-600 mb-6">Xem lại các lần khám, đơn thuốc và quá trình điều trị HIV</p>
+      <p className="text-gray-600 mb-6">
+        Xem lại các lần khám, đơn thuốc và quá trình điều trị HIV trong năm {selectedYear}
+      </p>
 
-      <div className="flex flex-wrap gap-6 mb-6">
+      <div className="flex flex-wrap gap-6 mb-6 items-end">
+        {/* Dropdown chọn năm */}
         <div className="flex flex-col">
-          <label className="text-sm font-medium text-gray-700 mb-1">Từ ngày</label>
-          <input
-            type="date"
-            value={fromDate}
-            onChange={handleFilterChange(setFromDate, "from")}
-            max={today}
+          <label className="text-sm font-medium text-gray-700 mb-1">Chọn năm</label>
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(parseInt(e.target.value, 10))}
             className="border border-gray-300 rounded px-3 py-2 text-sm shadow-sm"
-          />
+          >
+            {availableYears.map((year) => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
         </div>
-        <div className="flex flex-col">
-          <label className="text-sm font-medium text-gray-700 mb-1">Đến ngày</label>
-          <input
-            type="date"
-            value={toDate}
-            onChange={handleFilterChange(setToDate, "to")}
-            max={today}
-            className="border border-gray-300 rounded px-3 py-2 text-sm shadow-sm"
-          />
-        </div>
+
+        {/* Search */}
         <div className="flex flex-col flex-1 min-w-[200px]">
-          <label className="text-sm font-medium text-gray-700 mb-1">Nhập ID hoặc ngày</label>
+          <label className="text-sm font-medium text-gray-700 mb-1">Tìm kiếm (ID, ngày, loại, mô tả)</label>
           <input
             type="text"
-            placeholder="VD: 1 hoặc YYYY-MM-DD"
+            placeholder="VD: 1 hoặc 2024-12-05 hoặc Khám"
             value={searchInput}
-            onChange={handleSearchChange}
+            onChange={(e) => setSearchInput(e.target.value)}
             className="border border-gray-300 rounded px-3 py-2 text-sm shadow-sm"
           />
         </div>
       </div>
 
-      {isInvalidRange && (
-        <p className="text-red-600 font-semibold mb-4">
-          ❌ Ngày kết thúc không được vượt quá ngày hôm nay ({today}).
-        </p>
-      )}
-
       <div className="space-y-4">
-        {!isInvalidRange && isFiltered && filteredData?.length > 0 && (
-          <p className="font-semibold text-green-700">
-            📌 Có {filteredData.length} kết quả được tìm thấy.
-          </p>
-        )}
-
-        {!isInvalidRange && !isFiltered ? (
-          <p className="italic text-gray-500">
-            🔍 Vui lòng chọn khoảng thời gian hoặc nhập thông tin để xem lịch sử.
-          </p>
-        ) : !isInvalidRange && filteredData?.length === 0 ? (
-          <p className="italic text-gray-500">
-            Không có dữ liệu phù hợp với điều kiện đã chọn.
-          </p>
-        ) : (
-          filteredData?.map((item) => (
+        {filteredData.length > 0 ? (
+          filteredData.map((item) => (
             <div key={item.id} className="border border-gray-200 rounded-lg p-4 bg-gray-50 shadow-sm">
               <div className="flex justify-between items-center mb-1">
                 <strong className="text-base" style={{ color: "oklch(0.577 0.245 27.325)" }}>
@@ -135,6 +96,8 @@ export default function History() {
               <p className="text-gray-700 text-sm">{item.description}</p>
             </div>
           ))
+        ) : (
+          <p className="italic text-gray-500">Không có dữ liệu phù hợp với năm và tìm kiếm.</p>
         )}
       </div>
     </div>

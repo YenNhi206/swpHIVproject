@@ -43,7 +43,7 @@ export default function Navbar() {
     { path: '/', label: 'Trang chủ', icon: Home },
     { path: '/about', label: 'Giới thiệu', icon: Info },
     { path: '/knowledge', label: 'Kiến thức HIV', icon: BookOpen },
-    { path: '/listdoctor', label: 'Chuyên Gia - Bác Sĩ', icon: Stethoscope },
+    { path: '/listdoctor', label: 'Chuyên gia - Bác Sĩ', icon: Stethoscope },
     { path: '/services', label: 'Dịch vụ - Giá tiền', icon: CreditCard },
   ];
 
@@ -117,9 +117,10 @@ export default function Navbar() {
               >
                 <Link
                   to={link.path}
-                  className={`flex items-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all duration-300 ${isActive(link.path)
-                      ? 'bg-white text-red-700 font-bold shadow-inner'
-                      : 'text-white hover:bg-red-500 hover:text-white'
+                  className={`flex items-center gap-2 py-2 px-4 rounded-t-lg transition-colors duration-300 ${isActive(link.path)
+                    ? 'text-red-700 border-b-4 border-red-700 bg-red-100 font-bold'
+                    : 'text-gray-700 hover:text-red-600 hover:bg-red-50 hover:border-b-2 hover:border-red-200'
+
                     }`}
                 >
                   <link.icon className="w-5 h-5" />
@@ -149,9 +150,9 @@ export default function Navbar() {
                 <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
                   <Link
                     to="/login"
-                    className={`flex items-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all duration-300 ${isActive('/login')
-                        ? 'bg-white text-red-700 font-bold shadow-inner'
-                        : 'text-white hover:bg-red-500 hover:text-white'
+                    className={`flex items-center gap-2 py-2 px-4 rounded-t-lg transition-colors duration-300 ${isActive('/login')
+                      ? 'text-red-700 border-b-4 border-red-700 bg-red-100 font-bold'
+                      : 'text-gray-700 hover:text-red-600 hover:bg-red-50 hover:border-b-2 hover:border-red-200'
                       }`}
                   >
                     <LogIn className="w-5 h-5" />
@@ -161,9 +162,10 @@ export default function Navbar() {
                 <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
                   <Link
                     to="/signup"
-                    className={`flex items-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all duration-300 ${isActive('/signup')
-                        ? 'bg-white text-red-700 font-bold shadow-inner'
-                        : 'text-white hover:bg-red-500 hover:text-white'
+                    className={`flex items-center gap-2 py-2 px-4 rounded-t-lg transition-colors duration-300 ${isActive('/signup')
+                      ? 'text-red-700 border-b-4 border-red-700 bg-red-100 font-bold'
+                      : 'text-gray-700 hover:text-red-600 hover:bg-red-50 hover:border-b-2 hover:border-red-200'
+
                       }`}
                   >
                     <UserPlus className="w-5 h-5" />
