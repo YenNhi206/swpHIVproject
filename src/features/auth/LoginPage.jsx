@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Dialog } from '@headlessui/react';
 import { User, Lock, Mail, Key } from 'lucide-react';
 
@@ -17,6 +17,7 @@ export default function LoginPage({ setUser }) {
   const [message, setMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -96,25 +97,24 @@ export default function LoginPage({ setUser }) {
 
         const data = await response.json();
         console.log('Phản hồi từ /api/auth/login:', data);
-        if (data.message.includes('thành công')) {
+        if (data.success) {
+          // Lưu thông tin người dùng và token vào localStorage
           localStorage.setItem('user', JSON.stringify({
-            fullName: data.fullName,
+            username: data.username,
             role: data.role,
+            token: data.token,
           }));
-          setUser({ fullName: data.fullName, role: data.role });
+          setUser({ username: data.username, role: data.role, token: data.token });
 
-          switch (data.role) {
-            case 'DOCTOR':
-              navigate('/doctor');
-              break;
-            case 'STAFF':
-              navigate('/staff');
-              break;
-            case 'ADMIN':
-              navigate('/admin');
-              break;
-            default:
-              navigate('/');
+          // Kiểm tra sessionStorage để xử lý đặt lịch
+          const pending = JSON.parse(sessionStorage.getItem('pendingAppointment'));
+          if (pending && pending.doctor) {
+            sessionStorage.removeItem('pendingAppointment'); // Xóa sau khi xử lý
+            navigate('/appointments', { state: { doctor: pending.doctor } });
+          } else {
+            // Điều hướng dựa trên role hoặc từ location.state
+            const from = location.state?.from || '/';
+            navigate(from);
           }
         } else {
           setErrors({ server: data.message || 'Đăng nhập thất bại' });
@@ -214,11 +214,9 @@ export default function LoginPage({ setUser }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex flex-col">
-      <div className="flex items-center justify-center px-4 mt-4 mb-8">
-
+      <div className="flex-1 flex items-start justify-center px-4 pt-8">
         <div className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl p-8 opacity-0 translate-y-4 animate-fade-in">
-          <h2 className="text-2xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2">
-
+          <h2 className="text-2xl font-bold text-red-700 mb-6 flex items-center gap-2">
             <User className="w-6 h-6" />
             Đăng nhập
           </h2>
@@ -278,7 +276,7 @@ export default function LoginPage({ setUser }) {
               <p className="text-red-600 text-center mt-2">{errors.server}</p>
             )}
             <p
-              className="text-sm text-red-600 text-center mt-2 cursor-pointer hover:underline"
+              className="text-sm text-blue-600 text-center mt-2 cursor-pointer hover:underline"
               onClick={() => setIsModalOpen(true)}
             >
               Quên mật khẩu?
@@ -419,3 +417,5 @@ export default function LoginPage({ setUser }) {
     </div>
   );
 }
+
+
