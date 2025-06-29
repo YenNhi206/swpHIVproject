@@ -40,13 +40,133 @@ export default function AboutPage() {
 
   return (
     <motion.div className="w-full px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 font-sans" variants={containerVariants} initial="hidden" animate="visible">
-      <motion.div className="mb-16 relative overflow-hidden rounded-xl shadow-lg" variants={itemVariants} whileHover={imageVariants}>
-        <img src={healthcareImage} alt="Healthcare" className="w-full h-64 object-cover" />
-        <div className="absolute inset-0 flex items-center justify-center bg-opacity-40">
-          <h1 className="text-white text-4xl sm:text-5xl font-extrabold drop-shadow-lg text-center px-4">Giới thiệu về HIVCare+</h1>
-        </div>
-      </motion.div>
 
+      {/* Logo trang web */}
+      <section className="flex flex-col items-center text-center pt-12 pb-16 px-6 bg-gradient-to-b from-white via-red-50 to-white shadow-inner rounded-2xl mx-4">
+        {/* Logo / Tên thương hiệu */}
+        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-800 mb-4">
+          <span className="text-red-700">HIV Care</span>
+          <span className="text-red-500">+</span>
+        </h1>
+
+        {/* Slogan (tuỳ chọn) */}
+        <p className="text-gray-600 text-lg italic mb-8">
+          Đồng hành cùng sức khoẻ cộng đồng
+        </p>
+
+        {/* Thông tin liên hệ */}
+        <div className="text-gray-700 text-base md:text-lg space-y-4 w-full max-w-xl">
+          <div className="flex items-center justify-center gap-3">
+            <MapPin className="w-5 h-5 text-red-500" />
+            <span>123 Đường Sức Khoẻ, Quận 3, TP. Hồ Chí Minh, Việt Nam</span>
+          </div>
+
+          <div className="flex items-center justify-center gap-3">
+            <Phone className="w-5 h-5 text-red-500" />
+            <span>(028) 1234 5678</span>
+          </div>
+
+          <div className="flex items-center justify-center gap-3">
+            <Mail className="w-5 h-5 text-red-500" />
+            <a href="mailto:contact@hivtreatment.vn" className="text-red-600 hover:underline">
+              contact@hivtreatment.vn
+            </a>
+          </div>
+        </div>
+      </section>
+
+
+      {/* Lịch sử thành lập & Cơ sở hoạt động */}
+      <section>
+        <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+          Lịch sử thành lập & Cơ sở hoạt động
+        </h2>
+
+        <div className="px-4 sm:px-6 lg:px-12 py-12 text-gray-800 space-y-12">
+
+          <div>
+            <h3 className="text-xl font-bold text-red-600 mb-4">🏥 Lịch sử thành lập</h3>
+            <p>
+              HIV Care+ được thành lập với sứ mệnh cung cấp nền tảng y tế trực tuyến chuyên sâu, đáng tin cậy và toàn diện trong điều trị HIV/AIDS tại Việt Nam.
+            </p>
+            <p className="mt-2">
+              Ý tưởng khởi nguồn từ năm <strong>2018</strong>, khi một nhóm bác sĩ chuyên khoa truyền nhiễm, chuyên gia tâm lý và kỹ sư công nghệ cùng nhìn thấy khoảng trống trong việc tiếp cận thông tin y tế chính thống. Sau nhiều năm nghiên cứu và hợp tác với các trung tâm y tế lớn, <strong>trang web HIV Care+ chính thức ra đời vào đầu năm 2021</strong>.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-bold text-red-600 mb-4">📍 Cơ sở hoạt động</h3>
+            <p>
+              Chúng tôi hoạt động dưới sự cấp phép của Bộ Y tế, với <strong>trụ sở chính tại 123 Đường Sức Khoẻ, Quận 3, TP. Hồ Chí Minh</strong>. Cơ sở bao gồm:
+            </p>
+            <ul className="list-disc list-inside mt-2 space-y-1">
+              <li>Phòng khám chuyên khoa HIV/AIDS đạt chuẩn quốc tế</li>
+              <li>Đội ngũ bác sĩ, dược sĩ và chuyên gia tư vấn tâm lý giàu kinh nghiệm</li>
+              <li>Trung tâm hỗ trợ bệnh nhân trực tuyến 24/7</li>
+              <li>Hệ thống bảo mật và lưu trữ thông tin bệnh án theo chuẩn quốc tế (HIPAA)</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-bold text-red-600 mb-4">💡 Tầm nhìn & Giá trị</h3>
+            <p>
+              HIV Care+ không chỉ là một trang web — mà là một <strong>hệ sinh thái chăm sóc sức khoẻ toàn diện</strong>, nơi bệnh nhân được hỗ trợ bằng:
+            </p>
+            <ul className="list-disc list-inside mt-2 space-y-1">
+              <li>Thông tin chính xác, cập nhật từ chuyên gia</li>
+              <li>Tư vấn điều trị và kết nối với cơ sở y tế uy tín</li>
+              <li>Không kỳ thị, không phân biệt — chỉ tập trung vào đồng hành điều trị</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Năng lực & Thành tựu chuyên môn */}
+      <section>
+        <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+          Năng lực & Thành tựu chuyên môn
+        </h2>
+        <div className="px-4 sm:px-6 lg:px-12 py-12 text-gray-800 space-y-12">
+          {/* Phạm vi hoạt động & Dịch vụ */}
+          <div>
+            <h3 className="text-xl font-bold text-red-600 mb-4">📍 Phạm vi hoạt động & Dịch vụ</h3>
+            <p className="mb-4 leading-relaxed">
+              HIVCare+ phục vụ cộng đồng trên toàn quốc qua nền tảng trực tuyến và các cơ sở đối tác tại các thành phố lớn.
+            </p>
+            <ul className="list-disc list-inside space-y-2">
+              <li>Tư vấn, khám & điều trị HIV/AIDS trực tuyến</li>
+              <li>Cấp phát thuốc ARV & hỗ trợ tuân thủ điều trị</li>
+              <li>Tư vấn tâm lý, hỗ trợ cộng đồng LGBT và nhóm nguy cơ</li>
+              <li>Xét nghiệm HIV, tải lượng virus (VL), CD4, PrEP/PEP</li>
+              <li>Kết nối & chuyển tuyến đến các cơ sở y tế uy tín</li>
+            </ul>
+          </div>
+
+          {/* Kỹ thuật cao */}
+          <div>
+            <h3 className="text-xl font-bold text-red-600 mb-4">🧪 Các kỹ thuật cao đã thực hiện</h3>
+            <ul className="list-disc list-inside space-y-2 leading-relaxed">
+              <li>Xét nghiệm tải lượng HIV RNA (PCR Real-time)</li>
+              <li>Đo tế bào miễn dịch CD4/CD8 bằng kỹ thuật FACS</li>
+              <li>Xét nghiệm kháng thuốc gen HIV</li>
+              <li>Sàng lọc bệnh đồng nhiễm: Viêm gan B, C, giang mai</li>
+              <li>Hệ thống kỹ thuật số quản lý & theo dõi tuân thủ điều trị</li>
+            </ul>
+          </div>
+
+          {/* Thành tích */}
+          <div>
+            <h3 className="text-xl font-bold text-red-600 mb-4">🏆 Thành tích đã đạt được</h3>
+            <ul className="list-disc list-inside space-y-2 leading-relaxed">
+              <li>Hơn <strong>50.000 lượt tư vấn & điều trị</strong> toàn quốc</li>
+              <li>Hợp tác với hơn <strong>30 cơ sở y tế</strong> và tổ chức cộng đồng</li>
+              <li>Giải thưởng <strong>"Sáng kiến sức khỏe cộng đồng"</strong> năm 2023</li>
+              <li>Ghi nhận bởi Bộ Y tế & các tổ chức quốc tế về phòng chống HIV/AIDS</li>
+              <li>Vận hành hệ thống hỗ trợ điều trị 24/7 với bảo mật theo chuẩn HIPAA</li>
+            </ul>
+          </div>
+        </div>
+      </section>
       <section className="space-y-16">
 
         <motion.h1 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4" variants={itemVariants}>Chúng tôi khác biệt</motion.h1>
