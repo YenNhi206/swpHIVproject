@@ -11,6 +11,7 @@ export default function AppointmentForm() {
     date: '',
     time: '',
     gender: '',
+    visitType: '',
     service: '',
     doctor: '',
   });
@@ -21,10 +22,10 @@ export default function AppointmentForm() {
   const genderOptions = ['Nữ', 'Nam', 'Khác'];
 
   const firstVisitServices = [
-    'Khám HIV cơ bản',
-    'Xét nghiệm tải lượng virus HIV',
-    'Xét nghiệm CD4',
-    'Tư vấn và điều trị dự phòng',
+    'Xét nghiệm nhanh HIV và STIs',
+    'Dự phòng trước phơi nhiễm HIV – PrEP',
+    'Dự phòng sau phơi nhiễm HIV – PEP',
+    'Điều trị HIV – ARV',
   ];
 
   const followUpServices = [
@@ -45,7 +46,11 @@ export default function AppointmentForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      service: name === 'visitType' ? '' : prev.service,
+    }));
     setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
@@ -61,6 +66,7 @@ export default function AppointmentForm() {
     if (!formData.date) newErrors.date = 'Ngày hẹn là bắt buộc';
     if (!formData.time) newErrors.time = 'Giờ hẹn là bắt buộc';
     if (!formData.gender) newErrors.gender = 'Giới tính là bắt buộc';
+    if (!formData.visitType) newErrors.visitType = 'Vui lòng chọn loại khám';
     if (!formData.service) newErrors.service = 'Dịch vụ là bắt buộc';
     if (!formData.doctor) newErrors.doctor = 'Bác sĩ là bắt buộc';
     setErrors(newErrors);
@@ -75,18 +81,17 @@ export default function AppointmentForm() {
     }
   };
 
+  const availableServices = formData.visitType === 'Khám lần đầu' ? firstVisitServices : followUpServices;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white p-4">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-10 opacity-0 translate-y-4 animate-fade-in">
         <h2 className="text-2xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2">
-
           <Stethoscope className="w-6 h-6" />
           Đặt lịch hẹn
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            {/* Họ tên */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Họ tên</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -96,15 +101,12 @@ export default function AppointmentForm() {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  required
                   className="w-full p-3 border-none rounded-lg focus:outline-none"
                 />
               </div>
               {errors.fullName && <p className="text-red-600 text-sm mt-1">{errors.fullName}</p>}
             </div>
 
-
-            {/* Ngày sinh */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -114,14 +116,12 @@ export default function AppointmentForm() {
                   name="dob"
                   value={formData.dob}
                   onChange={handleChange}
-                  required
                   className="w-full p-3 border-none rounded-lg focus:outline-none"
                 />
               </div>
               {errors.dob && <p className="text-red-600 text-sm mt-1">{errors.dob}</p>}
             </div>
 
-            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -131,14 +131,12 @@ export default function AppointmentForm() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  required
                   className="w-full p-3 border-none rounded-lg focus:outline-none"
                 />
               </div>
               {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
             </div>
 
-            {/* Số điện thoại */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -148,14 +146,12 @@ export default function AppointmentForm() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  required
                   className="w-full p-3 border-none rounded-lg focus:outline-none"
                 />
               </div>
               {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone}</p>}
             </div>
 
-            {/* Giới tính */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
               <div className="flex space-x-6 mt-1">
@@ -176,7 +172,26 @@ export default function AppointmentForm() {
               {errors.gender && <p className="text-red-600 text-sm mt-1">{errors.gender}</p>}
             </div>
 
-            {/* Ngày hẹn */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Loại khám</label>
+              <div className="flex space-x-6 mt-1">
+                {['Khám lần đầu', 'Tái khám'].map((type) => (
+                  <label key={type} className="flex items-center">
+                    <input
+                      type="radio"
+                      name="visitType"
+                      value={type}
+                      checked={formData.visitType === type}
+                      onChange={handleChange}
+                      className="mr-2 accent-red-500"
+                    />
+                    {type}
+                  </label>
+                ))}
+              </div>
+              {errors.visitType && <p className="text-red-600 text-sm mt-1">{errors.visitType}</p>}
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Ngày hẹn</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -186,14 +201,12 @@ export default function AppointmentForm() {
                   name="date"
                   value={formData.date}
                   onChange={handleChange}
-                  required
                   className="w-full p-3 border-none rounded-lg focus:outline-none"
                 />
               </div>
               {errors.date && <p className="text-red-600 text-sm mt-1">{errors.date}</p>}
             </div>
 
-            {/* Giờ hẹn */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Giờ hẹn</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -203,7 +216,6 @@ export default function AppointmentForm() {
                   value={formData.time}
                   onChange={handleChange}
                   className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none"
-                  required
                 >
                   <option value="">Chọn giờ</option>
                   {timeSlots.map((slot, idx) => (
@@ -214,32 +226,23 @@ export default function AppointmentForm() {
               {errors.time && <p className="text-red-600 text-sm mt-1">{errors.time}</p>}
             </div>
 
-            {/* Dịch vụ và Bác sĩ cùng hàng */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Dịch vụ</label>
-              <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500 relative z-10">
+              <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                 <Stethoscope className="w-5 h-5 text-gray-400 mx-3" />
                 <select
                   name="service"
                   value={formData.service}
                   onChange={handleChange}
-                  className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none bg-white"
-                  required
+                  className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none"
+                  disabled={!formData.visitType}
                 >
-                  <option value="">Chọn dịch vụ</option>
-                  <optgroup label="Khám lần đầu">
-                    {firstVisitServices.map((service, index) => (
-                      <option key={index} value={service}>{service}</option>
-                    ))}
-                  </optgroup>
-                  <optgroup label="Tái khám">
-                    {followUpServices.map((service, index) => (
-                      <option key={index} value={service}>{service}</option>
-                    ))}
-                  </optgroup>
+                  <option value="">{formData.visitType ? 'Chọn dịch vụ' : 'Vui lòng chọn loại khám trước'}</option>
+                  {availableServices.map((service, index) => (
+                    <option key={index} value={service}>{service}</option>
+                  ))}
                 </select>
               </div>
-
               {errors.service && <p className="text-red-600 text-sm mt-1">{errors.service}</p>}
             </div>
 
@@ -252,7 +255,6 @@ export default function AppointmentForm() {
                   value={formData.doctor}
                   onChange={handleChange}
                   className="w-full p-3 border-none rounded-lg focus:outline-none appearance-none"
-                  required
                 >
                   <option value="">Chọn bác sĩ</option>
                   {doctors.map((doctor, index) => (
@@ -262,10 +264,8 @@ export default function AppointmentForm() {
               </div>
               {errors.doctor && <p className="text-red-600 text-sm mt-1">{errors.doctor}</p>}
             </div>
-
           </div>
 
-          {/* Nút bấm */}
           <div className="flex justify-between gap-6 mt-6">
             <button
               type="button"
