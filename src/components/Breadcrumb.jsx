@@ -6,7 +6,6 @@ import { ChevronRight } from 'lucide-react';
 export default function Breadcrumb() {
   const location = useLocation();
 
-  // Định nghĩa ánh xạ đường dẫn sang tên trang
   const pathMap = {
     '/': 'Trang chủ',
     '/about': 'Giới thiệu',
@@ -35,22 +34,19 @@ export default function Breadcrumb() {
     '*': 'Không tìm thấy',
   };
 
-  // Tách đường dẫn thành mảng
   const pathSegments = location.pathname.split('/').filter((segment) => segment);
 
-  // Xây dựng breadcrumb items
   const breadcrumbItems = pathSegments.reduce((acc, segment, index) => {
     const pathSoFar = `/${pathSegments.slice(0, index + 1).join('/')}`;
 
-    // Xử lý dynamic routes và các route đặc biệt
     let dynamicPath = pathSoFar;
     if (pathSegments[0] === 'treatment') {
       if (index === 1 && segment === 'create') {
-        dynamicPath = '/treatment/:create'; // Tạo mới phác đồ
+        dynamicPath = '/treatment/:create';
       } else if (index === 2 && pathSegments[2] === 'edit') {
-        dynamicPath = '/treatment/:id/edit'; // Sửa phác đồ
+        dynamicPath = '/treatment/:id/edit';
       } else if (index === 1 && segment !== 'new') {
-        dynamicPath = '/treatment/:id'; // Chi tiết phác đồ
+        dynamicPath = '/treatment/:id';
       }
     }
 
