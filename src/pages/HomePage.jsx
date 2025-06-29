@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
 import Button from '../components/Button';
 import hivCareImg from "../assets/hiv-care.png";
@@ -10,6 +10,10 @@ import hivpaitentImg from "../assets/hivpaitent.jpg";
 import img1 from "../assets/DYT.jpg";
 import img2 from "../assets/hiv2.jpg";
 import img3 from "../assets/doctor1.jpg";
+import { CalendarDays } from "lucide-react";
+
+
+import { ShieldCheck } from "lucide-react";
 
 
 const carouselImages = [
@@ -20,18 +24,20 @@ const carouselImages = [
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
+    if (isHovered) return;
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isHovered]);
 
-
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
-
+  const nextSlide = () =>
+    setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+  const prevSlide = () =>
+    setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -73,36 +79,59 @@ export default function HomePage() {
 
       {/* Carousel */}
       <motion.div
-        className="mb-10 rounded-xl overflow-hidden shadow-sm border border-gray-100 relative"
-        variants={itemVariants}
+        className="mb-10 rounded-xl overflow-hidden shadow-sm border border-gray-100 relative h-[300px] md:h-[380px]"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
-        <motion.img
-          src={carouselImages[currentSlide].src}
-          alt={carouselImages[currentSlide].alt}
-          className="w-full h-[300px] md:h-[380px] object-cover"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          key={currentSlide}
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={currentSlide}
+            src={carouselImages[currentSlide].src}
+            alt={carouselImages[currentSlide].alt}
+            className="w-full h-full object-cover absolute top-0 left-0"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.6 }}
+          />
+        </AnimatePresence>
+
+        {/* Hover effect */}
+        <motion.div
+          className="absolute inset-0"
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.3 }}
         />
+
+        {/* Navigation Buttons */}
         <motion.button
           onClick={prevSlide}
-          className="absolute top-1/2 left-4 bg-red-600 text-white p-2 rounded-full hover:bg-red-700"
+          className="absolute top-1/2 left-4 z-10 bg-red-600 text-white p-2 rounded-full hover:bg-red-700"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          transition={{ duration: 0.3 }}
         >
           <ChevronLeft className="w-5 h-5" />
         </motion.button>
         <motion.button
           onClick={nextSlide}
-          className="absolute top-1/2 right-4 bg-red-600 text-white p-2 rounded-full hover:bg-red-700"
+          className="absolute top-1/2 right-4 z-10 bg-red-600 text-white p-2 rounded-full hover:bg-red-700"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          transition={{ duration: 0.3 }}
         >
           <ChevronRight className="w-5 h-5" />
         </motion.button>
+
+        {/* Dots Indicator */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+          {carouselImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-red-600 scale-110' : 'bg-gray-300'
+                }`}
+            />
+          ))}
+        </div>
       </motion.div>
 
       {/* Giới thiệu cơ sở y tế */}
@@ -118,7 +147,7 @@ export default function HomePage() {
           />
         </motion.div>
         <motion.div variants={itemVariants}>
-          <p className="text-red-600 text-sm font-semibold uppercase mb-2 tracking-wide">
+          <p className="text-3xl font-bold text-red-600 mb-4 flex items-center gap-2">
             HỆ THỐNG CHUYÊN SÂU ĐIỀU TRỊ HIV
           </p>
           <h2 className="text-4xl font-extrabold text-gray-900 mb-4 leading-snug">
@@ -189,6 +218,12 @@ export default function HomePage() {
                 "Chỉ thị 54-CT/TW, ngày 30/1/2005 của Ban Bí thư đã nêu rõ về việc chống kỳ thị...",
               link: "https://btgtu.binhthuan.dcs.vn/Trang-chu/post/1520/xoa-bo-ky-thi-va-phan-biet-doi-xu-voi-nguoi-nhiem-hivaids",
             },
+            {
+              title: "Làm thế nào để bảo vệ bản thân, hỗ trợ người khác và xóa bỏ định kiến về HIV?",
+              description:
+                " Tài liệu này là một trong số 9 tài liệu hướng dẫn kịch bản giảng dạy chi tiết...",
+              link: "https://amaze.org/wp-content/uploads/2024/03/Vietnamese_Lesson-Plan-8_HIV.pdf",
+            },
           ].map(({ title, description, link }, idx) => (
             <motion.div
               key={title}
@@ -246,11 +281,12 @@ export default function HomePage() {
           ].map(({ img, alt, title, description, link }, idx) => (
             <motion.div
               key={title}
-              className="bg-white shadow-sm rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition"
+              className="bg-white shadow-sm rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition h-full flex flex-col"
               variants={itemVariants}
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
+
               <motion.img
                 src={img}
                 alt={alt}
@@ -258,105 +294,195 @@ export default function HomePage() {
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               />
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">{title}</h3>
-                <p className="text-gray-600 mb-4">{description}</p>
-                <Button
-                  label="Đọc thêm"
-                  onClick={() => window.open(link, '_blank')}
-                  icon={<ChevronRight className="w-4 h-4" />}
-                />
+              <div className="p-6 flex flex-col justify-between h-full">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3">{title}</h3>
+                  <p className="text-gray-600 mb-4">{description}</p>
+                </div>
+                <div className="mt-auto">
+                  <Button
+                    label="Đọc thêm"
+                    onClick={() => window.open(link, '_blank')}
+                    icon={<ChevronRight className="w-4 h-4" />}
+                  />
+                </div>
+              </div>
+
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* Tin tức & tiến bộ y học mới */}
+      <motion.section variants={containerVariants} className="mt-20">
+        <motion.div className="mb-12" variants={itemVariants}>
+          <h2 className="text-3xl font-bold text-red-600 mb-4 flex items-center gap-2">
+            <CheckCircle className="w-6 h-6 text-red-600" />
+            <span>Tin tức & tiến bộ y học mới</span>
+          </h2>
+          <p className="text-gray-600 max-w-xl">
+            Cập nhật các diễn biến và bước tiến nổi bật trong nghiên cứu, điều trị, và chính sách HIV/AIDS trên toàn cầu.
+          </p>
+        </motion.div>
+
+        {/* Lưới: 1 tin nổi bật + danh sách tin phụ */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {/* Tin nổi bật */}
+          <motion.div
+            variants={itemVariants}
+            className="lg:col-span-2 bg-white rounded-2xl shadow hover:shadow-lg transition p-10 flex flex-col justify-between relative"
+          >
+            <a
+              href="..."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block space-y-4"
+            >
+              <div className="inline-block px-3 py-1 bg-red-100 text-red-600 text-xs font-medium rounded-full">
+                Tin nổi bật
+              </div>
+
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Ngày 18/06/2025, FDA chính thức phê duyệt lenacapavir dưới tên thương mại Yeztugo — thuốc tiêm PrEP đầu tiên kéo dài 6 tháng, mở ra kỳ vọng thay đổi phòng ngừa HIV toàn cầu.
+              </p>
+
+              <h3 className="text-2xl font-bold text-gray-800 hover:text-red-600 transition">
+                FDA chấp thuận thuốc tiêm PrEP lenacapavir (Yeztugo) 6 tháng/lần
+              </h3>
+
+              <ul className="text-gray-600 text-sm space-y-2 leading-relaxed list-disc list-inside">
+                <li>Phương pháp PrEP đầu tiên kéo dài đến 6 tháng.</li>
+                <li>Một bước ngoặt lớn trong phòng ngừa HIV toàn cầu.</li>
+                <li>Giảm đáng kể rào cản tuân thủ so với thuốc hàng ngày.</li>
+              </ul>
+
+              <blockquote className="text-sm italic text-gray-500 border-l-4 border-red-200 pl-4">
+                “Lenacapavir có thể cách mạng hóa phòng ngừa HIV trong thập kỷ tới.” — WHO
+              </blockquote>
+
+              <span className="text-sm font-medium text-red-500 hover:underline block">
+                Xem chi tiết →
+              </span>
+            </a>
+
+            <ShieldCheck className="w-16 h-16 text-red-100 absolute bottom-6 right-6 opacity-10" />
+          </motion.div>
+
+          {/* Danh sách tin nhỏ */}
+          <div className="space-y-4">
+            {[
+              {
+                title: "UNAIDS kêu gọi Gilead giảm giá thuốc còn 25 USD/năm",
+                date: "18/06/2025",
+                link: "https://www.unaids.org/en/resources/presscentre/pressreleaseandstatementarchive/2025/june/20250618_lenacapavir",
+              },
+              {
+                title: "WHO hoan nghênh FDA phê duyệt lenacapavir",
+                date: "19/06/2025",
+                link: "https://www.who.int/news/item/19-06-2025-fda-approval-of-injectable-lenacapavir-marks-progress-for-hiv-prevention",
+              },
+              {
+                title: "The New Yorker: lenacapavir có thể cách mạng hóa phòng ngừa HIV",
+                date: "24/06/2025",
+                link: "https://www.newyorker.com/news/the-lede/the-drug-that-could-revolutionize-the-fight-against-hiv",
+              },
+
+              {
+                title: "Tòa án Tối cao Mỹ giữ yêu cầu bảo hiểm bao gồm PrEP",
+                date: "27/06/2025",
+                link: "https://www.reuters.com/business/healthcare-pharmaceuticals/gilead-shares-rise-after-us-top-court-ruling-preventative-coverage-2025-06-27/",
+              },
+
+            ].map(({ title, date, link }, idx) => (
+              <motion.div
+                key={idx}
+                variants={itemVariants}
+                className="p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition"
+              >
+                <a href={link} target="_blank" rel="noopener noreferrer" className="block">
+                  <p className="text-xs text-gray-400 mb-1">{date}</p>
+                  <h4 className="text-sm font-medium text-gray-800 hover:text-red-600 transition leading-snug">
+                    {title}
+                  </h4>
+                  <span className="text-xs text-red-500 hover:underline mt-1 inline-block">
+                    Xem chi tiết →
+                  </span>
+                </a>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Tài nguyên hỗ trợ cộng đồng */}
+      <motion.section
+        variants={containerVariants} className="mt-20">
+        <motion.div className="mb-12" variants={itemVariants}>
+          <h2 className="text-3xl font-bold text-red-600 mb-4 flex items-center gap-2">
+            <CheckCircle className="w-6 h-6 text-red-600" />
+            <span>Tài nguyên hỗ trợ cộng đồng</span>
+          </h2>
+          <p className="text-gray-600 max-w-xl">
+            Các tổ chức và nhóm hỗ trợ người nhiễm HIV – miễn phí, bảo mật, thân thiện và dễ tiếp cận.
+          </p>
+        </motion.div>
+
+        <div className="space-y-8">
+          {[
+            {
+              logo: "https://life-vietnam.org/wp-content/uploads/2022/12/Logo-LIFE-40.png",
+              title: "Trung tâm LIFE (HCM)",
+              description:
+                "Cung cấp tư vấn, điều trị, và hỗ trợ tâm lý miễn phí cho người sống chung với HIV. Hỗ trợ đặc biệt cho MSM và phụ nữ.",
+              link: "https://life-vietnam.org/",
+            },
+            {
+              logo: "data:image/png;base64,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",
+              title: "VNP+ - Mạng lưới người sống với HIV",
+              description:
+                "Kết nối cộng đồng người nhiễm HIV trên toàn quốc, hỗ trợ pháp lý, vận động chính sách và phòng chống kỳ thị.",
+              link: "https://www.vietnamplus.vn/",
+            },
+            {
+              logo: "https://www.ics.org.vn/thumb/2-163-60/upload/hinhanh/logo-9933.png",
+              title: "ICS Center - Cộng đồng LGBT+",
+              description:
+                "Hỗ trợ cộng đồng LGBT+ tiếp cận xét nghiệm, điều trị HIV và bảo vệ quyền cá nhân. Hoạt động tại TP.HCM.",
+              link: "https://www.ics.org.vn/",
+            },
+            {
+              logo: "https://lighthousevietnam.org/wp-content/uploads/2023/02/logo-lighthouse.png",
+              title: "Lighthouse Social Enterprise",
+              description:
+                "Tổ chức xã hội hỗ trợ MSM và người sống với HIV – cung cấp xét nghiệm nhanh HIV, PrEP, tư vấn đồng hành.",
+              link: "https://lighthousevietnam.org/en/home/",
+            },
+          ].map(({ logo, title, description, link }, index) => (
+            <motion.div
+              key={index}
+              className="flex items-start gap-6 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition duration-300 border border-gray-100"
+              variants={itemVariants}
+            >
+              <div className="w-16 h-16 flex-shrink-0 overflow-hidden rounded-full border border-gray-200 bg-white">
+                <img src={logo} alt={title} className="w-full h-full object-contain p-1" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-red-700">{title}</h3>
+                <p className="text-gray-700 text-sm mt-1 mb-2">{description}</p>
+                <a
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-red-500 hover:underline font-medium"
+                >
+                  Truy cập website →
+                </a>
               </div>
             </motion.div>
           ))}
         </div>
       </motion.section>
 
-      {/* Hành động & Dịch vụ */}
-      <motion.section
-        className="bg-white py-20"
-        variants={containerVariants}
-      >
-        <div className="grid md:grid-cols-2 gap-12 px-4 sm:px-6 lg:px-8">
-          <motion.div
-            className="bg-white p-8 rounded-xl shadow-sm border border-gray-100"
-            variants={itemVariants}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-          >
-            <h2 className="text-3xl font-bold text-red-600 mb-8">
-              Nên làm gì khi có nghi vấn nhiễm HIV?
-            </h2>
-            <div className="space-y-6">
-              {[
-                {
-                  title: "Bước 1: Tìm cơ sở y tế",
-                  desc: "Tìm một cơ sở y tế gần bạn hoặc trang y tế có cung cấp dịch vụ tư vấn và xét nghiệm HIV.",
-                },
-                {
-                  title: "Bước 2: Xét nghiệm HIV",
-                  desc: "Xét nghiệm là cách duy nhất để biết bạn có nhiễm HIV hay không. Hoàn toàn bảo mật.",
-                },
-                {
-                  title: "Bước 3: Điều trị & sống khỏe",
-                  desc: "Nếu dương tính, bạn sẽ được điều trị ARV và hỗ trợ để sống khỏe mạnh như người bình thường.",
-                },
-              ].map((step, index) => (
-                <motion.div
-                  key={index}
-                  className="flex items-start gap-4"
-                  variants={itemVariants}
-                >
-                  <div className="text-3xl text-red-600">{index + 1}</div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-red-700 mb-1">{step.title}</h3>
-                    <p className="text-gray-700 leading-relaxed">{step.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="bg-white p-8 rounded-xl shadow-sm border border-gray-100"
-            variants={itemVariants}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-          >
-            <h2 className="text-3xl font-bold text-red-600 mb-8">
-              Tại sao chọn dịch vụ y tế của chúng tôi?
-            </h2>
-            <div className="space-y-6">
-              {[
-                {
-                  title: "Đội ngũ y bác sĩ tận tâm",
-                  desc: "Chúng tôi có đội ngũ chuyên gia nhiều năm kinh nghiệm trong chăm sóc và điều trị HIV, luôn lắng nghe và đồng hành cùng bạn.",
-                },
-                {
-                  title: "Bảo mật tuyệt đối",
-                  desc: "Mọi thông tin cá nhân và kết quả xét nghiệm của bạn được bảo mật nghiêm ngặt, đảm bảo quyền riêng tư tối đa.",
-                },
-                {
-                  title: "Giáo dục và hỗ trợ toàn diện",
-                  desc: "Không chỉ điều trị, chúng tôi cung cấp tài liệu giáo dục, hỗ trợ tâm lý và cộng đồng để bạn sống tích cực và tự tin hơn.",
-                },
-              ].map((item, index) => (
-                <motion.div
-                  key={index}
-                  className="flex items-start gap-4"
-                  variants={itemVariants}
-                >
-                  <div className="text-3xl text-red-600">{index + 1}</div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-red-700 mb-1">{item.title}</h3>
-                    <p className="text-gray-700 leading-relaxed">{item.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
     </motion.div>
   );
 }

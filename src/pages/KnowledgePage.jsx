@@ -253,67 +253,111 @@ export default function KnowledgePage() {
       </motion.section>
 
       {/* Kiến Thức Nền Tảng */}
-      <motion.section className="mb-20" variants={containerVariants}>
-  <h3 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
-    <FileText className="w-6 h-6" /> Kiến thức nền tảng về HIV/AIDS
-  </h3>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {basicKnowledge.map(({ title, description, link }, idx) => (
-      <motion.article
-        key={idx}
-        className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200"
-        variants={itemVariants}
-        whileHover={{ scale: 1.02 }}
-        transition={{ duration: 0.3 }}
-      >
-        <h4 className="text-lg font-semibold text-gray-900 mb-2">{title}</h4>
-        <p className="text-sm text-gray-600 leading-relaxed mb-4">{description}</p>
-        <Button
-          label="Xem chi tiết"
-          onClick={() => window.open(link, "_blank")}
-          icon={<ChevronRight className="w-4 h-4" />}
-        />
-      </motion.article>
-    ))}
-  </div>
-</motion.section>
+      <motion.section
+        className="mb-20" variants={containerVariants}>
+        <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+          Kiến thức nền tảng về HIV/AIDS
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {basicKnowledge.map(({ title, description, link }, idx) => (
+            <motion.article
+              key={idx}
+              className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200"
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h4 className="text-lg font-semibold text-gray-900 mb-2">{title}</h4>
+              <p className="text-sm text-gray-600 leading-relaxed mb-4">{description}</p>
+              <Button
+                label="Xem chi tiết"
+                onClick={() => window.open(link, "_blank")}
+                icon={<ChevronRight className="w-4 h-4" />}
+              />
+            </motion.article>
+          ))}
+        </div>
+      </motion.section>
 
-      {/* Hướng Dẫn Điều Trị */}
-      <motion.section className="mb-16" variants={containerVariants}>
-  <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
-    <Syringe className="w-6 h-6" /> Hướng Dẫn Điều Trị HIV
-  </h2>
-  <p className="text-base text-gray-700 mb-8 max-w-2xl mx-auto text-center leading-relaxed">
-    Những bài viết cung cấp kiến thức thực tế và lời khuyên giúp bạn điều trị hiệu quả và sống khỏe mạnh cùng HIV.
-  </p>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {treatmentArticles.map(({ title, description, link }, idx) => (
-      <motion.article
-        key={idx}
-        className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200"
-        variants={itemVariants}
-        whileHover={{ scale: 1.02 }}
-        transition={{ duration: 0.3 }}
-      >
-        <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{title}</h3>
-        <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed">{description}</p>
-        <Button
-          label="Đọc thêm"
-          onClick={() => window.open(link, "_blank")}
-          icon={<ChevronRight className="w-4 h-4" />}
-        />
-      </motion.article>
-    ))}
-  </div>
-</motion.section>
-
-      {/* Educational Library Section */}
+      {/* Câu hỏi thường gặp */}
       <motion.section
         className="mb-16"
         variants={containerVariants}
       >
-        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
-          <FileText className="w-6 h-6" /> Thư Viện Tài Liệu Giáo Dục
+        <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+          Câu Hỏi Thường Gặp
+        </h2>
+        <div className="space-y-4 px-4">
+          {faqItems.map((faq, i) => (
+            <motion.div
+              key={i}
+              className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
+              variants={itemVariants}
+            >
+              <button
+                onClick={() => toggleFAQ(i)}
+                className="w-full flex justify-between items-center px-6 py-4 text-left text-gray-900 font-semibold hover:bg-red-50 transition-colors"
+                aria-expanded={openFAQIndex === i}
+              >
+                <span className="text-base">{faq.question}</span>
+                <ChevronDown
+                  className={`w-5 h-5 transform transition-transform duration-200 ${openFAQIndex === i ? "rotate-180" : ""}`}
+                />
+              </button>
+              {openFAQIndex === i && (
+                <motion.div
+                  className="px-6 py-5 bg-red-50 text-gray-700 text-sm leading-relaxed"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {faq.detailedContent}
+                </motion.div>
+              )}
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* Hướng Dẫn Điều Trị */}
+      <motion.section
+        className="mb-16" variants={containerVariants}>
+        <motion.div className="mb-12" variants={itemVariants}>
+          <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+            Hướng Dẫn Điều Trị HIV
+          </h2>
+          <p className="text-gray-600 max-w-xl">
+            Những bài viết cung cấp kiến thức thực tế và lời khuyên giúp bạn điều trị hiệu quả và sống khỏe mạnh cùng HIV.
+          </p>
+        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {treatmentArticles.map(({ title, description, link }, idx) => (
+            <motion.article
+              key={idx}
+              className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200"
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{title}</h3>
+              <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed">{description}</p>
+              <Button
+                label="Đọc thêm"
+                onClick={() => window.open(link, "_blank")}
+                icon={<ChevronRight className="w-4 h-4" />}
+              />
+            </motion.article>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* Thư Viện Tài Liệu Giáo Dục */}
+      <motion.section
+        className="mb-16"
+        variants={containerVariants}
+      >
+        <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+          Thư Viện Tài Liệu Giáo Dục
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {documents.map((doc, idx) => (
@@ -402,55 +446,14 @@ export default function KnowledgePage() {
         )}
       </motion.section>
 
-      {/* FAQ Section */}
+      {/* Blog Chia Sẻ Kinh Nghiệm */}
       <motion.section
         className="mb-16"
         variants={containerVariants}
       >
-        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
-          <Users className="w-6 h-6" /> Câu Hỏi Thường Gặp (FAQ)
-        </h2>
-        <div className="space-y-4 max-w-3xl mx-auto">
-          {faqItems.map((faq, i) => (
-            <motion.div
-              key={i}
-              className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
-              variants={itemVariants}
-            >
-              <button
-                onClick={() => toggleFAQ(i)}
-                className="w-full flex justify-between items-center px-6 py-4 text-left text-gray-900 font-semibold hover:bg-red-50 transition-colors"
-                aria-expanded={openFAQIndex === i}
-              >
-                <span className="text-base">{faq.question}</span>
-                <ChevronDown
-                  className={`w-5 h-5 transform transition-transform duration-200 ${openFAQIndex === i ? "rotate-180" : ""}`}
-                />
-              </button>
-              {openFAQIndex === i && (
-                <motion.div
-                  className="px-6 py-5 bg-red-50 text-gray-700 text-sm leading-relaxed"
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {faq.detailedContent}
-                </motion.div>
-              )}
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
-
-      {/* Blog Section */}
-      <motion.section
-        className="mb-16"
-        variants={containerVariants}
-      >
-        <h2 className="text-2xl font-bold text-red-600 mb-8 text-center flex items-center justify-center gap-2">
-          <FileText className="w-6 h-6" /> Blog Chia Sẻ Kinh Nghiệm
-        </h2>
-          <img src={blogImg} alt="HIV Info" className="w-full h-65 object-cover" />
+        <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+          Blog Chia Sẻ Kinh Nghiệm        </h2>
+        <img src={blogImg} alt="HIV Info" className="w-full h-65 object-cover" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {blogPosts.map(({ title, description, link }, idx) => (
             <motion.article
@@ -460,7 +463,7 @@ export default function KnowledgePage() {
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
-              
+
               <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">{title}</h3>
               <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed">{description}</p>
               <Button
