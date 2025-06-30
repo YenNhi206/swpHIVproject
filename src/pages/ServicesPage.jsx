@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Stethoscope, CheckCircle } from 'lucide-react';
+import { FileText, CheckCircle, HelpCircle } from 'lucide-react';
 
 const firstVisitServices = [
   {
@@ -65,10 +65,25 @@ const firstVisitServices = [
   },
 ];
 
+const serviceGroups = {
+  'Xét nghiệm & Dự phòng': [1, 2, 3],
+  'Điều trị & Theo dõi': [4, 5],
+  'Tư vấn hỗ trợ': [6],
+};
+
 function formatPrice(price) {
-  return typeof price === 'number'
-    ? price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-    : price;
+  if (typeof price === 'number') {
+    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  }
+  return (
+    <span className="inline-flex items-center gap-1 group relative cursor-help">
+      {price}
+      <HelpCircle className="w-4 h-4 text-gray-400 group-hover:text-red-500" />
+      <span className="absolute z-10 top-full left-0 mt-1 w-max px-2 py-1 text-xs bg-black text-white rounded opacity-0 group-hover:opacity-100 transition-opacity">
+        Vui lòng liên hệ để biết chi tiết giá
+      </span>
+    </span>
+  );
 }
 
 export default function ServicesPage() {
@@ -102,35 +117,40 @@ export default function ServicesPage() {
         Dịch vụ và Giá tiền
       </motion.h1>
 
-      <motion.section className="mt-12" variants={containerVariants}>
-        <h2 className="text-2xl font-bold text-red-600 mb-6 flex items-center gap-2">
-          <FileText className="w-6 h-6" /> Dịch vụ khám và điều trị
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {firstVisitServices.map((service) => (
-            <motion.div
-              key={service.id}
-              className="bg-white shadow-sm rounded-xl p-6 border border-gray-100 hover:shadow-md transition"
-              variants={itemVariants}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-            >
-              <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-red-500" /> {service.name}
-              </h3>
-              <div className="text-gray-600 mb-4 space-y-1">
-                {Array.isArray(service.description) ? (
-                  service.description.map((line, index) => (
-                    <p key={index}>• {line}</p>
-                  ))
-                ) : (
-                  <p>{service.description}</p>
-                )}
-              </div>
-              <p className="text-2xl font-bold text-red-600">{formatPrice(service.price)}</p>
-            </motion.div>
-          ))}
-        </div>
+      <motion.section className="mt-12 space-y-12" variants={containerVariants}>
+        {Object.entries(serviceGroups).map(([groupTitle, ids]) => (
+          <div key={groupTitle}>
+            <h2 className="text-2xl font-bold text-red-600 mb-6 flex items-center gap-2">
+              <FileText className="w-6 h-6" /> {groupTitle}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {firstVisitServices
+                .filter((s) => ids.includes(s.id))
+                .map((service) => (
+                  <motion.div
+                    key={service.id}
+                    className="bg-white shadow-sm rounded-xl p-6 border border-gray-100 hover:shadow-lg hover:ring-1 hover:ring-red-300 transition-all duration-300 ease-in-out"
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-red-500" /> {service.name}
+                    </h3>
+                    <div className="text-gray-600 mb-4 space-y-1">
+                      {Array.isArray(service.description) ? (
+                        service.description.map((line, index) => (
+                          <p key={index}>• {line}</p>
+                        ))
+                      ) : (
+                        <p>{service.description}</p>
+                      )}
+                    </div>
+                    <p className="text-2xl font-bold text-red-600">{formatPrice(service.price)}</p>
+                  </motion.div>
+                ))}
+            </div>
+          </div>
+        ))}
       </motion.section>
     </motion.div>
   );

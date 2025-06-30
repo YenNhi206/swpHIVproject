@@ -3,10 +3,15 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Share2, Download } from 'lucide-react';
 import Button from '../../components/Button';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function TreatmentDetail() {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+
 
   const treatmentData = {
     1: {
@@ -67,6 +72,25 @@ export default function TreatmentDetail() {
             </h2>
             <p className="mt-2 text-gray-600">Không dùng nếu dị ứng thành phần thuốc. Tham khảo bác sĩ.</p>
           </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">7</span>
+              Thời gian áp dụng điều trị
+            </h2>
+            <p className="mt-2 text-gray-600">Phác đồ có thể dùng suốt đời nếu người bệnh dung nạp tốt và không có kháng thuốc. Áp dụng cho điều trị ban đầu hoặc sau thất bại.</p>
+          </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">8</span>
+              Đánh giá hiệu quả điều trị
+            </h2>
+            <ul className="list-disc ml-8 mt-2 text-gray-600 space-y-2">
+              <li><strong>Thành công:</strong> Tải lượng HIV &lt; 200 bản sao/mL sau 6 tháng, CD4 tăng, cải thiện lâm sàng.</li>
+              <li><strong>Thất bại:</strong> Tải lượng virus không giảm sau 6 tháng hoặc tăng trở lại; có thể do kháng thuốc hoặc kém tuân thủ.</li>
+            </ul>
+          </section>
+
+
         </>
       ),
     },
@@ -130,6 +154,25 @@ export default function TreatmentDetail() {
             </h2>
             <p className="mt-2 text-gray-600">Không sử dụng nếu dị ứng với bất kỳ thành phần nào. Cần cần tham khảo ý kiến bác sĩ trước khi dùng.</p>
           </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">7</span>
+              Thời gian áp dụng điều trị
+            </h2>
+            <p className="mt-2 text-gray-600">Dùng lâu dài nếu không có độc tính huyết học. Thường dùng khi DTG không sẵn có hoặc trong thai kỳ.</p>
+          </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">8</span>
+              Đánh giá hiệu quả điều trị
+            </h2>
+            <ul className="list-disc ml-8 mt-2 text-gray-600 space-y-2">
+              <li><strong>Thành công:</strong> Tải lượng HIV &lt; 200 bản sao/mL sau 6 tháng, CD4 cải thiện.</li>
+              <li><strong>Thất bại:</strong> Virus không giảm hoặc tái tăng tải lượng. Xuất hiện tác dụng phụ nặng như thiếu máu hoặc phát ban nặng.</li>
+            </ul>
+          </section>
+
+
         </>
       ),
     },
@@ -192,6 +235,24 @@ export default function TreatmentDetail() {
             </h2>
             <p className="mt-2 text-gray-600">Không dùng nếu có tiền sử dị ứng với bất kỳ thành phần nào (đặc biệt là ABC). Cần được bác sĩ chỉ định và theo dõi chặt chẽ.</p>
           </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">7</span>
+              Thời gian áp dụng điều trị
+            </h2>
+            <p className="mt-2 text-gray-600">Phác đồ bậc 2 dùng lâu dài nếu dung nạp tốt, đặc biệt sau thất bại phác đồ có NNRTI. Dùng khi chống chỉ định với TDF.</p>
+          </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">8</span>
+              Đánh giá hiệu quả điều trị
+            </h2>
+            <ul className="list-disc ml-8 mt-2 text-gray-600 space-y-2">
+              <li><strong>Thành công:</strong> Tải lượng HIV &lt; 200 bản sao/mL trong 3–6 tháng, cải thiện miễn dịch và triệu chứng.</li>
+              <li><strong>Thất bại:</strong> Không đạt ức chế virus; nhiều tác dụng phụ tiêu hóa có thể ảnh hưởng tuân thủ.</li>
+            </ul>
+          </section>
+
         </>
       ),
     },
@@ -226,7 +287,7 @@ export default function TreatmentDetail() {
               <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">3</span>
               Chỉ định
             </h2>
-            <p className="mt-2 text-gray-600">Dành cho trẻ em từ 2 tuổi trở lên, chưa điều trị hoặc thất bại điều trị trước đó.</p>
+            <p className="mt-2 text-gray-600">Dành cho trẻ em từ 2 tuổi đến 12 tuổi , chưa điều trị hoặc thất bại điều trị trước đó.</p>
           </section>
           <section className="mb-6">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
@@ -254,6 +315,24 @@ export default function TreatmentDetail() {
             </h2>
             <p className="mt-2 text-gray-600">Không dùng nếu trẻ có tiền sử dị ứng với bất kỳ thành phần nào. Cần được bác sĩ chỉ định và giám sát.</p>
           </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">7</span>
+              Thời gian áp dụng điều trị
+            </h2>
+            <p className="mt-2 text-gray-600">Dùng lâu dài nếu người bệnh dung nạp tốt và không có kháng thuốc. Thường dùng cho phụ nữ mang thai hoặc ở nơi thiếu thuốc khác.</p>
+          </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">8</span>
+              Đánh giá hiệu quả điều trị
+            </h2>
+            <ul className="list-disc ml-8 mt-2 text-gray-600 space-y-2">
+              <li><strong>Thành công:</strong> Virus không phát hiện sau 6 tháng, CD4 tăng, sức khỏe cải thiện.</li>
+              <li><strong>Thất bại:</strong> Tải lượng virus cao kéo dài, xuất hiện tác dụng phụ nghiêm trọng (phản ứng dị ứng, thiếu máu).</li>
+            </ul>
+          </section>
+
         </>
       ),
     },
@@ -312,35 +391,35 @@ export default function TreatmentDetail() {
   }
 
   return (
-          <>
-            <motion.h1
-              className="text-3xl sm:text-4xl font-bold text-red-600 mb-6"
-              variants={itemVariants}
-            >
-              {treatment.name}
-            </motion.h1>
-            {treatment.content}
-            <motion.div
-              className="flex flex-wrap gap-4 mt-8"
-              variants={containerVariants}
-            >
-              <Button
-                label="Quay lại danh sách"
-                onClick={() => navigate('/treatment')}
-                icon={<ArrowLeft className="w-5 h-5" />}
-              />
-              <Button
-                label="Chia sẻ phác đồ"
-                onClick={() => alert('Chức năng chia sẻ đang phát triển!')}
-                icon={<Share2 className="w-5 h-5" />}
-              />
-              <Button
-                label="Tải PDF"
-                onClick={() => alert('Chức năng tải PDF đang phát triển!')}
-                icon={<Download className="w-5 h-5" />}
-              />
-            </motion.div>
-          </>
-       
+    <>
+      <motion.h1
+        className="text-3xl sm:text-4xl font-bold text-red-600 mb-6"
+        variants={itemVariants}
+      >
+        {treatment.name}
+      </motion.h1>
+      {treatment.content}
+      <motion.div
+        className="flex flex-wrap gap-4 mt-8"
+        variants={containerVariants}
+      >
+        <Button
+          label="Quay lại danh sách"
+          onClick={() => navigate('/treatment')}
+          icon={<ArrowLeft className="w-5 h-5" />}
+        />
+        <Button
+          label="Chia sẻ phác đồ"
+          onClick={() => alert('Chức năng chia sẻ đang phát triển!')}
+          icon={<Share2 className="w-5 h-5" />}
+        />
+        <Button
+          label="Tải PDF"
+          onClick={() => alert('Chức năng tải PDF đang phát triển!')}
+          icon={<Download className="w-5 h-5" />}
+        />
+      </motion.div>
+    </>
+
   );
 }

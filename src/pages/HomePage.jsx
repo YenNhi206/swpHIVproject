@@ -10,6 +10,11 @@ import hivpaitentImg from "../assets/hivpaitent.jpg";
 import img1 from "../assets/DYT.jpg";
 import img2 from "../assets/hiv2.jpg";
 import img3 from "../assets/doctor1.jpg";
+import img4 from "../assets/hiv-3.jpg";
+import img5 from "../assets/hiv-4.jpg";
+import img6 from "../assets/hiv-5.jpg";
+import img7 from "../assets/hiv-6.jpg";
+import img8 from "../assets/hiv-7.jpg";
 import { CalendarDays } from "lucide-react";
 
 
@@ -20,6 +25,12 @@ const carouselImages = [
   { src: img1, alt: 'HIV Care 1' },
   { src: img2, alt: 'HIV Care 2' },
   { src: img3, alt: 'HIV Care 3' },
+  { src: img4, alt: 'HIV Care 4' },
+  { src: img5, alt: 'HIV Care 5' },
+  { src: img6, alt: 'HIV Care 6' },
+  { src: img7, alt: 'HIV Care 7' },
+  { src: img8, alt: 'HIV Care 8' },
+
 ];
 
 export default function HomePage() {
@@ -314,7 +325,8 @@ export default function HomePage() {
       </motion.section>
 
       {/* Tin tức & tiến bộ y học mới */}
-      <motion.section variants={containerVariants} className="mt-20">
+      <motion.section
+        variants={containerVariants} className="mt-20">
         <motion.div className="mb-12" variants={itemVariants}>
           <h2 className="text-3xl font-bold text-red-600 mb-4 flex items-center gap-2">
             <CheckCircle className="w-6 h-6 text-red-600" />
@@ -333,7 +345,7 @@ export default function HomePage() {
             className="lg:col-span-2 bg-white rounded-2xl shadow hover:shadow-lg transition p-10 flex flex-col justify-between relative"
           >
             <a
-              href="..."
+              href="https://www.gilead.com/news/news-details/2025/yeztugo-lenacapavir-is-now-the-first-and-only-fda-approved-hiv-prevention-option-offering-6-months-of-protection"
               target="_blank"
               rel="noopener noreferrer"
               className="block space-y-4"
