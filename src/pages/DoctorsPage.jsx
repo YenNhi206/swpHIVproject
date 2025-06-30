@@ -10,7 +10,7 @@ export default function DoctorsPage() {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [schedule, setSchedule] = useState([]);
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(10);
+  const [size] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);

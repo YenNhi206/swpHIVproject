@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import {
   CheckCircle,
   XCircle,
@@ -101,6 +102,7 @@ export default function StaffAppointmentPage() {
           onChange={(e) => setSelectedDate(e.target.value)}
           className="border rounded px-3 py-2"
         />
+
       </div>
 
       <div className="flex justify-center flex-wrap gap-2 mb-4">
@@ -109,8 +111,8 @@ export default function StaffAppointmentPage() {
             key={tab}
             onClick={() => setSelectedTab(tab)}
             className={`px-4 py-2 rounded-full font-medium border ${selectedTab === tab
-                ? "bg-red-600 text-white"
-                : "bg-white text-red-700 border-red-500"
+              ? "bg-red-600 text-white"
+              : "bg-white text-red-700 border-red-500"
               }`}
           >
             {tab}
@@ -148,10 +150,10 @@ export default function StaffAppointmentPage() {
                   <td className="p-3">{appt.service}</td>
                   <td
                     className={`p-3 font-semibold ${appt.status === "Vắng"
-                        ? "text-red-600"
-                        : appt.status === "Hoàn tất"
-                          ? "text-green-600"
-                          : "text-gray-600"
+                      ? "text-red-600"
+                      : appt.status === "Hoàn tất"
+                        ? "text-green-600"
+                        : "text-gray-600"
                       }`}
                   >
                     {appt.status}
