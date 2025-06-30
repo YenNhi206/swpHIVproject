@@ -1,92 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, CheckCircle, HelpCircle } from 'lucide-react';
 
-const firstVisitServices = [
-  {
-    id: 1,
-    name: 'Xét nghiệm nhanh HIV và STIs',
-    description: [
-      'Chính xác & Bảo mật.',
-      'Xét nghiệm nhanh HIV-1/2 Combo Antigen/Antibody (Ag/Ab).',
-      'Kết quả nhanh chóng chỉ sau 20 phút.',
-    ],
-    price: 200000,
-  },
-  {
-    id: 2,
-    name: 'Dự phòng trước phơi nhiễm HIV – PrEP',
-    description: [
-      'Bảo mật & Hiệu quả.',
-      'Sử dụng thuốc để phòng tránh lây nhiễm HIV trước khi có nguy cơ tiếp xúc.',
-      'Được tư vấn và theo dõi bởi đội ngũ y tế giàu kinh nghiệm.',
-    ],
-    price: 500000,
-  },
-  {
-    id: 3,
-    name: 'Dự phòng sau phơi nhiễm HIV – PEP',
-    description: [
-      'Ít tác dụng phụ.',
-      'Điều trị khẩn cấp sau khi có nguy cơ phơi nhiễm HIV.',
-      'Hiệu quả nếu thực hiện trong vòng 72 giờ.',
-    ],
-    price: 300000,
-  },
-  {
-    id: 4,
-    name: 'Điều trị HIV – ARV',
-    description: [
-      'Bảo mật & Uy tín.',
-      'Điều trị HIV lâu dài giúp kiểm soát virus.',
-      'Nâng cao chất lượng cuộc sống và giảm nguy cơ lây nhiễm.',
-    ],
-    price: 'Tùy phác đồ',
-  },
-  {
-    id: 5,
-    name: 'Dịch vụ tại nhà',
-    description: [
-      'Theo lịch hẹn.',
-      'Tư vấn khám chữa bệnh qua điện thoại, ứng dụng.',
-      'Tiện lợi và bảo mật tối đa.',
-    ],
-    price: '...',
-  },
-  {
-    id: 6,
-    name: 'Tư vấn tâm lý',
-    description: [
-      'Hỗ trợ tinh thần.',
-      'Tư vấn tâm lý cho người sống chung với HIV.',
-      'Giảm căng thẳng, lo lắng, nâng cao tinh thần.',
-    ],
-    price: '...',
-  },
-];
-
 const serviceGroups = {
-  'Xét nghiệm & Dự phòng': [1, 2, 3],
-  'Điều trị & Theo dõi': [4, 5],
-  'Tư vấn hỗ trợ': [6],
+  'Khám lần đầu': ['FIRST_VISIT'],
+  'Tái khám': ['FOLLOW_UP'],
 };
 
 function formatPrice(price) {
-  if (typeof price === 'number') {
-    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  const number = Number(price); // Ép kiểu về số
+  if (!isNaN(number)) {
+    return number.toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    });
   }
   return (
     <span className="inline-flex items-center gap-1 group relative cursor-help">
       {price}
-      <HelpCircle className="w-4 h-4 text-gray-400 group-hover:text-red-500" />
-      <span className="absolute z-10 top-full left-0 mt-1 w-max px-2 py-1 text-xs bg-black text-white rounded opacity-0 group-hover:opacity-100 transition-opacity">
-        Vui lòng liên hệ để biết chi tiết giá
-      </span>
     </span>
   );
 }
 
 export default function ServicesPage() {
+  const [services, setServices] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchServices = async () => {
+    setIsLoading(true);
+    try {
+      const token = JSON.parse(localStorage.getItem('user'))?.token;
+      const response = await fetch('http://localhost:8080/api/services', {
+        headers: {
+          'Authorization': token ? `Bearer ${token}` : '',
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) throw new Error('Lỗi khi tải danh sách dịch vụ');
+      const data = await response.json();
+      setServices(data);
+    } catch (error) {
+      console.error('Lỗi khi gọi API dịch vụ:', error);
+      setError('Không thể tải danh sách dịch vụ. Vui lòng thử lại.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -117,15 +82,21 @@ export default function ServicesPage() {
         Dịch vụ và Giá tiền
       </motion.h1>
 
+      {/* ĐÃ BỎ NÚT TẢI LẠI */}
+
       <motion.section className="mt-12 space-y-12" variants={containerVariants}>
-        {Object.entries(serviceGroups).map(([groupTitle, ids]) => (
+        {isLoading ? (
+          <p className="text-center text-gray-500">Đang tải...</p>
+        ) : error ? (
+          <p className="text-center text-red-600">{error}</p>
+        ) : Object.entries(serviceGroups).map(([groupTitle, types]) => (
           <div key={groupTitle}>
             <h2 className="text-2xl font-bold text-red-600 mb-6 flex items-center gap-2">
               <FileText className="w-6 h-6" /> {groupTitle}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {firstVisitServices
-                .filter((s) => ids.includes(s.id))
+              {services
+                .filter((service) => types.includes(service.type))
                 .map((service) => (
                   <motion.div
                     key={service.id}

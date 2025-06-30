@@ -6,6 +6,7 @@ import Button from '../../components/Button';
 
 
 
+
 export default function TreatmentDetail() {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);

@@ -12,18 +12,19 @@ export default function DoctorsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [schedule, setSchedule] = useState([]);
+
   const navigate = useNavigate();
 
-  // Lấy danh sách bác sĩ theo trang và từ khóa tìm kiếm
   useEffect(() => {
     const fetchDoctors = async () => {
       setIsLoading(true);
       try {
         const response = await fetch(
           `http://localhost:8080/api/doctors?page=${page}&size=${size}&search=${encodeURIComponent(searchTerm)}&searchBy=name`,
-          {
-            headers: { 'Content-Type': 'application/json' },
-          }
+          { headers: { 'Content-Type': 'application/json' } }
         );
         if (!response.ok) throw new Error(`Lỗi API: ${response.status}`);
         const data = await response.json();
@@ -38,11 +39,9 @@ export default function DoctorsPage() {
     fetchDoctors();
   }, [page, size, searchTerm]);
 
-  // Khi nhấn nút Đặt lịch, lấy lịch trống hiện tại của bác sĩ rồi navigate sang trang đặt lịch
   const handleBookAppointment = async (doctor) => {
     const token = JSON.parse(localStorage.getItem('user'))?.token;
     if (!token) {
-      // Nếu chưa đăng nhập, lưu tạm bác sĩ và chuyển đến login
       sessionStorage.setItem('pendingAppointment', JSON.stringify({ doctor, from: '/doctors' }));
       navigate('/login');
       return;
@@ -50,7 +49,6 @@ export default function DoctorsPage() {
 
     try {
       const currentDate = new Date().toISOString().split('T')[0];
-      // Lấy lịch trống ngày hôm nay của bác sĩ
       const scheduleRes = await fetch(
         `http://localhost:8080/api/doctors/${doctor.id}/schedule?date=${currentDate}`,
         {
@@ -58,7 +56,6 @@ export default function DoctorsPage() {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-
         }
       );
       if (!scheduleRes.ok) throw new Error('Không thể tải lịch trống');
@@ -66,15 +63,10 @@ export default function DoctorsPage() {
       const availableTimeSlots = scheduleData.timeSlots || [];
 
       navigate('/appointments', {
-        state: {
-          doctor,
-          availableTimeSlots,
-          defaultDate: currentDate,
-        },
+        state: { doctor, availableTimeSlots, defaultDate: currentDate },
       });
     } catch (error) {
       console.error('Lỗi lấy lịch trống:', error);
-      // Chuyển sang trang đặt lịch không có giờ trống
       navigate('/appointments', {
         state: { doctor, availableTimeSlots: [], defaultDate: new Date().toISOString().split('T')[0] },
       });
@@ -84,6 +76,24 @@ export default function DoctorsPage() {
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
       setPage(newPage);
+    }
+  };
+
+  const openDoctorModal = async (doctor) => {
+    setSelectedDoctor(doctor);
+    setShowModal(true);
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/doctors/${doctor.id}/schedule`,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+      if (!response.ok) throw new Error('Không thể tải lịch bác sĩ');
+      const data = await response.json();
+      setSchedule(data || []);
+    } catch (err) {
+      console.error('Lỗi khi tải lịch bác sĩ:', err);
+      setSchedule([]);
     }
   };
 
@@ -139,20 +149,28 @@ export default function DoctorsPage() {
               key={doctor.id}
               className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer"
               variants={itemVariants}
-              onClick={() => { }}
+              onClick={() => openDoctorModal(doctor)}
             >
               <div className="flex items-center gap-6">
                 <img
                   src={doctor.imageUrl || 'https://via.placeholder.com/96'}
-alt={doctor.fullName}
+                  alt={doctor.fullName}
                   className="w-24 h-24 rounded-full border-4 border-red-100 object-cover"
                 />
                 <div className="flex-1 space-y-2">
                   <h2 className="text-xl font-bold text-gray-800">{doctor.fullName}</h2>
                   <p className="text-red-600 font-medium">{doctor.specialization}</p>
                   <p className="text-gray-600">Trình độ: {doctor.qualification || 'Không có thông tin'}</p>
-                  <p className="text-gray-600 line-clamp-2">{doctor.description || 'Không có mô tả'}</p>
-                  <div className="text-right">
+                  <p className="text-red-600 font-medium">{doctor.workingSchedule}</p>
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      label="Xem chi tiết"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDoctorModal(doctor);
+                      }}
+                      icon={<Phone className="w-4 h-4" />}
+                    />
                     <Button
                       label="Đặt lịch"
                       onClick={(e) => {
@@ -205,7 +223,7 @@ alt={doctor.fullName}
               <img
                 src={selectedDoctor.imageUrl || 'https://via.placeholder.com/100'}
                 alt={selectedDoctor.fullName}
-className="w-24 h-24 rounded-full border-4 border-red-200 object-cover"
+                className="w-24 h-24 rounded-full border-4 border-red-200 object-cover"
               />
               <div>
                 <h2 className="text-2xl font-bold text-red-700">{selectedDoctor.fullName}</h2>
@@ -214,18 +232,21 @@ className="w-24 h-24 rounded-full border-4 border-red-200 object-cover"
             </div>
 
             <p><strong>Trình độ:</strong> {selectedDoctor.qualification || 'Không rõ'}</p>
-            <p><strong>Mô tả:</strong> {selectedDoctor.description || 'Không có mô tả'}</p>
             <p><strong>Điện thoại:</strong> {selectedDoctor.phoneNumber || 'Không có'}</p>
             <p><strong>Email:</strong> {selectedDoctor.email || 'Không có'}</p>
-            <p><strong>Địa chỉ:</strong> {selectedDoctor.address || 'Không có'}</p>
+            
+
             <div className="mt-4">
               <h4 className="font-semibold">Lịch trình:</h4>
               <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
                 {(schedule || []).map((sch, i) => (
-                  <li key={i}>{sch.date} - {sch.timeSlots.join(', ')}</li>
+                  <li key={i}>
+                    {sch.date} - {sch.timeSlots.join(', ')}
+                  </li>
                 ))}
               </ul>
             </div>
+
             <div className="text-right mt-4">
               <Button
                 label="Đặt lịch"

@@ -18,6 +18,7 @@ export default function LoginPage({ setUser }) {
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const from = location.state?.from?.pathname || null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,8 +104,15 @@ export default function LoginPage({ setUser }) {
             username: data.username,
             role: data.role,
             token: data.token,
+            fullName: data.fullName
           }));
-          setUser({ username: data.username, role: data.role, token: data.token });
+          setUser({
+            username: data.username,
+            role: data.role,
+            token: data.token,
+            fullName: data.fullName
+          });
+
 
           // Kiểm tra sessionStorage để xử lý đặt lịch
           const pending = JSON.parse(sessionStorage.getItem('pendingAppointment'));
@@ -112,9 +120,25 @@ export default function LoginPage({ setUser }) {
             sessionStorage.removeItem('pendingAppointment'); // Xóa sau khi xử lý
             navigate('/appointments', { state: { doctor: pending.doctor } });
           } else {
-            // Điều hướng dựa trên role hoặc từ location.state
-            const from = location.state?.from || '/';
-            navigate(from);
+            if (from) {
+              navigate(from);
+            } else {
+              switch (data.role) {
+                case 'DOCTOR':
+                  navigate('/doctor');
+                  break;
+                case 'ADMIN':
+                  navigate('/admin');
+                  break;
+                case 'STAFF':
+                  navigate('/staff');
+                  break;
+                case 'PATIENT':
+                default:
+                  navigate('/');
+                  break;
+              }
+            }
           }
         } else {
           setErrors({ server: data.message || 'Đăng nhập thất bại' });
