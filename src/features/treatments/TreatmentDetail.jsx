@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link,useNavigate  } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Share2, Download } from 'lucide-react';
 import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
 
 
+
 export default function TreatmentDetail() {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-
-
 
   const treatmentData = {
     1: {
