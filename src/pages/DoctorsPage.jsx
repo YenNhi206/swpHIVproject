@@ -58,6 +58,7 @@ export default function DoctorsPage() {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
+
         }
       );
       if (!scheduleRes.ok) throw new Error('Không thể tải lịch trống');
@@ -143,7 +144,7 @@ export default function DoctorsPage() {
               <div className="flex items-center gap-6">
                 <img
                   src={doctor.imageUrl || 'https://via.placeholder.com/96'}
-                  alt={doctor.fullName}
+alt={doctor.fullName}
                   className="w-24 h-24 rounded-full border-4 border-red-100 object-cover"
                 />
                 <div className="flex-1 space-y-2">
@@ -189,6 +190,61 @@ export default function DoctorsPage() {
           Sau
         </button>
       </div>
+
+      {showModal && selectedDoctor && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative border border-gray-200">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+              onClick={() => setShowModal(false)}
+            >
+              ✕
+            </button>
+
+            <div className="flex items-center gap-4 mb-4">
+              <img
+                src={selectedDoctor.imageUrl || 'https://via.placeholder.com/100'}
+                alt={selectedDoctor.fullName}
+className="w-24 h-24 rounded-full border-4 border-red-200 object-cover"
+              />
+              <div>
+                <h2 className="text-2xl font-bold text-red-700">{selectedDoctor.fullName}</h2>
+                <p className="text-gray-600">{selectedDoctor.specialization}</p>
+              </div>
+            </div>
+
+            <p><strong>Trình độ:</strong> {selectedDoctor.qualification || 'Không rõ'}</p>
+            <p><strong>Mô tả:</strong> {selectedDoctor.description || 'Không có mô tả'}</p>
+            <p><strong>Điện thoại:</strong> {selectedDoctor.phoneNumber || 'Không có'}</p>
+            <p><strong>Email:</strong> {selectedDoctor.email || 'Không có'}</p>
+            <p><strong>Địa chỉ:</strong> {selectedDoctor.address || 'Không có'}</p>
+            <div className="mt-4">
+              <h4 className="font-semibold">Lịch trình:</h4>
+              <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                {(schedule || []).map((sch, i) => (
+                  <li key={i}>{sch.date} - {sch.timeSlots.join(', ')}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="text-right mt-4">
+              <Button
+                label="Đặt lịch"
+                onClick={() => {
+                  setShowModal(false);
+                  const token = JSON.parse(localStorage.getItem('user'))?.token;
+                  if (!token) {
+                    sessionStorage.setItem('pendingAppointment', JSON.stringify({ doctor: selectedDoctor, from: '/doctors' }));
+                    navigate('/login');
+                  } else {
+                    navigate('/appointments', { state: { doctor: selectedDoctor } });
+                  }
+                }}
+                icon={<Calendar className="w-4 h-4" />}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 }
