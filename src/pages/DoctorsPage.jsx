@@ -77,8 +77,7 @@ export default function DoctorsPage() {
         console.error('Lỗi khi gọi API chi tiết hoặc lịch trình:', error);
       }
     };
-
-    if (selectedDoctor?.id && showModal) {
+if (selectedDoctor?.id && showModal) {
       fetchDoctorDetailsAndSchedule(selectedDoctor.id);
     }
   }, [selectedDoctor?.id, showModal]);
@@ -162,7 +161,7 @@ export default function DoctorsPage() {
               <div className="flex items-center gap-6">
                 <img
                   src={doctor.imageUrl || 'https://via.placeholder.com/96'}
-                  alt={doctor.fullName}
+alt={doctor.fullName}
                   className="w-24 h-24 rounded-full border-4 border-red-100 object-cover"
                 />
                 <div className="flex-1 space-y-2">
@@ -229,7 +228,7 @@ export default function DoctorsPage() {
               <img
                 src={selectedDoctor.imageUrl || 'https://via.placeholder.com/100'}
                 alt={selectedDoctor.fullName}
-                className="w-24 h-24 rounded-full border-4 border-red-200 object-cover"
+className="w-24 h-24 rounded-full border-4 border-red-200 object-cover"
               />
               <div>
                 <h2 className="text-2xl font-bold text-red-700">{selectedDoctor.fullName}</h2>
