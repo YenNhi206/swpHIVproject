@@ -68,26 +68,26 @@ export default function TreatmentDetail() {
           <section className="mb-6">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
               <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">6</span>
-              Lưu ý
-            </h2>
-            <p className="mt-2 text-gray-600">Không dùng nếu dị ứng thành phần thuốc. Tham khảo bác sĩ.</p>
-          </section>
-          <section className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">7</span>
               Thời gian áp dụng điều trị
             </h2>
             <p className="mt-2 text-gray-600">Phác đồ có thể dùng suốt đời nếu người bệnh dung nạp tốt và không có kháng thuốc. Áp dụng cho điều trị ban đầu hoặc sau thất bại.</p>
           </section>
           <section className="mb-6">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">8</span>
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">7</span>
               Đánh giá hiệu quả điều trị
             </h2>
             <ul className="list-disc ml-8 mt-2 text-gray-600 space-y-2">
               <li><strong>Thành công:</strong> Tải lượng HIV &lt; 200 bản sao/mL sau 6 tháng, CD4 tăng, cải thiện lâm sàng.</li>
               <li><strong>Thất bại:</strong> Tải lượng virus không giảm sau 6 tháng hoặc tăng trở lại; có thể do kháng thuốc hoặc kém tuân thủ.</li>
             </ul>
+          </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">8</span>
+              Lưu ý
+            </h2>
+            <p className="mt-2 text-gray-600">Không dùng nếu dị ứng thành phần thuốc. Tham khảo bác sĩ.</p>
           </section>
 
 
@@ -150,26 +150,26 @@ export default function TreatmentDetail() {
           <section className="mb-6">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
               <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">6</span>
-              Lưu ý
-            </h2>
-            <p className="mt-2 text-gray-600">Không sử dụng nếu dị ứng với bất kỳ thành phần nào. Cần cần tham khảo ý kiến bác sĩ trước khi dùng.</p>
-          </section>
-          <section className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">7</span>
               Thời gian áp dụng điều trị
             </h2>
             <p className="mt-2 text-gray-600">Dùng lâu dài nếu không có độc tính huyết học. Thường dùng khi DTG không sẵn có hoặc trong thai kỳ.</p>
           </section>
           <section className="mb-6">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">8</span>
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">7</span>
               Đánh giá hiệu quả điều trị
             </h2>
             <ul className="list-disc ml-8 mt-2 text-gray-600 space-y-2">
               <li><strong>Thành công:</strong> Tải lượng HIV &lt; 200 bản sao/mL sau 6 tháng, CD4 cải thiện.</li>
               <li><strong>Thất bại:</strong> Virus không giảm hoặc tái tăng tải lượng. Xuất hiện tác dụng phụ nặng như thiếu máu hoặc phát ban nặng.</li>
             </ul>
+          </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">8</span>
+              Lưu ý
+            </h2>
+            <p className="mt-2 text-gray-600">Không sử dụng nếu dị ứng với bất kỳ thành phần nào. Cần cần tham khảo ý kiến bác sĩ trước khi dùng.</p>
           </section>
 
 
@@ -231,26 +231,26 @@ export default function TreatmentDetail() {
           <section className="mb-6">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
               <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">6</span>
-              Lưu ý
-            </h2>
-            <p className="mt-2 text-gray-600">Không dùng nếu có tiền sử dị ứng với bất kỳ thành phần nào (đặc biệt là ABC). Cần được bác sĩ chỉ định và theo dõi chặt chẽ.</p>
-          </section>
-          <section className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">7</span>
               Thời gian áp dụng điều trị
             </h2>
             <p className="mt-2 text-gray-600">Phác đồ bậc 2 dùng lâu dài nếu dung nạp tốt, đặc biệt sau thất bại phác đồ có NNRTI. Dùng khi chống chỉ định với TDF.</p>
           </section>
           <section className="mb-6">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">8</span>
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">7</span>
               Đánh giá hiệu quả điều trị
             </h2>
             <ul className="list-disc ml-8 mt-2 text-gray-600 space-y-2">
               <li><strong>Thành công:</strong> Tải lượng HIV &lt; 200 bản sao/mL trong 3–6 tháng, cải thiện miễn dịch và triệu chứng.</li>
               <li><strong>Thất bại:</strong> Không đạt ức chế virus; nhiều tác dụng phụ tiêu hóa có thể ảnh hưởng tuân thủ.</li>
             </ul>
+          </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">8</span>
+              Lưu ý
+            </h2>
+            <p className="mt-2 text-gray-600">Không dùng nếu có tiền sử dị ứng với bất kỳ thành phần nào (đặc biệt là ABC). Cần được bác sĩ chỉ định và theo dõi chặt chẽ.</p>
           </section>
 
         </>
@@ -311,26 +311,26 @@ export default function TreatmentDetail() {
           <section className="mb-6">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
               <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">6</span>
-              Lưu ý
-            </h2>
-            <p className="mt-2 text-gray-600">Không dùng nếu trẻ có tiền sử dị ứng với bất kỳ thành phần nào. Cần được bác sĩ chỉ định và giám sát.</p>
-          </section>
-          <section className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">7</span>
               Thời gian áp dụng điều trị
             </h2>
             <p className="mt-2 text-gray-600">Dùng lâu dài nếu người bệnh dung nạp tốt và không có kháng thuốc. Thường dùng cho phụ nữ mang thai hoặc ở nơi thiếu thuốc khác.</p>
           </section>
           <section className="mb-6">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">8</span>
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">7</span>
               Đánh giá hiệu quả điều trị
             </h2>
             <ul className="list-disc ml-8 mt-2 text-gray-600 space-y-2">
               <li><strong>Thành công:</strong> Virus không phát hiện sau 6 tháng, CD4 tăng, sức khỏe cải thiện.</li>
               <li><strong>Thất bại:</strong> Tải lượng virus cao kéo dài, xuất hiện tác dụng phụ nghiêm trọng (phản ứng dị ứng, thiếu máu).</li>
             </ul>
+          </section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+              <span className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm">8</span>
+              Lưu ý
+            </h2>
+            <p className="mt-2 text-gray-600">Không dùng nếu trẻ có tiền sử dị ứng với bất kỳ thành phần nào. Cần được bác sĩ chỉ định và giám sát.</p>
           </section>
 
         </>

@@ -54,6 +54,8 @@ export default function EditTreatment() {
             ['Chỉ định', 'indication'],
             ['Tác dụng phụ', 'sideEffects'],
             ['Theo dõi hiệu quả', 'monitoring'],
+            ['Thời gian áp dụng', 'duration'],
+            ['Đánh giá hiệu quả điều trị', 'evaluation'],
             ['Lưu ý', 'precautions'],
           ].map(([label, name], idx) => (
             <motion.div key={name} variants={itemVariants}>
