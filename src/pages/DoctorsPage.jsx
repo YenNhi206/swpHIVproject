@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Phone, Search, Mail } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Calendar, Phone, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 
 export default function DoctorsPage() {
   const [doctors, setDoctors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [schedule, setSchedule] = useState([]);
   const [page, setPage] = useState(0);
   const [size] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
-  const location = useLocation();
 
+  // Lấy danh sách bác sĩ theo trang và từ khóa tìm kiếm
   useEffect(() => {
     const fetchDoctors = async () => {
       setIsLoading(true);
@@ -41,65 +38,52 @@ export default function DoctorsPage() {
     fetchDoctors();
   }, [page, size, searchTerm]);
 
-  useEffect(() => {
-    const fetchDoctorDetailsAndSchedule = async (doctorId) => {
-      try {
-        const token = JSON.parse(localStorage.getItem('user'))?.token;
-        if (!token) {
-          setSelectedDoctor(null);
-          return;
-        }
+  // Khi nhấn nút Đặt lịch, lấy lịch trống hiện tại của bác sĩ rồi navigate sang trang đặt lịch
+  const handleBookAppointment = async (doctor) => {
+    const token = JSON.parse(localStorage.getItem('user'))?.token;
+    if (!token) {
+      // Nếu chưa đăng nhập, lưu tạm bác sĩ và chuyển đến login
+      sessionStorage.setItem('pendingAppointment', JSON.stringify({ doctor, from: '/doctors' }));
+      navigate('/login');
+      return;
+    }
 
-        const doctorResponse = await fetch(`http://localhost:8080/api/doctors/${doctorId}`, {
+    try {
+      const currentDate = new Date().toISOString().split('T')[0];
+      // Lấy lịch trống ngày hôm nay của bác sĩ
+      const scheduleRes = await fetch(
+        `http://localhost:8080/api/doctors/${doctor.id}/schedule?date=${currentDate}`,
+        {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-        });
-        if (!doctorResponse.ok) throw new Error('Không thể tải chi tiết bác sĩ');
-        const doctorData = await doctorResponse.json();
 
-        const currentDate = new Date().toISOString().split('T')[0];
-        const scheduleResponse = await fetch(
-          `http://localhost:8080/api/doctors/${doctorId}/schedule?date=${currentDate}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        if (!scheduleResponse.ok) throw new Error('Không thể tải lịch trình');
-        const scheduleData = await scheduleResponse.json();
-        setSelectedDoctor({ ...doctorData, schedule: scheduleData });
-        setSchedule(scheduleData);
-      } catch (error) {
-        console.error('Lỗi khi gọi API chi tiết hoặc lịch trình:', error);
-      }
-    };
-if (selectedDoctor?.id && showModal) {
-      fetchDoctorDetailsAndSchedule(selectedDoctor.id);
+        }
+      );
+      if (!scheduleRes.ok) throw new Error('Không thể tải lịch trống');
+      const scheduleData = await scheduleRes.json();
+      const availableTimeSlots = scheduleData.timeSlots || [];
+
+      navigate('/appointments', {
+        state: {
+          doctor,
+          availableTimeSlots,
+          defaultDate: currentDate,
+        },
+      });
+    } catch (error) {
+      console.error('Lỗi lấy lịch trống:', error);
+      // Chuyển sang trang đặt lịch không có giờ trống
+      navigate('/appointments', {
+        state: { doctor, availableTimeSlots: [], defaultDate: new Date().toISOString().split('T')[0] },
+      });
     }
-  }, [selectedDoctor?.id, showModal]);
-
-  useEffect(() => {
-    const pending = JSON.parse(sessionStorage.getItem('pendingAppointment'));
-    const token = JSON.parse(localStorage.getItem('user'))?.token;
-    if (pending && token) {
-      sessionStorage.removeItem('pendingAppointment');
-      navigate('/appointments', { state: { doctor: pending.doctor } });
-    }
-  }, [location, navigate]);
-
-  const handleSelectDoctor = (doctor) => {
-    setSelectedDoctor(doctor);
-    setShowModal(true);
   };
 
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
       setPage(newPage);
-      setSelectedDoctor(null);
     }
   };
 
@@ -140,7 +124,6 @@ if (selectedDoctor?.id && showModal) {
             onChange={(e) => {
               setSearchTerm(e.target.value);
               setPage(0);
-              setSelectedDoctor(null);
             }}
           />
           <Search className="absolute top-3 left-3 text-gray-400 w-5 h-5" />
@@ -156,7 +139,7 @@ if (selectedDoctor?.id && showModal) {
               key={doctor.id}
               className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer"
               variants={itemVariants}
-              onClick={() => handleSelectDoctor(doctor)}
+              onClick={() => { }}
             >
               <div className="flex items-center gap-6">
                 <img
@@ -174,13 +157,7 @@ alt={doctor.fullName}
                       label="Đặt lịch"
                       onClick={(e) => {
                         e.stopPropagation();
-                        const token = JSON.parse(localStorage.getItem('user'))?.token;
-                        if (!token) {
-                          sessionStorage.setItem('pendingAppointment', JSON.stringify({ doctor, from: '/doctors' }));
-                          navigate('/login');
-                        } else {
-                          navigate('/appointments', { state: { doctor } });
-                        }
+                        handleBookAppointment(doctor);
                       }}
                       icon={<Calendar className="w-4 h-4" />}
                     />
