@@ -16,7 +16,6 @@ import DoctorDashboard from "./features/dashboard/DoctorDashboard";
 import PatientDashboard from "./features/dashboard/PatientDashboard";
 
 import Support from "./features/patientdashboard/Support";
-import Reminder from "./features/patientdashboard/Reminder";
 import History from "./features/patientdashboard/History";
 
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
@@ -164,14 +163,6 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <Support />
-            </MainLayout>
-          }
-        />
-        <Route
-          path="/reminder"
-          element={
-            <MainLayout user={user} setUser={setUser}>
-              <Reminder />
             </MainLayout>
           }
         />
