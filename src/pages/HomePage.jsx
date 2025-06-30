@@ -15,6 +15,7 @@ import img5 from "../assets/hiv-4.jpg";
 import img6 from "../assets/hiv-5.jpg";
 import img7 from "../assets/hiv-6.jpg";
 import img8 from "../assets/hiv-7.jpg";
+import video from "../assets/camhung.mp4";
 import { CalendarDays } from "lucide-react";
 
 
@@ -495,6 +496,152 @@ export default function HomePage() {
         </div>
       </motion.section>
 
-    </motion.div>
+      {/* Góc sáng tạo */}
+      <motion.section
+        className="mt-16"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.h2
+          variants={itemVariants}
+          className="text-3xl font-bold text-red-600 mb-8 text-center flex items-center gap-2"
+        >
+          <CheckCircle className="w-6 h-6" />
+          Góc sáng tạo – nghệ thuật từ cộng đồng
+        </motion.h2>
+
+        {/* Mô tả mục tiêu */}
+        <motion.div variants={itemVariants}>
+          <p className="text-gray-700 mb-3">Một phần độc đáo để:</p>
+          <ul className="list-disc list-inside text-gray-800 space-y-2 mb-6">
+            <li>Trưng bày tranh, thơ, video của người sống chung với HIV</li>
+            <li>Truyền cảm hứng tích cực, giảm kỳ thị</li>
+            <li>Kết nối cảm xúc mạnh mẽ với cộng đồng</li>
+            <li>Khơi dậy sự đồng cảm qua nghệ thuật và câu chuyện chân thực</li>
+            <li>Tạo không gian sáng tạo để lan tỏa thông điệp yêu thương</li>
+          </ul>
+        </motion.div>
+
+        {/* Gợi ý đóng góp */}
+        <motion.div variants={itemVariants} className="mb-8">
+          <h3 className="text-lg font-semibold text-red-500 mb-2">💡 Gợi ý đóng góp</h3>
+          <ul className="list-disc list-inside text-gray-700 space-y-1">
+            <li>Vẽ tranh hoặc gửi ảnh về hành trình sống tích cực</li>
+            <li>Viết thơ, truyện ngắn hoặc nhật ký truyền cảm hứng</li>
+            <li>Gửi video chia sẻ trải nghiệm, thông điệp yêu thương</li>
+          </ul>
+        </motion.div>
+
+        {/* Ví dụ tác phẩm minh họa (mock) */}
+        <motion.div variants={itemVariants} className="mb-10">
+          <h3 className="text-lg font-semibold text-red-500 mb-4">🌟 Một vài tác phẩm tiêu biểu</h3>
+          <div className="grid md:grid-cols-3 gap-4">
+            {/* PHẦN 1 */}
+            <div className="bg-gray-100 rounded-lg p-4 shadow flex flex-col justify-between h-full">
+              <div>
+                <img
+                  src="https://thtanthanh2.pgdtpthainguyen.edu.vn/upload/s/20171225/90e5cfa9791316a4d96830ff5762c426hiv4.jpg"
+                  alt="Tác phẩm 1"
+                  className="rounded mb-2"
+                />
+              </div>
+              <p className="text-sm text-gray-700 mt-auto">
+                <a
+                  href="https://thtanthanh2.pgdtpthainguyen.edu.vn/tin-tuc-su-kien/bai-tuyen-truyen-ve-hiv-aids-va-khong-ki-thi-phan-biet-doi-x.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-black hover:text-red-500 block"
+                >
+                  "Bài tuyên truyền về HIV – AIDS và không kì thị, phân biệt, đối xử với trẻ em bị nhiễm hoặc bị ảnh hưởng bởi HIV"
+                </a>
+              </p>
+            </div>
+
+            {/* PHẦN 2 */}
+            <div className="bg-gray-100 rounded-lg p-4 shadow flex flex-col justify-between h-full">
+              <div>
+                <div className="text-gray-700 bg-white rounded-md p-4 shadow-inner transition hover:shadow-md duration-200 max-h-64 overflow-y-scroll text-center whitespace-pre-line ">
+                 
+                  {`Thơ phòng, chống HIV
+
+Gì nguy bằng HIV
+Đại dịch tàn phá không chê đường nào
+Tế bào nó phá ào ào
+Tan tành miễn dịch cách nào tránh xa
+Chỉ trong một phút trôi qua
+Toàn cầu đã có mười ca nhiễm vào
+Tử vong mỗi lúc một cao
+Tốc độ lây nhiễm nhường nào hiểm nguy.
+
+Nói ra để hết hoài nghi
+Có WHO, UNIAIDS vào
+Đại dịch lây những đường nào?
+Mang thai, tình dục, theo đường máu qua
+Tệ nạn mắc phải nhiều ca
+Mại dâm, ma túy đường xa thêm gần
+Dây vào ta nhẹ lâng lâng
+Con đường đại dịch tiến gần ngay đây
+Tính chi kẻ dại người ngây
+HIV/AIDS nó thề không tha
+Trẻ em từ mới sinh ra
+Đã nhiễm virus mẹ cha truyền vào.
+
+Cách chữa, cách trị làm sao
+Xin thưa chẳng có cách nào chữa xong
+Chỉ hay cách tránh, cách phòng
+Sống sao lành mạnh mới hòng thoát thân
+Không tiêm, không chích, mại dâm
+Sống như thế ấy ko lâm đường cùng
+Đại dịch hết phá lung tung
+Đe dọa tính mạng, hành hung loài người.
+
+Giáo dục tất thẩy mọi người
+Trẻ em, người lớn ko cười nạn nhân
+Ko kỳ thị, chẳng biệt phân
+Hết lòng đối xử nghĩa nhân giúp đời
+Tương lai rạn rỡ ngời ngời
+HIV/AIDS hết thời hại dân.`}
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-800 mt-4">
+                <a
+                  href="https://tiengchuong.chinhphu.vn/tho-phong-chong-hiv-1-11363.htm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-black hover:text-red-500 block"
+                >
+                Thơ phòng, chống HIV
+                </a>
+              </p>
+            </div>
+
+
+            {/* PHẦN 3 */}
+            <div className="bg-gray-100 rounded-lg p-4 shadow flex flex-col justify-between h-full items-center text-center">
+              <div>
+                <video controls className="rounded mb-2 w-[300px] max-w-full">
+                  <source src="/src/assets/camhung.mp4" type="video/mp4" />
+                  Trình duyệt không hỗ trợ video.
+                </video>
+              </div>
+              <p className="text-sm text-gray-700 mt-auto">
+                <a>
+                  Video về "Những người truyền cảm hứng cho cộng đồng người nhiễm HIV"
+                </a>
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Ghi chú cuối */}
+        <motion.div variants={itemVariants} className="text-sm text-gray-500 italic">
+          * Nội dung được chọn lọc từ cộng đồng & các sự kiện đặc biệt.
+        </motion.div>
+      </motion.section>
+
+
+    </motion.div >
   );
 }
