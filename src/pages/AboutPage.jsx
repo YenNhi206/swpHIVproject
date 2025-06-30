@@ -77,7 +77,7 @@ export default function AboutPage() {
 
 
       {/* Lịch sử thành lập & Cơ sở hoạt động */}
-      <section>
+      <section className="mt-16">
         <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
           Lịch sử thành lập & Cơ sở hoạt động
         </h2>
@@ -122,7 +122,7 @@ export default function AboutPage() {
       </section>
 
       {/* Năng lực & Thành tựu chuyên môn */}
-      <section>
+      <section className="mt-16">
         <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
           Năng lực & Thành tựu chuyên môn
         </h2>
@@ -167,125 +167,169 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      <section className="space-y-16">
 
+      {/* Chúng tôi khác biệt */}
+      <section className="space-y-16 mt-16">
         <motion.h1 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4" variants={itemVariants}>Chúng tôi khác biệt</motion.h1>
-
         <div className="space-y-12">
+
+          {/* Tâm đức */}
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
             <img src="https://phongkhamdakhoaphuduc.com/wp-content/uploads/2022/07/kham-benh-online.jpg" alt="Tâm đức" className="w-full h-auto rounded-xl shadow" />
             <div>
               <h3 className="text-xl font-bold text-red-600 mb-4">TÂM ĐỨC</h3>
-              <p className="text-gray-700 leading-relaxed">Chúng tôi đặt tâm đức làm trọng tâm nhằm mang đến dịch vụ chăm sóc sức khỏe toàn diện dành cho cộng đồng.</p>
+              <p className="text-gray-700 leading-relaxed mb-3">
+                Chúng tôi đặt tâm đức làm trọng tâm nhằm mang đến dịch vụ chăm sóc sức khỏe toàn diện dành cho cộng đồng.
+              </p>
+              <p className="text-gray-700 leading-relaxed mb-3">
+                Đội ngũ y bác sĩ không chỉ có chuyên môn cao mà còn tận tâm lắng nghe và đồng hành cùng người bệnh trong suốt quá trình điều trị.
+              </p>
+              <p className="text-gray-700 leading-relaxed mb-3">
+                Phòng khám ứng dụng công nghệ tiên tiến trong khám và điều trị, giúp tiết kiệm thời gian, nâng cao hiệu quả và đảm bảo sự an toàn cho bệnh nhân.
+              </p>
+              <p className="text-gray-700 leading-relaxed">
+                Chúng tôi luôn hướng đến mục tiêu trở thành nơi chăm sóc sức khỏe tin cậy, nơi bệnh nhân cảm nhận được sự ấm áp, chia sẻ và an tâm như ở nhà.
+              </p>
             </div>
+
           </div>
 
+          {/* Chuyên nghiệp */}
           <div className="bg-red-100 py-8 px-4 rounded-xl">
             <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
               <div>
                 <h3 className="text-xl font-bold text-red-600 mb-4">CHUYÊN NGHIỆP</h3>
-                <p className="text-gray-700 leading-relaxed">Chúng tôi cam kết không ngừng chuyên mình để đáp ứng tốt nhất nhu cầu chăm sóc sức khỏe của khách hàng.</p>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  Chúng tôi cam kết không ngừng chuyên mình để đáp ứng tốt nhất nhu cầu chăm sóc sức khỏe của khách hàng.
+                </p>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  Đội ngũ nhân viên được đào tạo bài bản, tuân thủ quy trình nghiêm ngặt và luôn đặt sự an toàn, chính xác lên hàng đầu.
+                </p>
+                <p className="text-gray-700 leading-relaxed mb-3">
+                  Mỗi quy trình khám chữa bệnh đều được tối ưu hóa nhằm mang lại trải nghiệm nhanh chóng, minh bạch và hiệu quả.
+                </p>
+                <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                  <li>Tiếp đón chu đáo – hỗ trợ tận tâm</li>
+                  <li>Quy trình khám chữa rõ ràng, chuẩn quốc tế</li>
+                  <li>Thường xuyên cập nhật công nghệ y tế mới nhất</li>
+                  <li>Chất lượng dịch vụ được kiểm soát chặt chẽ</li>
+                </ul>
               </div>
+
               <img src="https://nutrihome.vn/wp-content/uploads/2020/08/lay-mau-xet-nghiem.jpg" alt="Chuyên nghiệp" className="w-full h-auto rounded-xl shadow" />
             </div>
           </div>
 
+          {/* Ân cần */}
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
             <img src="http://image.congan.com.vn/thumbnail/CATP-2048-2022-12-17/hp76886.jpg" alt="Ân cần" className="w-full h-80 rounded-xl shadow object-cover" />
             <div>
               <h3 className="text-xl font-bold text-red-600 mb-4">ÂN CẦN</h3>
-              <p className="text-gray-700 leading-relaxed">Cam kết duy nhất của chúng tôi suốt hơn 1 thập niên không ngừng chuyên mình.</p>
+              <p className="text-gray-700 leading-relaxed mb-3">
+                Mỗi khách hàng khi đến với chúng tôi đều được lắng nghe, thấu hiểu và chăm sóc bằng sự tận tâm từ trái tim.
+              </p>
+              <p className="text-gray-700 leading-relaxed mb-3">
+                Chúng tôi tin rằng sự ân cần trong từng hành động nhỏ sẽ mang lại cảm giác an tâm và niềm tin lớn lao cho người bệnh trong hành trình điều trị.
+              </p>
+              <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                <li>Luôn đặt sự đồng cảm lên hàng đầu</li>
+                <li>Giao tiếp nhẹ nhàng, lắng nghe chủ động</li>
+                <li>Chăm sóc từ chi tiết nhỏ nhất</li>
+                <li>Tạo không gian ấm áp, gần gũi như gia đình</li>
+              </ul>
             </div>
+
           </div>
         </div>
-
-        <motion.div variants={itemVariants}>
-          <h2 className="text-2xl font-bold text-red-600 mb-4 flex items-center gap-2">
-            <Users className="w-6 h-6 text-red-500" />
-            Đội ngũ
-          </h2>
-          <p className="text-gray-700 leading-relaxed">Gồm các bác sĩ HIV/AIDS giàu kinh nghiệm và chuyên gia công nghệ y tế, tận tâm, chuyên nghiệp, ân cần với sứ mệnh chăm sóc sức khỏe cộng đồng.</p>
-        </motion.div>
-
-        <motion.div variants={containerVariants} className="pt-4">
-          <h2 className="text-2xl font-bold text-red-600 mb-6 flex items-center gap-2">
-            <Users className="w-6 h-6 text-red-500" />
-            Đối tượng phục vụ
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { title: 'Người nhiễm HIV', desc: 'Hỗ trợ điều trị và theo dõi sức khỏe.' },
-              { title: 'Nhóm nguy cơ cao', desc: 'Tư vấn dự phòng và xét nghiệm.' },
-              { title: 'Bác sĩ', desc: 'Quản lý và chăm sóc bệnh nhân.' },
-              { title: 'Cộng đồng', desc: 'Giảm kỳ thị, nâng cao nhận thức.' },
-              { title: 'Tổ chức y tế', desc: 'Hỗ trợ báo cáo và chính sách.' },
-            ].map((item, idx) => (
-              <motion.div key={idx} className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm flex items-start gap-4 hover:bg-gray-50 transition" variants={itemVariants} whileHover={{ scale: 1.02 }}>
-                <Users className="w-6 h-6 text-red-500" />
-                <div>
-                  <h4 className="font-semibold text-gray-800">{item.title}</h4>
-                  <p className="text-sm text-gray-600">{item.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        <motion.div className="bg-red-100 p-6 rounded-xl shadow-sm border border-gray-100 mt-12" variants={itemVariants} whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-800">
-            <div>
-              <h2 className="text-xl font-bold text-red-600 mb-4">TẦM NHÌN</h2>
-              <p>HIVCare+ là thương hiệu uy tín, trách nhiệm trong lĩnh vực chăm sóc sức khỏe, góp phần khẳng định vị thế của cộng đồng trong xã hội.</p>
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-red-600 mb-4">SỨ MỆNH</h2>
-              <ul className="list-disc list-inside space-y-2">
-                <li><strong>Kiến tạo</strong> hệ sinh thái chăm sóc sức khỏe cộng đồng.</li>
-                <li><strong>Khai phóng</strong> tiềm năng, trao quyền lãnh đạo cộng đồng.</li>
-                <li><strong>Khẳng định</strong> vai trò cộng đồng trong nâng cao sức khỏe xã hội.</li>
-              </ul>
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-red-600 mb-4">GIÁ TRỊ CỐT LÕI</h2>
-              <ul className="list-disc list-inside space-y-2">
-                <li><strong>Gắn kết</strong></li>
-                <li><strong>Lắng nghe</strong></li>
-                <li><strong>In dấu</strong></li>
-                <li><strong>Nhiệt tâm</strong></li>
-                <li><strong>Khai phóng</strong></li>
-              </ul>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div variants={containerVariants}>
-          <h2 className="text-2xl font-bold text-red-600 mb-6 flex items-center gap-2">
-            <MapPin className="w-6 h-6 text-red-500" />
-            Liên hệ
-          </h2>
-          <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-6 grid sm:grid-cols-2 gap-6">
-            {[
-              { icon: MapPin, title: 'Địa chỉ', value: '123 Đường ABC, TP.HCM' },
-              { icon: Mail, title: 'Email', value: 'support@hivcare.vn', href: 'mailto:support@hivcare.vn' },
-              { icon: Phone, title: 'Điện thoại', value: '0123 456 789', href: 'tel:0123456789' },
-              { icon: Clock, title: 'Giờ làm việc', value: 'Thứ 2 – Thứ 6: 8h – 17h' },
-            ].map((item, idx) => (
-              <motion.div key={idx} className="flex items-start gap-4" variants={itemVariants}>
-                <item.icon className="w-6 h-6 text-red-500" />
-                <div>
-                  <h4 className="font-semibold text-gray-800">{item.title}</h4>
-                  {item.href ? (
-                    <a href={item.href} className="text-sm text-red-600 hover:underline">{item.value}</a>
-                  ) : (
-                    <p className="text-sm text-gray-600">{item.value}</p>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
       </section>
+
+      {/* Đội ngũ */}
+      <section className="mt-16">
+        <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+          Đội ngũ
+        </h2>
+        <p className="text-gray-700 leading-relaxed">Gồm các bác sĩ HIV/AIDS giàu kinh nghiệm và chuyên gia công nghệ y tế, tận tâm, chuyên nghiệp, ân cần với sứ mệnh chăm sóc sức khỏe cộng đồng.</p>
+      </section>
+
+      {/* Đối tượng phục vụ */}
+      <section className="mt-16">
+        <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+          Đối tượng phục vụ
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            { title: 'Người nhiễm HIV', desc: 'Hỗ trợ điều trị và theo dõi sức khỏe.' },
+            { title: 'Nhóm nguy cơ cao', desc: 'Tư vấn dự phòng và xét nghiệm.' },
+            { title: 'Bác sĩ', desc: 'Quản lý và chăm sóc bệnh nhân.' },
+            { title: 'Cộng đồng', desc: 'Giảm kỳ thị, nâng cao nhận thức.' },
+            { title: 'Tổ chức y tế', desc: 'Hỗ trợ báo cáo và chính sách.' },
+          ].map((item, idx) => (
+            <motion.div key={idx} className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm flex items-start gap-4 hover:bg-gray-50 transition" variants={itemVariants} whileHover={{ scale: 1.02 }}>
+              <Users className="w-6 h-6 text-red-500" />
+              <div>
+                <h4 className="font-semibold text-gray-800">{item.title}</h4>
+                <p className="text-sm text-gray-600">{item.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Tầm nhìn, Sứ mệnh, Gía trị cốt lỗi */}
+      <section className="bg-red-100 p-6 rounded-xl shadow-sm border border-gray-100 mt-16" variants={itemVariants} whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-800">
+          <div>
+            <h2 className="text-xl font-bold text-red-600 mb-4">TẦM NHÌN</h2>
+            <p>HIVCare+ là thương hiệu uy tín, trách nhiệm trong lĩnh vực chăm sóc sức khỏe, góp phần khẳng định vị thế của cộng đồng trong xã hội.</p>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-red-600 mb-4">SỨ MỆNH</h2>
+            <ul className="list-disc list-inside space-y-2">
+              <li><strong>Kiến tạo</strong> hệ sinh thái chăm sóc sức khỏe cộng đồng.</li>
+              <li><strong>Khai phóng</strong> tiềm năng, trao quyền lãnh đạo cộng đồng.</li>
+              <li><strong>Khẳng định</strong> vai trò cộng đồng trong nâng cao sức khỏe xã hội.</li>
+            </ul>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-red-600 mb-4">GIÁ TRỊ CỐT LÕI</h2>
+            <ul className="list-disc list-inside space-y-2">
+              <li><strong>Gắn kết</strong></li>
+              <li><strong>Lắng nghe</strong></li>
+              <li><strong>In dấu</strong></li>
+              <li><strong>Nhiệt tâm</strong></li>
+              <li><strong>Khai phóng</strong></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Liên hệ */}
+      <section className="mt-16">
+        <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+          Liên hệ
+        </h2>
+        <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-6 grid sm:grid-cols-2 gap-6">
+          {[
+            { icon: MapPin, title: 'Địa chỉ', value: '123 Đường ABC, TP.HCM' },
+            { icon: Mail, title: 'Email', value: 'support@hivcare.vn', href: 'mailto:support@hivcare.vn' },
+            { icon: Phone, title: 'Điện thoại', value: '0123 456 789', href: 'tel:0123456789' },
+            { icon: Clock, title: 'Giờ làm việc', value: 'Thứ 2 – Thứ 7: 8h – 17h' },
+          ].map((item, idx) => (
+            <motion.div key={idx} className="flex items-start gap-4" variants={itemVariants}>
+              <item.icon className="w-6 h-6 text-red-500" />
+              <div>
+                <h4 className="font-semibold text-gray-800">{item.title}</h4>
+                {item.href ? (
+                  <a href={item.href} className="text-sm text-red-600 hover:underline">{item.value}</a>
+                ) : (
+                  <p className="text-sm text-gray-600">{item.value}</p>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
 
       <motion.div className="fixed bottom-24 right-6 flex flex-col gap-2 z-50" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
         <Button label="Nhắn tư vấn" onClick={() => window.open('https://www.facebook.com', '_blank')} icon={<MessageCircle className="w-4 h-4" />} />

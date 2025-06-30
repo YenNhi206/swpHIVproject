@@ -16,6 +16,8 @@ export default function CreateTreatment() {
     monitoring: '',
     precautions: '',
     category: '',
+    duration: '',
+    evaluation: '',
   });
 
   const handleChange = (e) => {
@@ -108,7 +110,10 @@ export default function CreateTreatment() {
             ['Chỉ định', 'indication'],
             ['Tác dụng phụ', 'sideEffects'],
             ['Theo dõi hiệu quả', 'monitoring'],
+            ['Thời gian áp dụng', 'duration'],
+            ['Đánh giá hiệu quả điều trị', 'evaluation'],
             ['Lưu ý', 'precautions'],
+
           ].map(([label, name], idx) => (
             <motion.div key={name} variants={itemVariants}>
               <label className="block text-sm font-medium text-gray-700">{label}</label>
@@ -121,7 +126,6 @@ export default function CreateTreatment() {
               />
             </motion.div>
           ))}
-
           <motion.div
             className="flex justify-end space-x-3 pt-6"
             variants={itemVariants}
@@ -136,6 +140,7 @@ export default function CreateTreatment() {
               type="submit"
             />
           </motion.div>
+
         </form>
       </motion.div>
     </motion.div>
