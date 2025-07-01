@@ -161,7 +161,7 @@ export default function DoctorsPage() {
                   <h2 className="text-xl font-bold text-gray-800">{doctor.fullName}</h2>
                   <p className="text-red-600 font-medium">{doctor.specialization}</p>
                   <p className="text-gray-600">Trình độ: {doctor.qualification || 'Không có thông tin'}</p>
-                  <p className="text-red-600 font-medium">{doctor.workingSchedule}</p>
+                  <p className="text-gray-600">Lịch làm việc: {doctor.workingSchedule}</p>
                   <div className="flex justify-end gap-2">
                     <Button
                       label="Xem chi tiết"
@@ -234,18 +234,9 @@ export default function DoctorsPage() {
             <p><strong>Trình độ:</strong> {selectedDoctor.qualification || 'Không rõ'}</p>
             <p><strong>Điện thoại:</strong> {selectedDoctor.phoneNumber || 'Không có'}</p>
             <p><strong>Email:</strong> {selectedDoctor.email || 'Không có'}</p>
-            
+            <p><strong>Lịch làm việc:</strong> {selectedDoctor.workingSchedule || 'Không có thông tin'}</p>
 
-            <div className="mt-4">
-              <h4 className="font-semibold">Lịch trình:</h4>
-              <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                {(schedule || []).map((sch, i) => (
-                  <li key={i}>
-                    {sch.date} - {sch.timeSlots.join(', ')}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            
 
             <div className="text-right mt-4">
               <Button

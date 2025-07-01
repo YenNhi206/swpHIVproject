@@ -24,7 +24,8 @@ export default function SignupPage() {
   const validateRegisterForm = () => {
     const newErrors = {};
     if (!formData.fullName) newErrors.fullName = 'Họ tên là bắt buộc';
-    else if (!/^[a-zA-Z\s]+$/.test(formData.fullName)) newErrors.fullName = 'Họ tên chỉ chứa chữ cái';
+    else if (!formData.fullName.match(/^[a-zA-ZÀ-ỹ\s]+$/i)) // Kiểm tra nếu không khớp với regex tiếng Việt
+      newErrors.fullName = 'Họ tên chỉ được chứa chữ cái và dấu tiếng Việt';
     if (!formData.email) newErrors.email = 'Email là bắt buộc';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Email không hợp lệ';
     if (!formData.password) newErrors.password = 'Mật khẩu là bắt buộc';
@@ -125,8 +126,7 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex flex-col">
-      <div className="flex items-center justify-center px-4 mt-4 mb-8">
-
+      <div className="flex items-center justify-center px-4 mt-4 mb-8 sm:px-6 lg:px-8">
         <div className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl p-8 animate-fade-in">
           <h2 className="text-2xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2">
             {isOtpStep ? (
