@@ -34,12 +34,12 @@ export default function LoginPage({ setUser }) {
   const validateLoginForm = () => {
     const newErrors = {};
     if (!credentials.identifier)
-      newErrors.identifier = 'Email hoặc Họ tên là bắt buộc';
+      newErrors.identifier = 'Email';
     else if (
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(credentials.identifier) &&
-      !credentials.identifier.match(/^[a-zA-Z\s]+$/)
+      !credentials.identifier.match(/^[a-zA-ZÀ-ỹ\s]+$/i) // Thay đổi regex để hỗ trợ tiếng Việt
     )
-      newErrors.identifier = 'Email hoặc Họ tên không hợp lệ';
+      newErrors.identifier = 'Email';
 
     if (!credentials.password)
       newErrors.password = 'Mật khẩu là bắt buộc';
@@ -113,11 +113,10 @@ export default function LoginPage({ setUser }) {
             fullName: data.fullName
           });
 
-
           // Kiểm tra sessionStorage để xử lý đặt lịch
           const pending = JSON.parse(sessionStorage.getItem('pendingAppointment'));
           if (pending && pending.doctor) {
-            sessionStorage.removeItem('pendingAppointment'); // Xóa sau khi xử lý
+            sessionStorage.removeItem('pendingAppointment');
             navigate('/appointments', { state: { doctor: pending.doctor } });
           } else {
             if (from) {
@@ -238,7 +237,7 @@ export default function LoginPage({ setUser }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex flex-col">
-      <div className="flex-1 flex items-start justify-center px-4 pt-8">
+      <div className="flex-1 flex items-start justify-center px-4 pt-8 sm:px-6 lg:px-8">
         <div className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl p-8 opacity-0 translate-y-4 animate-fade-in">
           <h2 className="text-2xl font-bold text-red-700 mb-6 flex items-center gap-2">
             <User className="w-6 h-6" />
@@ -261,7 +260,7 @@ export default function LoginPage({ setUser }) {
                   name="identifier"
                   required
                   className="w-full p-3 border-none rounded-lg focus:outline-none"
-                  placeholder="Email"
+                  placeholder="Nhập email"
                   value={credentials.identifier}
                   onChange={handleChange}
                 />
@@ -441,5 +440,3 @@ export default function LoginPage({ setUser }) {
     </div>
   );
 }
-
-
