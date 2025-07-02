@@ -48,6 +48,13 @@ export default function Navbar() {
     { path: '/services', label: 'Dịch vụ - Giá tiền', icon: CreditCard },
   ];
 
+  const handleUserClick = () => {
+    if (user?.role === 'ADMIN') navigate('/admin');
+    else if (user?.role === 'DOCTOR') navigate('/doctor');
+    else if (user?.role === 'STAFF') navigate('/staff');
+    else navigate('/patient'); // Mặc định nếu không có role hoặc là PATIENT
+  };
+
   return (
     <motion.header
       className="w-full bg-red-50 shadow-sm"
@@ -111,8 +118,8 @@ export default function Navbar() {
                 <Link
                   to={link.path}
                   className={`flex items-center gap-2 py-2 px-4 rounded-t-lg transition-colors duration-300 ${isActive(link.path)
-                      ? 'text-red-700 border-b-4 border-red-700 bg-red-100 font-bold'
-                      : 'text-gray-700 hover:text-red-600 hover:bg-red-50 hover:border-b-2 hover:border-red-200'
+                    ? 'text-red-700 border-b-4 border-red-700 bg-red-100 font-bold'
+                    : 'text-gray-700 hover:text-red-600 hover:bg-red-50 hover:border-b-2 hover:border-red-200'
                     }`}
                 >
                   <link.icon className="w-5 h-5" />
@@ -122,14 +129,17 @@ export default function Navbar() {
             ))}
 
             {user ? (
-              <div className="flex items-center gap-4 ml-4 cursor-pointer" onClick={() => navigate('/patient')}>
+              <div
+                className="flex items-center gap-4 ml-4 cursor-pointer"
+                onClick={handleUserClick}
+              >
                 <UserIcon className="w-6 h-6 text-red-700" />
                 <span className="font-semibold text-red-700">
                   {user?.fullName ? ` ${user.fullName}` : ' Người dùng'}
                 </span>
                 <motion.button
                   onClick={(e) => {
-                    e.stopPropagation(); // Ngăn việc click nút logout cũng trigger navigate
+                    e.stopPropagation();
                     handleLogout();
                   }}
                   className="flex items-center gap-1 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
@@ -146,8 +156,8 @@ export default function Navbar() {
                   <Link
                     to="/login"
                     className={`flex items-center gap-2 py-2 px-4 rounded-t-lg transition-colors duration-300 ${isActive('/login')
-                        ? 'text-red-700 border-b-4 border-red-700 bg-red-100 font-bold'
-                        : 'text-gray-700 hover:text-red-600 hover:bg-red-50 hover:border-b-2 hover:border-red-200'
+                      ? 'text-red-700 border-b-4 border-red-700 bg-red-100 font-bold'
+                      : 'text-gray-700 hover:text-red-600 hover:bg-red-50 hover:border-b-2 hover:border-red-200'
                       }`}
                   >
                     <LogIn className="w-5 h-5" />
@@ -158,8 +168,8 @@ export default function Navbar() {
                   <Link
                     to="/signup"
                     className={`flex items-center gap-2 py-2 px-4 rounded-t-lg transition-colors duration-300 ${isActive('/signup')
-                        ? 'text-red-700 border-b-4 border-red-700 bg-red-100 font-bold'
-                        : 'text-gray-700 hover:text-red-600 hover:bg-red-50 hover:border-b-2 hover:border-red-200'
+                      ? 'text-red-700 border-b-4 border-red-700 bg-red-100 font-bold'
+                      : 'text-gray-700 hover:text-red-600 hover:bg-red-50 hover:border-b-2 hover:border-red-200'
                       }`}
                   >
                     <UserPlus className="w-5 h-5" />
