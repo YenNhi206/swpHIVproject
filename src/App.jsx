@@ -11,12 +11,12 @@ import NotFoundPage from "./pages/NotFoundPage";
 import LoginPage from "./features/auth/LoginPage";
 import SignupPage from "./features/auth/SignupPage";
 
-import AdminDashboard from "./features/dashboard/AdminDashboard";
-import DoctorDashboard from "./features/dashboard/DoctorDashboard";
-import PatientDashboard from "./features/dashboard/PatientDashboard";
+import AdminDashboard from "./features/admin/AdminDashboard";
+import DoctorDashboard from "./features/doctor/DoctorDashboard";
+import PatientDashboard from "./features/patient/PatientDashboard";
 
-import Support from "./features/patientdashboard/Support";
-import History from "./features/patientdashboard/History";
+import Support from "./features/patient/Support";
+import History from "./features/patient/History";
 
 import TreatmentDetail from "./features/treatments/TreatmentDetail";
 import TreatmentList from "./features/treatments/TreatmentList";
@@ -36,6 +36,14 @@ import StaffDashboard from "./features/dashboard/StaffDashboard";
 import KnowledgePage from "./pages/KnowledgePage";
 import DoctorsPage from "./pages/DoctorsPage";
 import ServicesPage from "./pages/ServicesPage";
+import PatientAppointments from "./features/doctor/PatientAppointments";
+import Footer from "./components/Footer";
+import DoctorAlertsPage from "./features/doctor/DoctorAlertsPage";
+import PatientDetailForDoctor from "./features/doctor/PatientDetailForDoctor";
+import AdminAccountsPage from "./features/admin/AdminAccountsPage";
+import AppointmentManagement from "./features/admin/AppointmentManagement";
+import AdminStatisticsPage from "./features/admin/AdminStatisticsPage";
+import AdminFinancePage from "./features/admin/AdminFinancePage";
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -59,6 +67,7 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <HomePage />
+              <Footer />
             </MainLayout>
           }
         />
@@ -67,6 +76,7 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <AboutPage />
+              <Footer />
             </MainLayout>
           }
         />
@@ -75,6 +85,7 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <DoctorsPage />
+              <Footer />
             </MainLayout>
           }
         />
@@ -83,6 +94,7 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <ServicesPage />
+              <Footer />
             </MainLayout>
           }
         />
@@ -91,11 +103,12 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <KnowledgePage />
+              <Footer />
             </MainLayout>
           }
         />
         <Route
-          path="/treatment"
+          path="doctor/treatment"
           element={
             <MainLayout user={user} setUser={setUser}>
               <TreatmentList />
@@ -139,6 +152,7 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <PatientProfile />
+              <Footer />
             </MainLayout>
           }
         />
@@ -150,6 +164,18 @@ export default function App() {
             </MainLayout>
           }
         />
+
+
+        <Route
+          path="/doctor/patientappointments"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <PatientAppointments />
+            </MainLayout>
+          }
+        />
+
+
         <Route
           path="/anonymous-appointment"
           element={
@@ -171,6 +197,7 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <History />
+              <Footer />
             </MainLayout>
           }
         />
@@ -228,6 +255,7 @@ export default function App() {
           element={
             <AuthLayout>
               <PaymentPage />
+              <Footer />
             </AuthLayout>
           }
         />
@@ -247,6 +275,62 @@ export default function App() {
             </AuthLayout>
           }
         />
+
+        <Route
+          path="/doctor/alerts"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <DoctorAlertsPage />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/admin/accounts"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <AdminAccountsPage />
+            </MainLayout>
+          }
+        />
+
+
+        <Route
+          path="/admin/appointments"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <AppointmentManagement />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/doctor/patientappointments/:patientId"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <PatientDetailForDoctor />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/admin/statistics"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <AdminStatisticsPage />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/admin/finance"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <AdminFinancePage />
+            </MainLayout>
+          }
+        />
+
         <Route
           path="*"
           element={
