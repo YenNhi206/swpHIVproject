@@ -6,6 +6,9 @@ import { ChevronRight } from 'lucide-react';
 export default function Breadcrumb() {
   const location = useLocation();
 
+  // Lấy thông tin user từ localStorage
+  const user = JSON.parse(localStorage.getItem('user'));
+
   const pathMap = {
     '/': 'Trang chủ',
     '/about': 'Giới thiệu',
@@ -16,11 +19,16 @@ export default function Breadcrumb() {
     '/doctor': 'Bác sĩ',
     '/payment': 'Thanh toán',
     '/users': 'Hồ sơ bệnh nhân',
-    '/treatment': 'Danh sách phác đồ',
+    '/doctor/treatment': 'Phác đồ điều trị',
+    '/doctor/patientappointments': 'Lịch hẹn bệnh nhân',
+    '/doctor/alerts': 'Cảnh báo',
     '/treatment/:id': 'Chi tiết phác đồ',
-    '/treatment/:create': 'Tạo phác đồ',
+    '/treatment': 'Phác đồ điều trị',
+    '/treatment/create': 'Tạo phác đồ',
     '/treatment/:id/edit': 'Sửa phác đồ',
-    '/patient': 'Bảng điều khiển bệnh nhân',
+    '/admin/accounts': 'Quản lý tài khoản',
+    '/patients': 'Hồ sơ bệnh nhân',
+    '/admin/appointments': 'Quản lý lịch hẹn',
     '/support': 'Kết nối cùng HIVCare+',
     '/reminder': 'Nhắc nhở',
     '/history': 'Lịch sử',
@@ -53,7 +61,7 @@ export default function Breadcrumb() {
     const label = pathMap[dynamicPath] || pathMap[pathSoFar] || segment.charAt(0).toUpperCase() + segment.slice(1);
     acc.push({ path: pathSoFar, label });
     return acc;
-  }, [{ path: '/', label: 'Trang chủ' }]);
+  }, user?.role === 'PATIENT' ? [{ path: '/', label: 'Trang chủ' }] : []);
 
   return (
     <motion.div
