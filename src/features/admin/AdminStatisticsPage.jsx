@@ -25,7 +25,7 @@ const columns = [
 export default function AdminStatisticsPage() {
     return (
         <div className="max-w-7xl mx-auto p-6 space-y-8">
-            <h1 className="text-3xl font-bold text-red-700 mb-6">Báo cáo Thống kê</h1>
+            <h1 className="text-3xl font-bold text-red-700 mb-6">Báo cáo - Thống kê</h1>
 
             {/* Card số liệu tổng quan */}
             <Row gutter={[16, 16]}>

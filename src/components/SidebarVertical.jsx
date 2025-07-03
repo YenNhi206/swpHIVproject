@@ -1,86 +1,83 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
     User,
     LogOut,
+    Home,
     Calendar,
     Users,
     BarChart,
-    Home,
-    DollarSign,
     FileText,
     AlertTriangle,
-    Stethoscope,
-} from 'lucide-react';
+    DollarSign,
+    BookOpen,
+    PlusCircle,
+} from "lucide-react";
 
 export default function SidebarVertical({ user, handleLogout }) {
     const location = useLocation();
     const [showLogout, setShowLogout] = useState(false);
 
+    if (!user || user.role === "PATIENT") {
+        return null; // Ẩn sidebar cho patient hoặc chưa đăng nhập
+    }
+
     const isActive = (path) => location.pathname === path;
 
-    if (!user || user.role === 'PATIENT') {
-        return null;
-    }
-
+    // Menu sidebar theo role
     const sidebarLinks = [];
 
-    // ADMIN
-    if (user.role === 'ADMIN') {
+    if (user.role === "ADMIN") {
         sidebarLinks.push(
-            { path: '/admin', label: 'Trang chủ Admin', icon: Home },
-            { path: '/admin/accounts', label: 'Quản lý tài khoản', icon: Users },
-            { path: '/admin/appointments', label: 'Quản lý lịch hẹn', icon: Calendar },
-            { path: '/admin/statistics', label: 'Báo cáo & Thống kê', icon: BarChart },
-            { path: '/admin/finance', label: 'Quản lý tài chính', icon: DollarSign },
-            { path: '/admin/blog', label: 'Quản lý bài viết', icon: FileText }
+            { path: "/admin", label: "Trang chủ Admin", icon: Home },
+            { path: "/admin/accounts", label: "Quản lý tài khoản", icon: Users },
+            { path: "/admin/finance", label: "Quản lý tài chính", icon: DollarSign },
+            { path: "/admin/statistics", label: "Báo cáo thống kê", icon: BarChart },
+            { path: "/admin/blogs", label: "Quản lý bài viết", icon: BookOpen }
         );
     }
 
-    // DOCTOR
-    if (user.role === 'DOCTOR') {
+    if (user.role === "DOCTOR") {
         sidebarLinks.push(
-            { path: '/doctor', label: 'Trang Bác sĩ', icon: Home },
-            { path: '/doctor/treatment', label: 'Phác đồ điều trị', icon: FileText },
-            { path: '/doctor/patientappointments', label: 'Lịch hẹn bệnh nhân', icon: Calendar },
-            { path: '/doctor/alerts', label: 'Cảnh báo', icon: AlertTriangle }
+            { path: "/doctor", label: "Trang Bác sĩ", icon: Home },
+            { path: "/doctor/patientappointments", label: "Lịch hẹn bệnh nhân", icon: Calendar },
+            { path: "/doctor/treatment", label: "Phác đồ điều trị", icon: FileText },
+            { path: "/doctor/alerts", label: "Cảnh báo", icon: AlertTriangle }
         );
     }
 
-    // STAFF
-    if (user.role === 'STAFF') {
+    if (user.role === "STAFF") {
         sidebarLinks.push(
-            { path: '/staff', label: 'Trang Nhân viên', icon: Home },
-            { path: '/staff/appointments', label: 'Quản lý lịch hẹn', icon: Calendar },
-            { path: '/staff/patients', label: 'Quản lý bệnh nhân', icon: Users }
+            { path: "/staff", label: "Trang Nhân viên", icon: Home },
+            { path: "/staff/appointments", label: "Quản lý lịch hẹn", icon: Calendar },
+            { path: "/staff/patients", label: "Thêm bệnh nhân", icon: PlusCircle },
+            { path: "/staff/listpatients", label: "Danh sách bệnh nhân", icon: Users }
         );
     }
 
-    const toggleLogout = () => {
-        setShowLogout((prev) => !prev);
-    };
+    const toggleLogout = () => setShowLogout((prev) => !prev);
 
     return (
         <div className="h-screen w-64 bg-red-50 shadow-lg flex flex-col p-4 fixed left-0 top-0 z-30">
             <h2 className="text-red-700 text-2xl font-bold mb-6">HIV Care+</h2>
 
             <div className="flex flex-col gap-3 flex-1">
-                {sidebarLinks.map((link) => (
+                {sidebarLinks.map(({ path, label, icon: Icon }) => (
                     <Link
-                        key={link.path}
-                        to={link.path}
-                        className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${isActive(link.path)
-                                ? 'bg-red-200 text-red-700 font-bold'
-                                : 'text-gray-700 hover:bg-red-100'
+                        key={path}
+                        to={path}
+                        className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${isActive(path)
+                            ? "bg-red-200 text-red-700 font-bold"
+                            : "text-gray-700 hover:bg-red-100"
                             }`}
                     >
-                        <link.icon className="w-5 h-5" />
-                        {link.label}
+                        <Icon className="w-5 h-5" />
+                        {label}
                     </Link>
                 ))}
             </div>
 
-            {/* User Info + Nút đăng xuất */}
+            {/* User info + nút đăng xuất */}
             <div
                 className="flex items-center gap-2 cursor-pointer select-none"
                 onClick={toggleLogout}
