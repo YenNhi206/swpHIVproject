@@ -107,7 +107,7 @@ export default function AdminFinancePage() {
 
     return (
         <div className="max-w-7xl mx-auto p-6 space-y-6">
-            <h1 className="text-3xl font-bold text-red-700 mb-6">Quản lý Tài chính theo tháng - Admin</h1>
+            <h1 className="text-3xl font-bold text-red-700 mb-6">Quản lý Tài chính </h1>
 
             <Row gutter={16} className="mb-6">
                 <Col span={8}>

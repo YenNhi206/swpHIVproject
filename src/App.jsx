@@ -32,7 +32,7 @@ import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmen
 import PaymentPage from "./features/payment/PaymentPage";
 
 import ChatWidget from "./components/ChatWidget";
-import StaffDashboard from "./features/dashboard/StaffDashboard";
+import StaffDashboard from "./features/staff/StaffDashboard";
 import KnowledgePage from "./pages/KnowledgePage";
 import DoctorsPage from "./pages/DoctorsPage";
 import ServicesPage from "./pages/ServicesPage";
@@ -41,9 +41,12 @@ import Footer from "./components/Footer";
 import DoctorAlertsPage from "./features/doctor/DoctorAlertsPage";
 import PatientDetailForDoctor from "./features/doctor/PatientDetailForDoctor";
 import AdminAccountsPage from "./features/admin/AdminAccountsPage";
-import AppointmentManagement from "./features/admin/AppointmentManagement";
 import AdminStatisticsPage from "./features/admin/AdminStatisticsPage";
 import AdminFinancePage from "./features/admin/AdminFinancePage";
+import AdminBlogManagement from "./features/admin/AdminBlogManagemen";
+import StaffPatientsPage from "./features/staff/StaffPatientsPage";
+import StaffAppointment from "./features/staff/StaffAppointment";
+import StaffPatientListPage from "./features/staff/StaffPatientListPage";
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -294,12 +297,11 @@ export default function App() {
           }
         />
 
-
         <Route
-          path="/admin/appointments"
+          path="/admin/blogs"
           element={
             <MainLayout user={user} setUser={setUser}>
-              <AppointmentManagement />
+              <AdminBlogManagement />
             </MainLayout>
           }
         />
@@ -327,6 +329,38 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <AdminFinancePage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/admin/blog"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <AdminBlogManagement />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/staff/patients"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <StaffPatientsPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/staff/appointments"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <StaffAppointment />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/staff/listpatients"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <StaffPatientListPage />
             </MainLayout>
           }
         />
