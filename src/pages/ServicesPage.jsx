@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, CheckCircle, HelpCircle } from 'lucide-react';
+import { FileText, CheckCircle } from 'lucide-react';
 
 const serviceGroups = {
   'Khám lần đầu': ['FIRST_VISIT'],
@@ -8,18 +8,13 @@ const serviceGroups = {
 };
 
 function formatPrice(price) {
-  const number = Number(price); // Ép kiểu về số
-  if (!isNaN(number)) {
-    return number.toLocaleString('vi-VN', {
+  const number = Number(price);
+  return !isNaN(number)
+    ? number.toLocaleString('vi-VN', {
       style: 'currency',
       currency: 'VND',
-    });
-  }
-  return (
-    <span className="inline-flex items-center gap-1 group relative cursor-help">
-      {price}
-    </span>
-  );
+    })
+    : 'Chưa có giá';
 }
 
 export default function ServicesPage() {
@@ -29,15 +24,30 @@ export default function ServicesPage() {
 
   const fetchServices = async () => {
     setIsLoading(true);
+    const token = JSON.parse(localStorage.getItem('user'))?.token;
+
+    if (!token) {
+      setError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const token = JSON.parse(localStorage.getItem('user'))?.token;
       const response = await fetch('http://localhost:8080/api/services', {
         headers: {
-          'Authorization': token ? `Bearer ${token}` : '',
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
+
+      if (response.status === 401) {
+        localStorage.removeItem('user');
+        setError('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.');
+        return;
+      }
+
       if (!response.ok) throw new Error('Lỗi khi tải danh sách dịch vụ');
+
       const data = await response.json();
       setServices(data);
     } catch (error) {
@@ -82,8 +92,6 @@ export default function ServicesPage() {
         Dịch vụ và Giá tiền
       </motion.h1>
 
-      {/* ĐÃ BỎ NÚT TẢI LẠI */}
-
       <motion.section className="mt-12 space-y-12" variants={containerVariants}>
         {isLoading ? (
           <p className="text-center text-gray-500">Đang tải...</p>
@@ -107,16 +115,27 @@ export default function ServicesPage() {
                     <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
                       <CheckCircle className="w-5 h-5 text-red-500" /> {service.name}
                     </h3>
+
+                    {/* ✅ Fallback mô tả */}
                     <div className="text-gray-600 mb-4 space-y-1">
                       {Array.isArray(service.description) ? (
-                        service.description.map((line, index) => (
-                          <p key={index}>• {line}</p>
-                        ))
+                        service.description.length > 0 ? (
+                          service.description.map((line, index) => (
+                            <p key={index}>• {line}</p>
+                          ))
+                        ) : (
+                          <p className="italic text-gray-400">Không có mô tả</p>
+                        )
+                      ) : typeof service.description === 'string' ? (
+                        <p>• {service.description}</p>
                       ) : (
-                        <p>{service.description}</p>
+                        <p className="italic text-gray-400">Không có mô tả</p>
                       )}
                     </div>
-                    <p className="text-2xl font-bold text-red-600">{formatPrice(service.price)}</p>
+
+                    <p className="text-2xl font-bold text-red-600">
+                      {formatPrice(service.price)}
+                    </p>
                   </motion.div>
                 ))}
             </div>

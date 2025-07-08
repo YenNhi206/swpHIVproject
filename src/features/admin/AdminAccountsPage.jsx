@@ -1,26 +1,63 @@
-import React, { useState } from 'react';
-import { Table, Button, Modal, Input, Tabs } from 'antd';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Table, Button, Modal, Input, Tabs, message } from "antd";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 
 export default function AdminAccountsPage() {
-    const [accounts, setAccounts] = useState([
-        { id: 1, fullName: 'Bác sĩ Trần A', email: 'tran.a@hivclinic.vn', phone: '0912345678', role: 'DOCTOR' },
-        { id: 2, fullName: 'Nhân viên Lê B', email: 'le.b@hivclinic.vn', phone: '0987654321', role: 'STAFF' },
-        { id: 3, fullName: 'Bệnh nhân Nguyễn D', email: 'nguyen.d@gmail.com', phone: '0933445566', role: 'PATIENT' },
-    ]);
-
+    const [accounts, setAccounts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingAccount, setEditingAccount] = useState(null);
     const [form, setForm] = useState({
-        fullName: '',
-        email: '',
-        phone: '',
-        role: 'DOCTOR',
+        fullName: "",
+        email: "",
+        phone: "",
+        role: "DOCTOR",
     });
+    const [activeRole, setActiveRole] = useState("DOCTOR");
+
+    // Fetch accounts from API
+    useEffect(() => {
+        const fetchDoctors = async () => {
+            try {
+                const token = JSON.parse(localStorage.getItem("user"))?.token;
+                if (!token) {
+                    message.error("Vui lòng đăng nhập để tiếp tục.");
+                    return;
+                }
+                setLoading(true);
+                const response = await fetch(
+                    `http://localhost:8080/api/doctors?page=0&size=10&search=&searchBy=name`,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                if (!response.ok) throw new Error("Không thể tải danh sách bác sĩ");
+                const data = await response.json();
+                // Giả định tất cả đều là DOCTOR, bạn cần mở rộng API để bao gồm STAFF và PATIENT
+                const doctorAccounts = data.content.map((doctor) => ({
+                    id: doctor.id,
+                    fullName: doctor.fullName,
+                    email: doctor.email,
+                    phone: doctor.phoneNumber || "",
+                    role: "DOCTOR",
+                }));
+                setAccounts(doctorAccounts);
+            } catch (error) {
+                console.error("Lỗi khi tải danh sách bác sĩ:", error);
+                message.error("Lỗi khi tải danh sách: " + error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchDoctors();
+    }, []);
 
     const openAddModal = (role) => {
         setEditingAccount(null);
-        setForm({ fullName: '', email: '', phone: '', role });
+        setForm({ fullName: "", email: "", phone: "", role });
         setIsModalOpen(true);
     };
 
@@ -30,63 +67,130 @@ export default function AdminAccountsPage() {
         setIsModalOpen(true);
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         Modal.confirm({
-            title: 'Xác nhận',
-            content: 'Bạn có chắc muốn xóa tài khoản này?',
-            okText: 'Xóa',
+            title: "Xác nhận",
+            content: "Bạn có chắc muốn xóa tài khoản này?",
+            okText: "Xóa",
             okButtonProps: { danger: true },
-            cancelText: 'Hủy',
-            onOk: () => setAccounts(accounts.filter(acc => acc.id !== id)),
+            cancelText: "Hủy",
+            onOk: async () => {
+                try {
+                    const token = JSON.parse(localStorage.getItem("user"))?.token;
+                    if (!token) throw new Error("Vui lòng đăng nhập");
+                    const response = await fetch(
+                        `http://localhost:8080/api/doctors/${id}`,
+                        {
+                            method: "DELETE",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    );
+                    if (!response.ok) throw new Error("Xóa thất bại");
+                    setAccounts(accounts.filter((acc) => acc.id !== id));
+                    message.success("Xóa tài khoản thành công");
+                } catch (error) {
+                    console.error("Lỗi khi xóa tài khoản:", error);
+                    message.error("Lỗi khi xóa: " + error.message);
+                }
+            },
         });
     };
 
-    const handleSave = () => {
-        if (editingAccount) {
-            setAccounts(accounts.map(acc => acc.id === editingAccount.id ? { ...form, id: acc.id } : acc));
-        } else {
-            setAccounts([...accounts, { ...form, id: Date.now() }]);
+    const handleSave = async () => {
+        try {
+            const token = JSON.parse(localStorage.getItem("user"))?.token;
+            if (!token) throw new Error("Vui lòng đăng nhập");
+            const payload = {
+                fullName: form.fullName,
+                email: form.email,
+                phoneNumber: form.phone,
+                // Thêm các trường khác nếu cần (e.g., specialization, qualification)
+            };
+
+            if (editingAccount) {
+                const response = await fetch(
+                    `http://localhost:8080/api/doctors/${editingAccount.id}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify(payload),
+                    }
+                );
+                if (!response.ok) throw new Error("Cập nhật thất bại");
+                const updatedDoctor = await response.json();
+                setAccounts(
+                    accounts.map((acc) =>
+                        acc.id === editingAccount.id
+                            ? { ...acc, ...updatedDoctor, phone: updatedDoctor.phoneNumber }
+                            : acc
+                    )
+                );
+                message.success("Cập nhật tài khoản thành công");
+            } else {
+                const response = await fetch(`http://localhost:8080/api/doctors`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(payload),
+                });
+                if (!response.ok) throw new Error("Thêm thất bại");
+                const newDoctor = await response.json();
+                setAccounts([
+                    ...accounts,
+                    { ...newDoctor, phone: newDoctor.phoneNumber, role: "DOCTOR" },
+                ]);
+                message.success("Thêm tài khoản thành công");
+            }
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error("Lỗi khi lưu tài khoản:", error);
+            message.error("Lỗi khi lưu: " + error.message);
         }
-        setIsModalOpen(false);
     };
 
     const renderTable = (role) => {
-        const filteredAccounts = accounts.filter(acc => acc.role === role);
+        const filteredAccounts = accounts.filter((acc) => acc.role === role);
 
         return (
-            <div className="space-y-4">
-
-                <Table
-                    columns={[
-                        { title: 'Họ tên', dataIndex: 'fullName', key: 'fullName' },
-                        { title: 'Email', dataIndex: 'email', key: 'email' },
-                        { title: 'Số điện thoại', dataIndex: 'phone', key: 'phone' },
-                        {
-                            title: 'Hành động',
-                            key: 'actions',
-                            render: (_, record) => (
-                                <div className="flex gap-2">
-                                    <Button
-                                        size="small"
-                                        style={{ borderColor: '#dc2626', color: '#dc2626' }}
-                                        icon={<Pencil size={16} />}
-                                        onClick={() => openEditModal(record)}
-                                    />
-                                    <Button
-                                        size="small"
-                                        danger
-                                        icon={<Trash2 size={16} />}
-                                        onClick={() => handleDelete(record.id)}
-                                    />
-                                </div>
-                            )
-                        }
-                    ]}
-                    dataSource={filteredAccounts}
-                    rowKey="id"
-                    bordered
-                />
-            </div>
+            <Table
+                loading={loading}
+                columns={[
+                    { title: "Họ tên", dataIndex: "fullName", key: "fullName" },
+                    { title: "Email", dataIndex: "email", key: "email" },
+                    { title: "Số điện thoại", dataIndex: "phone", key: "phone" },
+                    {
+                        title: "Hành động",
+                        key: "actions",
+                        render: (_, record) => (
+                            <div className="flex gap-2">
+                                <Button
+                                    size="small"
+                                    style={{ borderColor: "#dc2626", color: "#dc2626" }}
+                                    icon={<Pencil size={16} />}
+                                    onClick={() => openEditModal(record)}
+                                />
+                                <Button
+                                    size="small"
+                                    danger
+                                    icon={<Trash2 size={16} />}
+                                    onClick={() => handleDelete(record.id)}
+                                />
+                            </div>
+                        ),
+                    },
+                ]}
+                dataSource={filteredAccounts}
+                rowKey="id"
+                bordered
+            />
         );
     };
 
@@ -94,48 +198,59 @@ export default function AdminAccountsPage() {
         <div className="max-w-7xl mx-auto p-6 space-y-6">
             <h1 className="text-3xl font-bold text-red-700 mb-4">Quản lý tài khoản</h1>
             <Button
-                style={{ backgroundColor: '#dc2626', color: 'white' }}
+                style={{ backgroundColor: "#dc2626", color: "white" }}
                 icon={<Plus />}
-                onClick={() => openAddModal(role)}
-
+                onClick={() => openAddModal(activeRole)}
             >
                 Thêm tài khoản
             </Button>
 
-            <Tabs defaultActiveKey="DOCTOR">
+            <Tabs
+                defaultActiveKey="DOCTOR"
+                onChange={(key) => setActiveRole(key)}
+            >
                 <Tabs.TabPane tab="Bác sĩ" key="DOCTOR">
-                    {renderTable('DOCTOR')}
+                    {renderTable("DOCTOR")}
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Nhân viên" key="STAFF">
-                    {renderTable('STAFF')}
+                    {renderTable("STAFF")}
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Bệnh nhân" key="PATIENT">
-                    {renderTable('PATIENT')}
+                    {renderTable("PATIENT")}
                 </Tabs.TabPane>
             </Tabs>
 
             {/* Modal thêm/sửa */}
             <Modal
                 open={isModalOpen}
-                title={editingAccount ? 'Chỉnh sửa tài khoản' : 'Thêm tài khoản'}
+                title={editingAccount ? "Chỉnh sửa tài khoản" : "Thêm tài khoản"}
                 onCancel={() => setIsModalOpen(false)}
                 onOk={handleSave}
                 okText="Lưu"
                 cancelText="Hủy"
-                okButtonProps={{ style: { backgroundColor: '#dc2626', borderColor: '#dc2626' } }}
+                okButtonProps={{ style: { backgroundColor: "#dc2626", borderColor: "#dc2626" } }}
             >
                 <div className="space-y-4">
                     <div>
                         <label className="block font-medium mb-1">Họ tên</label>
-                        <Input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} />
+                        <Input
+                            value={form.fullName}
+                            onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+                        />
                     </div>
                     <div>
                         <label className="block font-medium mb-1">Email</label>
-                        <Input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                        <Input
+                            value={form.email}
+                            onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        />
                     </div>
                     <div>
                         <label className="block font-medium mb-1">Số điện thoại</label>
-                        <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                        <Input
+                            value={form.phone}
+                            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                        />
                     </div>
                 </div>
             </Modal>
