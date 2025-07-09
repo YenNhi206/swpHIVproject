@@ -40,27 +40,6 @@ export default function LoginPage({ setUser }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const validateForgotEmailForm = () => {
-    const newErrors = {};
-    if (!forgotEmail) newErrors.forgotEmail = 'Email là bắt buộc';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(forgotEmail))
-      newErrors.forgotEmail = 'Email không hợp lệ';
-    if (!newPassword) newErrors.newPassword = 'Mật khẩu mới là bắt buộc';
-    else if (newPassword.length < 6)
-      newErrors.newPassword = 'Mật khẩu mới phải có ít nhất 6 ký tự';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const validateResetPasswordForm = () => {
-    const newErrors = {};
-    if (!otp) newErrors.otp = 'OTP là bắt buộc';
-    else if (!/^[A-Za-z0-9]{6}$/.test(otp))
-      newErrors.otp = 'OTP phải gồm 6 ký tự chữ và số';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleLogin = async (e) => {
     e.preventDefault();
     if (validateLoginForm()) {
@@ -79,12 +58,15 @@ export default function LoginPage({ setUser }) {
 
         const data = await response.json();
         if (data.success) {
+          // ✅ Lưu token vào localStorage
+          localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify({
             username: data.username,
             role: data.role,
             token: data.token,
             fullName: data.fullName
           }));
+
           setUser({
             username: data.username,
             role: data.role,
@@ -113,61 +95,6 @@ export default function LoginPage({ setUser }) {
         }
       } catch (error) {
         setErrors({ server: error.message || 'Có lỗi xảy ra' });
-      }
-    }
-  };
-
-  const handleForgotSubmit = async (e) => {
-    e.preventDefault();
-    if (validateForgotEmailForm()) {
-      const payload = { email: forgotEmail, newPassword };
-      try {
-        const response = await fetch('http://localhost:8080/api/auth/forgot-password', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Gửi yêu cầu thất bại');
-        }
-
-        const data = await response.json();
-        setResetStep('otp');
-        setMessage('OTP đã được gửi về email của bạn. Vui lòng nhập OTP để xác nhận.');
-      } catch (error) {
-        setErrors((prev) => ({ ...prev, forgotEmail: error.message || 'Có lỗi xảy ra' }));
-      }
-    }
-  };
-
-  const handleResetPasswordSubmit = async (e) => {
-    e.preventDefault();
-    if (validateResetPasswordForm()) {
-      const payload = { email: forgotEmail, otp };
-      try {
-        const response = await fetch('http://localhost:8080/api/auth/reset-password-otp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Xác nhận OTP thất bại');
-        }
-
-        const data = await response.json();
-        setSuccessMessage(data.message || 'Đặt lại mật khẩu thành công! Vui lòng đăng nhập.');
-        setIsModalOpen(false);
-        setResetStep('email');
-        setOtp('');
-        setNewPassword('');
-        setForgotEmail('');
-        setErrors({});
-      } catch (error) {
-        setErrors((prev) => ({ ...prev, reset: error.message || 'Có lỗi xảy ra' }));
       }
     }
   };
@@ -221,121 +148,12 @@ export default function LoginPage({ setUser }) {
               Đăng nhập
             </button>
             {errors.server && <p className="text-red-600 text-center mt-2">{errors.server}</p>}
-            <p className="text-sm text-blue-600 text-center mt-2 cursor-pointer hover:underline" onClick={() => setIsModalOpen(true)}>
-              Quên mật khẩu?
-            </p>
             <p className="mt-4 text-center text-gray-600">
               Chưa có tài khoản? <Link to="/signup" className="text-red-600 hover:text-red-700 font-medium">Đăng ký ngay</Link>
             </p>
           </form>
         </div>
       </div>
-
-      {/* Modal Quên mật khẩu */}
-      <Dialog open={isModalOpen} onClose={() => {
-        setIsModalOpen(false);
-        setResetStep('email');
-        setOtp('');
-        setNewPassword('');
-        setForgotEmail('');
-        setErrors({});
-        setMessage('');
-      }} className="relative z-50">
-        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 z-50">
-            <Dialog.Title className="text-xl font-semibold mb-4 text-red-700">
-              {resetStep === 'email' ? 'Lấy lại mật khẩu' : 'Xác minh OTP'}
-            </Dialog.Title>
-            {message && <p className="text-green-600 text-sm mb-4">{message}</p>}
-            {resetStep === 'email' ? (
-              <form onSubmit={handleForgotSubmit} className="space-y-4">
-                <p className="text-sm text-gray-600 mb-4">
-                  Nhập địa chỉ email và mật khẩu mới để nhận OTP xác thực.
-                </p>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                  <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                    <Mail className="w-5 h-5 text-gray-400 mx-3" />
-                    <input
-                      type="email"
-                      className="w-full p-3 border-none rounded-lg focus:outline-none"
-                      placeholder="Nhập email"
-                      value={forgotEmail}
-                      onChange={(e) => setForgotEmail(e.target.value)}
-                    />
-                  </div>
-                  {errors.forgotEmail && <p className="text-red-600 text-sm mt-1">{errors.forgotEmail}</p>}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu mới</label>
-                  <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                    <Lock className="w-5 h-5 text-gray-400 mx-3" />
-                    <input
-                      type="password"
-                      className="w-full p-3 border-none rounded-lg focus:outline-none"
-                      placeholder="Nhập mật khẩu mới"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                    />
-                  </div>
-                  {errors.newPassword && <p className="text-red-600 text-sm mt-1">{errors.newPassword}</p>}
-                </div>
-                <div className="flex justify-end gap-2">
-                  <button type="button" onClick={() => {
-                    setIsModalOpen(false);
-                    setResetStep('email');
-                    setOtp('');
-                    setNewPassword('');
-                    setForgotEmail('');
-                    setMessage('');
-                  }} className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
-                    Hủy
-                  </button>
-                  <button type="submit" className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                    Gửi OTP
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <form onSubmit={handleResetPasswordSubmit} className="space-y-4">
-                <p className="text-sm text-gray-600 mb-4">
-                  Nhập OTP được gửi về email để xác nhận đặt lại mật khẩu.
-                </p>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">OTP</label>
-                  <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                    <Key className="w-5 h-5 text-gray-400 mx-3" />
-                    <input
-                      type="text"
-                      className="w-full p-3 border-none rounded-lg focus:outline-none"
-                      placeholder="Nhập OTP (6 ký tự)"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                    />
-                  </div>
-                  {errors.otp && <p className="text-red-600 text-sm mt-1">{errors.otp}</p>}
-                </div>
-                <div className="flex justify-end gap-2">
-                  <button type="button" onClick={() => {
-                    setIsModalOpen(false);
-                    setResetStep('email');
-                    setOtp('');
-                    setNewPassword('');
-                    setForgotEmail('');
-                    setMessage('');
-                  }} className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
-                    Hủy
-                  </button>
-                  <button type="submit" className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                    Xác nhận
-                  </button>
-                </div>
-              </form>
-            )}
-          </Dialog.Panel>
-        </div>
-      </Dialog>
     </div>
   );
 }
