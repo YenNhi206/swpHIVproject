@@ -1,31 +1,97 @@
 import React, { useState, useEffect } from 'react';
-import { User, Calendar, Phone, MapPin, Biohazard, Pill, Edit, Save } from 'lucide-react';
+import {
+  User, Calendar, Phone, MapPin, Biohazard, Pill, Edit, Save,
+} from 'lucide-react';
+import { message } from 'antd';
+
+const genderDisplayMap = { MALE: 'Nam', FEMALE: 'Nữ', OTHER: 'Khác' };
+const genderValueMap = { Nam: 'MALE', Nữ: 'FEMALE', Khác: 'OTHER' };
 
 export default function PatientProfile() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    name: 'Nguyễn Văn A',
-    gender: 'Nam',
-    dob: '1990-01-01',
-    phone: '0901234567',
-    address: '123 Đường ABC, Quận 1, TP.HCM',
-    hivStatus: 'Dương tính',
-    treatmentStartDate: '2018-06-01',
+    fullName: '',
+    gender: '',
+    birthDate: '',
+    phone: '',
+    address: '',
+    hivStatus: '',
+    treatmentStartDate: '',
   });
 
+  // Lấy hồ sơ
   useEffect(() => {
-    setTimeout(() => setIsLoading(false), 1000);
+    fetch('http://localhost:8080/api/patients/profile', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+      .then(async (res) => {
+        if (res.status === 304) {
+          message.warning('Hồ sơ chưa có thay đổi (304 Not Modified)');
+          return null;
+        }
+        if (!res.ok) throw new Error('Lỗi khi lấy hồ sơ');
+        return await res.json();
+      })
+      .then((data) => {
+        if (data) {
+          setUserInfo({
+            fullName: data.fullName || '',
+            gender: genderDisplayMap[data.gender] || '',
+            birthDate: data.birthDate || '',
+            phone: data.phone || '',
+            address: data.address || '',
+            hivStatus: data.hivStatus || '',
+            treatmentStartDate: data.treatmentStartDate || '',
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        message.error('Không thể tải hồ sơ bệnh nhân');
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
+  // Thay đổi input
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Lưu hồ sơ
   const handleSave = () => {
-    setIsEditing(false);
-    alert('Hồ sơ đã được lưu thành công!');
+    const payload = {
+      ...userInfo,
+      gender: genderValueMap[userInfo.gender] || userInfo.gender,
+    };
+    fetch('http://localhost:8080/api/patients/profile', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(async (res) => {
+        if (!res.ok) throw new Error('Lỗi khi cập nhật hồ sơ');
+        const data = await res.json();
+        setUserInfo({
+          ...data,
+          gender: genderDisplayMap[data.gender] || data.gender,
+        });
+        message.success('Hồ sơ đã được lưu thành công!');
+        setIsEditing(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        message.error('Không thể cập nhật hồ sơ');
+      });
   };
 
   return (
@@ -48,8 +114,8 @@ export default function PatientProfile() {
             <div className="grid md:grid-cols-2 gap-6">
               <ProfileField
                 label="Họ tên"
-                name="name"
-                value={userInfo.name}
+                name="fullName"
+                value={userInfo.fullName}
                 icon={<User className="w-5 h-5 text-red-500" />}
                 isEditing={isEditing}
                 onChange={handleChange}
@@ -61,14 +127,21 @@ export default function PatientProfile() {
                 icon={<User className="w-5 h-5 text-red-500" />}
                 isEditing={isEditing}
                 onChange={handleChange}
+                type="select"
+                options={[
+                  { value: 'Nam', label: 'Nam' },
+                  { value: 'Nữ', label: 'Nữ' },
+                  { value: 'Khác', label: 'Khác' },
+                ]}
               />
               <ProfileField
                 label="Ngày sinh"
-                name="dob"
-                value={userInfo.dob}
+                name="birthDate"
+                value={userInfo.birthDate}
                 icon={<Calendar className="w-5 h-5 text-red-500" />}
                 isEditing={isEditing}
                 onChange={handleChange}
+                type="date"
               />
               <ProfileField
                 label="Số điện thoại"
@@ -90,7 +163,7 @@ export default function PatientProfile() {
                 label="Tình trạng HIV"
                 value={userInfo.hivStatus}
                 icon={<Biohazard className="w-5 h-5 text-red-500" />}
-                isEditing={false} // luôn không edit
+                isEditing={false}
               />
               <ProfileField
                 label="Bắt đầu điều trị"
@@ -99,6 +172,7 @@ export default function PatientProfile() {
                 icon={<Pill className="w-5 h-5 text-red-500" />}
                 isEditing={isEditing}
                 onChange={handleChange}
+                type="date"
               />
             </div>
           )}
@@ -128,7 +202,7 @@ export default function PatientProfile() {
   );
 }
 
-function ProfileField({ label, name, value, icon, isEditing, onChange }) {
+function ProfileField({ label, name, value, icon, isEditing, onChange, type = 'text', options = [] }) {
   return (
     <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300">
       {icon}
@@ -137,13 +211,28 @@ function ProfileField({ label, name, value, icon, isEditing, onChange }) {
           {label}
         </span>
         {isEditing && name ? (
-          <input
-            type="text"
-            name={name}
-            value={value}
-            onChange={onChange}
-            className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
+          type === 'select' ? (
+            <select
+              name={name}
+              value={value}
+              onChange={onChange}
+              className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+            >
+              {options.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type={type}
+              name={name}
+              value={value}
+              onChange={onChange}
+              className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+            />
+          )
         ) : (
           <span className="text-lg text-gray-800">{value}</span>
         )}
