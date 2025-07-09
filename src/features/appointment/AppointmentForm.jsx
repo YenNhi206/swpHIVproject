@@ -6,94 +6,29 @@ export default function AppointmentForm() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { doctor: doctorFromState, availableTimeSlots: initialAvailableTimeSlots = [], defaultDate = '' } = location.state || {};
+  // Nếu có truyền doctor và lịch trống, ngày mặc định từ trang trước
+  const { doctor: doctorFromState, defaultDate = '' } = location.state || {};
 
   const [formData, setFormData] = useState({
     fullName: '',
     dob: '',
     email: '',
     phone: '',
-    date: defaultDate || '', // Sử dụng defaultDate nếu có
+    date: defaultDate || '',
     time: '',
     gender: '',
-    visitType: 'Khám lần đầu', // Giá trị mặc định
+    visitType: 'Khám lần đầu',
     service: '',
     doctor: doctorFromState ? doctorFromState.fullName : '',
   });
 
-  const [availableTimeSlots, setAvailableTimeSlots] = useState(initialAvailableTimeSlots);
-  const [services, setServices] = useState([]);
-  const [doctors, setDoctors] = useState([]);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  const [services, setServices] = useState([]); // services = [{id, name}, ...]
+  const [doctors, setDoctors] = useState([]); // doctors = [{id, fullName, ...}, ...]
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState('');
 
-  useEffect(() => {
-    const fetchAvailableTimeSlots = async () => {
-      if (!formData.date || !doctorFromState?.id) {
-        console.log('Không đủ dữ liệu để fetch lịch trống:', { date: formData.date, doctorId: doctorFromState?.id });
-        setAvailableTimeSlots([]);
-        return;
-      }
-
-      try {
-        const token = JSON.parse(localStorage.getItem('user'))?.token;
-        if (!token) {
-          console.log('Không có token, không thể fetch lịch trống');
-          setAvailableTimeSlots([]);
-          return;
-        }
-
-        console.log(`Fetching schedule for doctor ${doctorFromState.id} on ${formData.date}`);
-        const res = await fetch(
-          `http://localhost:8080/api/doctors/${doctorFromState.id}/schedule?date=${formData.date}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        if (!res.ok) throw new Error(`Lỗi tải lịch trống: ${res.status} - ${res.statusText}`);
-        const data = await res.json();
-        console.log('API response:', data);
-        setAvailableTimeSlots(data.timeSlots || []);
-        if (!data.timeSlots?.includes(formData.time)) {
-          setFormData((prev) => ({ ...prev, time: '' }));
-        }
-      } catch (error) {
-        console.error('Lỗi khi tải lịch trống:', error);
-        setAvailableTimeSlots([]);
-        setSubmitError('Không thể tải lịch trống. Vui lòng kiểm tra lại ngày hoặc đăng nhập.');
-      }
-    };
-
-    fetchAvailableTimeSlots();
-  }, [formData.date, doctorFromState, formData.time]);
-
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const token = JSON.parse(localStorage.getItem('user'))?.token;
-        const type = formData.visitType === 'Khám lần đầu' ? 'FIRST_VISIT' : 'FOLLOW_UP';
-        console.log('Fetching services for type:', type);
-        const res = await fetch(`http://localhost:8080/api/services/type/${type}`, {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : '',
-            'Content-Type': 'application/json',
-          },
-        });
-        if (!res.ok) throw new Error(`Lỗi tải danh sách dịch vụ: ${res.status}`);
-        const data = await res.json();
-        console.log('API response:', data);
-        setServices(data.map(s => s.name));
-      } catch (error) {
-        console.error('Lỗi khi tải dịch vụ:', error);
-        setServices([]);
-      }
-    };
-    fetchServices();
-  }, [formData.visitType]);
-
+  // Fetch danh sách bác sĩ 1 lần khi load form
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -115,16 +50,82 @@ export default function AppointmentForm() {
     fetchDoctors();
   }, []);
 
+  // Fetch dịch vụ theo loại khám (visitType)
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem('user'))?.token;
+        const type = formData.visitType === 'Khám lần đầu' ? 'FIRST_VISIT' : 'FOLLOW_UP';
+        const res = await fetch(`http://localhost:8080/api/services/type/${type}`, {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : '',
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!res.ok) throw new Error(`Lỗi tải danh sách dịch vụ: ${res.status}`);
+        const data = await res.json();
+        setServices(data); // data là mảng {id, name, ...}
+      } catch (error) {
+        console.error('Lỗi khi tải dịch vụ:', error);
+        setServices([]);
+      }
+    };
+    fetchServices();
+  }, [formData.visitType]);
+
+  // Fetch lịch trống khi date hoặc bác sĩ thay đổi
+  useEffect(() => {
+    const fetchAvailableTimeSlots = async () => {
+      if (!formData.date || !formData.doctor) {
+        setAvailableTimeSlots([]);
+        return;
+      }
+
+      try {
+        const token = JSON.parse(localStorage.getItem('user'))?.token;
+        if (!token) {
+          setAvailableTimeSlots([]);
+          return;
+        }
+
+        // Lấy id bác sĩ theo tên fullName
+        const doctorObj = doctors.find(d => d.fullName === formData.doctor);
+        if (!doctorObj) {
+          setAvailableTimeSlots([]);
+          return;
+        }
+
+        const res = await fetch(
+          `http://localhost:8080/api/doctors/${doctorObj.id}/schedules?date=${formData.date}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        if (!res.ok) throw new Error('Lỗi tải lịch trống');
+        const data = await res.json();
+        setAvailableTimeSlots(data.timeSlots || []);
+        // Nếu time hiện tại không còn trong timeSlots, reset time
+        if (!data.timeSlots?.includes(formData.time)) {
+          setFormData(prev => ({ ...prev, time: '' }));
+        }
+      } catch (error) {
+        console.error('Lỗi khi tải lịch trống:', error);
+        setAvailableTimeSlots([]);
+      }
+    };
+    fetchAvailableTimeSlots();
+  }, [formData.date, formData.doctor, doctors]);
+
   const genderOptions = ['Nữ', 'Nam', 'Khác'];
-  const availableServices = services.length > 0 ? services : ['Không có dịch vụ'];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    setErrors((prev) => ({ ...prev, [name]: '' }));
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setErrors(prev => ({ ...prev, [name]: '' }));
+    setSubmitError('');
   };
 
   const validateForm = () => {
@@ -140,7 +141,7 @@ export default function AppointmentForm() {
     if (!formData.time) newErrors.time = 'Giờ hẹn là bắt buộc';
     if (!formData.gender) newErrors.gender = 'Giới tính là bắt buộc';
     if (!formData.visitType) newErrors.visitType = 'Vui lòng chọn loại khám';
-    if (!formData.service || formData.service === 'Không có dịch vụ') newErrors.service = 'Vui lòng chọn dịch vụ hợp lệ';
+    if (!formData.service) newErrors.service = 'Vui lòng chọn dịch vụ';
     if (!formData.doctor) newErrors.doctor = 'Bác sĩ là bắt buộc';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -148,45 +149,55 @@ export default function AppointmentForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      const token = JSON.parse(localStorage.getItem('user'))?.token;
-      if (!token) {
-        setSubmitError('Vui lòng đăng nhập để đặt lịch.');
-        navigate('/login', { state: { from: '/appointment-form' } });
+    if (!validateForm()) return;
+
+    const token = JSON.parse(localStorage.getItem('user'))?.token;
+    if (!token) {
+      setSubmitError('Vui lòng đăng nhập để đặt lịch.');
+      navigate('/login', { state: { from: '/appointment-form' } });
+      return;
+    }
+
+    try {
+      const selectedDoctor = doctors.find(d => d.fullName === formData.doctor);
+      const selectedService = services.find(s => s.name === formData.service);
+      if (!selectedDoctor) {
+        setSubmitError('Bác sĩ không hợp lệ');
+        return;
+      }
+      if (!selectedService) {
+        setSubmitError('Dịch vụ không hợp lệ');
         return;
       }
 
-      try {
-        const selectedDoctor = doctors.find(d => d.fullName === formData.doctor);
-        const selectedService = services.find(s => s === formData.service);
-        const username = JSON.parse(localStorage.getItem('user'))?.username || 'anonymous';
+      const username = JSON.parse(localStorage.getItem('user'))?.username || 'anonymous';
 
-        const response = await fetch('http://localhost:8080/api/appointments', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            serviceId: selectedService ? doctors.findIndex(d => d.fullName === selectedDoctor?.fullName) + 1 : null,
-            appointmentType: formData.visitType === 'Khám lần đầu' ? 'FIRST_VISIT' : 'FOLLOW_UP',
-            appointmentDate: `${formData.date}T${formData.time}:00`,
-            status: 'PENDING',
-            userUsername: username,
-            serviceName: formData.service,
-          }),
-        });
+      const response = await fetch('http://localhost:8080/api/appointments', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          doctorId: selectedDoctor.id,
+          serviceId: selectedService.id,
+          appointmentType: formData.visitType === 'Khám lần đầu' ? 'FIRST_VISIT' : 'FOLLOW_UP',
+          appointmentDate: `${formData.date}T${formData.time}:00`,
+          status: 'PENDING',
+          userUsername: username,
+          serviceName: formData.service,
+        }),
+      });
 
-        const data = await response.json();
-        if (response.ok) {
-          navigate('/payment', { state: { appointmentData: data } });
-        } else {
-          setSubmitError(data.message || 'Đặt lịch thất bại');
-        }
-      } catch (error) {
-        console.error('Lỗi khi gọi API:', error);
-        setSubmitError('Có lỗi xảy ra khi đặt lịch');
+      const data = await response.json();
+      if (response.ok) {
+        navigate('/payment', { state: { appointmentData: data } });
+      } else {
+        setSubmitError(data.message || 'Đặt lịch thất bại');
       }
+    } catch (error) {
+      console.error('Lỗi khi gọi API:', error);
+      setSubmitError('Có lỗi xảy ra khi đặt lịch');
     }
   };
 
@@ -199,6 +210,7 @@ export default function AppointmentForm() {
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Họ tên */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Họ tên</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -214,6 +226,7 @@ export default function AppointmentForm() {
               {errors.fullName && <p className="text-red-600 text-sm mt-1">{errors.fullName}</p>}
             </div>
 
+            {/* Ngày sinh */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -229,6 +242,7 @@ export default function AppointmentForm() {
               {errors.dob && <p className="text-red-600 text-sm mt-1">{errors.dob}</p>}
             </div>
 
+            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -244,6 +258,7 @@ export default function AppointmentForm() {
               {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
             </div>
 
+            {/* Số điện thoại */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -259,6 +274,7 @@ export default function AppointmentForm() {
               {errors.phone && <p className="text-red-600 text-sm mt-1">{errors.phone}</p>}
             </div>
 
+            {/* Giới tính */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
               <div className="flex space-x-6 mt-1">
@@ -279,6 +295,7 @@ export default function AppointmentForm() {
               {errors.gender && <p className="text-red-600 text-sm mt-1">{errors.gender}</p>}
             </div>
 
+            {/* Loại khám */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Loại khám</label>
               <div className="flex space-x-6 mt-1">
@@ -299,6 +316,7 @@ export default function AppointmentForm() {
               {errors.visitType && <p className="text-red-600 text-sm mt-1">{errors.visitType}</p>}
             </div>
 
+            {/* Dịch vụ */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Dịch vụ</label>
               <select
@@ -308,15 +326,16 @@ export default function AppointmentForm() {
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               >
                 <option value="">-- Chọn dịch vụ --</option>
-                {availableServices.map((service) => (
-                  <option key={service} value={service}>
-                    {service}
+                {services.map((service) => (
+                  <option key={service.id} value={service.name}>
+                    {service.name}
                   </option>
                 ))}
               </select>
               {errors.service && <p className="text-red-600 text-sm mt-1">{errors.service}</p>}
             </div>
 
+            {/* Bác sĩ */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Bác sĩ</label>
               <select
@@ -335,6 +354,7 @@ export default function AppointmentForm() {
               {errors.doctor && <p className="text-red-600 text-sm mt-1">{errors.doctor}</p>}
             </div>
 
+            {/* Ngày hẹn */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Ngày hẹn</label>
               <input
@@ -347,6 +367,7 @@ export default function AppointmentForm() {
               {errors.date && <p className="text-red-600 text-sm mt-1">{errors.date}</p>}
             </div>
 
+            {/* Giờ hẹn */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Giờ hẹn</label>
               <select
