@@ -32,7 +32,7 @@ const basicKnowledge = [
 ];
 const treatmentArticles = [
   {
-    title: " Tuân thủ trong điều trị HIV/AIDS",
+    title: "Vai trò của tuân thủ trong điều trị HIV/AIDS và một số giải pháp giúp tuân thủ",
     description:
       "Tuân thủ là điều cốt lõi cho sự thành công của điều trị thuốc ARV đem lại hiệu quả cho điều trị và điều trị dự phòng các nhiễm trùng cơ hội..",
     link: "https://cdcvinhphuc.vn/vai-tro-cua-tuan-thu-trong-dieu-tri-hiv-aids-va-mot-so-giai-phap-giup-tuan-thu/",
