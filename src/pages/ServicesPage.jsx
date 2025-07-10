@@ -24,27 +24,13 @@ export default function ServicesPage() {
 
   const fetchServices = async () => {
     setIsLoading(true);
-    const token = JSON.parse(localStorage.getItem('user'))?.token;
-
-    if (!token) {
-      setError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-      setIsLoading(false);
-      return;
-    }
 
     try {
       const response = await fetch('http://localhost:8080/api/services', {
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
-
-      if (response.status === 401) {
-        localStorage.removeItem('user');
-        setError('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.');
-        return;
-      }
 
       if (!response.ok) throw new Error('Lỗi khi tải danh sách dịch vụ');
 
@@ -116,7 +102,6 @@ export default function ServicesPage() {
                       <CheckCircle className="w-5 h-5 text-red-500" /> {service.name}
                     </h3>
 
-                    {/* ✅ Fallback mô tả */}
                     <div className="text-gray-600 mb-4 space-y-1">
                       {Array.isArray(service.description) ? (
                         service.description.length > 0 ? (

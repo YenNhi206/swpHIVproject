@@ -1,157 +1,215 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Tabs, Table, Button, message } from "antd";
 import {
-    CheckCircle,
-    XCircle,
-    PlusCircle,
-    User,
-    Phone,
-    MapPin,
-    Venus,
-    Mars,
+    Clock,
+    Check,
+    Stethoscope,
+    UserCheck,
+    UserX,
 } from "lucide-react";
-import { Row, Col, Form, Input, Select } from "antd";
 
-const { Option } = Select;
-
-const TABS = ["Tất cả", "Chưa đến", "Đã đến", "Đang khám", "Hoàn tất", "Vắng"];
-const STATUS_FLOW = ["Chưa đến", "Đã đến", "Đang khám", "Hoàn tất"];
-
-const mockPatients = [
-    {
-        id: 1,
-        fullName: "Nguyễn Văn A",
-        gender: "Nam",
-        phone: "0123456789",
-        address: "Hà Nội",
-        status: "Chưa đến",
-    },
-    {
-        id: 2,
-        fullName: "Trần Thị B",
-        gender: "Nữ",
-        phone: "0987654321",
-        address: "TP.HCM",
-        status: "Đã đến",
-    },
-];
+const { TabPane } = Tabs;
 
 export default function StaffAppointment() {
-    const [patients, setPatients] = useState([]);
-    const [selectedTab, setSelectedTab] = useState("Tất cả");
+    const [appointments, setAppointments] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [activeTab, setActiveTab] = useState("Tất cả");
+
+    const tabStatusMap = {
+        "Tất cả": "",
+        "Chưa đến": "PENDING",
+        "Đã đến": "CHECKED_IN",
+        "Đang khám": "IN_PROGRESS",
+        "Hoàn tất": "COMPLETED",
+        "Vắng": "ABSENT",
+    };
+
+    const token = localStorage.getItem("token");
+
+    const fetchAppointments = async () => {
+        setLoading(true);
+        try {
+            const status = tabStatusMap[activeTab];
+            const url = status
+                ? `http://localhost:8080/api/appointments?status=${status}`
+                : "http://localhost:8080/api/appointments";
+
+            const res = await fetch(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!res.ok) throw new Error("Failed to fetch appointments");
+
+            const data = await res.json();
+            console.log("Fetched appointments data:", data);
+
+            // Nếu backend trả dạng phân trang kiểu Page<AppointmentDTO>
+            // thì dùng data.content, nếu trả list thì dùng data
+            const appointmentsData = data.content ? data.content : data;
+            setAppointments(appointmentsData);
+        } catch (err) {
+            console.error(err);
+            message.error("Lỗi khi tải lịch hẹn");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
 
     useEffect(() => {
-        setPatients(mockPatients);
-    }, []);
+        fetchAppointments();
+        // eslint-disable-next-line
+    }, [activeTab]);
 
-    const handleUpdateStatus = (id) => {
-        setPatients((prev) =>
-            prev.map((p) => {
-                if (p.id !== id) return p;
-                const currentIndex = STATUS_FLOW.indexOf(p.status);
-                if (currentIndex < STATUS_FLOW.length - 1) {
-                    return { ...p, status: STATUS_FLOW[currentIndex + 1] };
-                }
-                return p;
-            })
-        );
+    const getNextStatus = (status) => {
+        const flow = ["PENDING", "CHECKED_IN", "IN_PROGRESS", "COMPLETED"];
+        const index = flow.indexOf(status);
+        return index >= 0 && index < flow.length - 1 ? flow[index + 1] : null;
     };
 
-    const handleSetAbsent = (id) => {
-        setPatients((prev) =>
-            prev.map((p) => (p.id === id ? { ...p, status: "Vắng" } : p))
-        );
+    const handleUpdateStatus = async (id, currentStatus) => {
+        const nextStatus = getNextStatus(currentStatus);
+        if (!nextStatus) return;
+
+        try {
+            const res = await fetch(`http://localhost:8080/api/appointments/${id}/status`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status: nextStatus }),
+            });
+
+            if (!res.ok) throw new Error("Failed to update");
+
+            const updated = await res.json();
+            setAppointments((prev) =>
+                prev.map((a) => (a.id === id ? updated : a))
+            );
+            message.success("Cập nhật trạng thái thành công");
+        } catch (err) {
+            console.error(err);
+            message.error("Lỗi khi cập nhật trạng thái");
+        }
     };
 
-    const filteredPatients = patients.filter(
-        (p) => selectedTab === "Tất cả" || p.status === selectedTab
-    );
+    const handleSetAbsent = async (id) => {
+        try {
+            const res = await fetch(`http://localhost:8080/api/appointments/${id}/status`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status: "ABSENT" }),
+            });
+
+            if (!res.ok) throw new Error("Failed to update");
+
+            const updated = await res.json();
+            setAppointments((prev) =>
+                prev.map((a) => (a.id === id ? updated : a))
+            );
+            message.success("Đã đánh dấu vắng mặt");
+        } catch (err) {
+            console.error(err);
+            message.error("Lỗi khi cập nhật vắng mặt");
+        }
+    };
+
+    const columns = [
+        {
+            title: "Họ tên / Bí danh",
+            dataIndex: "fullName",
+            key: "fullName",
+            render: (text, record) =>
+                text || record.aliasName || <i>Chưa cung cấp</i>,
+        },
+        {
+            title: "Bác sĩ",
+            dataIndex: "doctorName",
+            key: "doctorName",
+            render: (text) => text || <i>Chưa chỉ định</i>,
+        },
+        {
+            title: "Dịch vụ",
+            dataIndex: "serviceName",
+            key: "serviceName",
+        },
+        {
+            title: "Giới tính",
+            dataIndex: "gender",
+            key: "gender",
+        },
+        {
+            title: "Ngày hẹn",
+            dataIndex: "appointmentDate",
+            key: "appointmentDate",
+            render: (text) => new Date(text).toLocaleString("vi-VN"),
+        },
+        {
+            title: "Trạng thái",
+            dataIndex: "status",
+            key: "status",
+        },
+        {
+            title: "Hành động",
+            key: "actions",
+            render: (_, record) => {
+                const next = getNextStatus(record.status);
+                return (
+                    <div className="flex gap-2">
+                        {next && (
+                            <Button
+                                size="small"
+                                type="primary"
+                                onClick={() => handleUpdateStatus(record.id, record.status)}
+                                icon={<Check size={14} />}
+                            >
+                                {next === "CHECKED_IN"
+                                    ? "Đã đến"
+                                    : next === "IN_PROGRESS"
+                                        ? "Khám"
+                                        : "Hoàn tất"}
+                            </Button>
+                        )}
+                        {record.status !== "COMPLETED" &&
+                            record.status !== "ABSENT" && (
+                                <Button
+                                    size="small"
+                                    danger
+                                    onClick={() => handleSetAbsent(record.id)}
+                                    icon={<UserX size={14} />}
+                                >
+                                    Vắng
+                                </Button>
+                            )}
+                    </div>
+                );
+            },
+        },
+    ];
 
     return (
-        <div className="p-6 bg-red-50 min-h-screen">
-            <h1 className="text-3xl font-bold text-center text-red-700 mb-6">
-                Quản Lý Bệnh Nhân
-            </h1>
-
-            {/* Tabs */}
-            <div className="flex justify-center flex-wrap gap-2 mb-4">
-                {TABS.map((tab) => (
-                    <button
-                        key={tab}
-                        onClick={() => setSelectedTab(tab)}
-                        className={`px-4 py-2 rounded-full font-medium border ${selectedTab === tab
-                            ? "bg-red-600 text-white"
-                            : "bg-white text-red-700 border-red-500"
-                            }`}
-                    >
-                        {tab}
-                    </button>
+        <div className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Quản lý lịch hẹn</h2>
+            <Tabs activeKey={activeTab} onChange={setActiveTab}>
+                {Object.keys(tabStatusMap).map((key) => (
+                    <TabPane tab={key} key={key}>
+                        <Table
+                            columns={columns}
+                            dataSource={appointments}
+                            rowKey="id"
+                            loading={loading}
+                            pagination={{ pageSize: 10 }}
+                        />
+                    </TabPane>
                 ))}
-            </div>
-
-            {/* Danh sách bệnh nhân */}
-            <div className="overflow-x-auto">
-                {filteredPatients.length === 0 ? (
-                    <p className="text-center text-red-600 font-medium mt-4">
-                        Không có bệnh nhân.
-                    </p>
-                ) : (
-                    <table className="w-full table-auto bg-white border border-red-300 rounded shadow">
-                        <thead className="bg-red-600 text-white">
-                            <tr>
-                                <th className="p-3">Họ tên</th>
-                                <th className="p-3">Giới tính</th>
-                                <th className="p-3">SĐT</th>
-                                <th className="p-3">Địa chỉ</th>
-                                <th className="p-3">Trạng thái</th>
-                                <th className="p-3">Cập nhật</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredPatients.map((p) => (
-                                <tr key={p.id} className="border-t text-center hover:bg-red-50">
-                                    <td className="p-3">{p.fullName}</td>
-                                    <td className="p-3">{p.gender}</td>
-                                    <td className="p-3">{p.phone}</td>
-                                    <td className="p-3">{p.address}</td>
-                                    <td
-                                        className={`p-3 font-semibold ${p.status === "Vắng"
-                                            ? "text-red-600"
-                                            : p.status === "Hoàn tất"
-                                                ? "text-green-600"
-                                                : "text-gray-600"
-                                            }`}
-                                    >
-                                        {p.status}
-                                    </td>
-                                    <td className="p-3">
-                                        <div className="flex gap-2 justify-center">
-                                            {p.status !== "Hoàn tất" && p.status !== "Vắng" && (
-                                                <button
-                                                    onClick={() => handleUpdateStatus(p.id)}
-                                                    className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
-                                                >
-                                                    <CheckCircle size={16} />
-                                                    Tiếp theo
-                                                </button>
-                                            )}
-                                            {p.status !== "Vắng" && p.status !== "Hoàn tất" && (
-                                                <button
-                                                    onClick={() => handleSetAbsent(p.id)}
-                                                    className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                                                >
-                                                    <XCircle size={16} />
-                                                    Vắng
-                                                </button>
-                                            )}
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
-            </div>
-
+            </Tabs>
         </div>
     );
 }
