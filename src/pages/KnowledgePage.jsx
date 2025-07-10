@@ -140,13 +140,85 @@
 //   },
 // ];
 
+
+
 import React, { useState, useEffect } from 'react';
-import { BookOpenText, LoaderCircle } from 'lucide-react';
+import { LoaderCircle, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+// Câu hỏi thường gặp (FAQ)
+const faqItems = [
+  {
+    question: "HIV là gì và lây truyền qua những con đường nào?",
+    shortAnswer:
+      "HIV là virus gây suy giảm miễn dịch, lây qua máu, tình dục không an toàn và từ mẹ sang con.",
+    detailedContent: (
+      <>
+        <p className="text-gray-700 mb-3">
+          HIV (Human Immunodeficiency Virus) là virus làm suy yếu hệ thống miễn dịch của con người, khiến cơ thể dễ mắc các bệnh nhiễm trùng và ung thư.
+        </p>
+        <p className="text-gray-700 mb-3 font-semibold">Các con đường lây truyền chính:</p>
+        <ul className="list-disc pl-5 mb-4 text-gray-700">
+          <li>Quan hệ tình dục không an toàn (qua đường âm đạo, hậu môn, hoặc miệng nếu có vết thương)</li>
+          <li>Dùng chung kim tiêm hoặc các dụng cụ tiêm chích</li>
+          <li>Truyền máu hoặc chế phẩm máu nhiễm HIV (rất hiếm hiện nay do sàng lọc máu tốt)</li>
+          <li>Truyền từ mẹ sang con trong thai kỳ, lúc sinh hoặc cho con bú</li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    question: "Người nhiễm HIV có thể sống bình thường không?",
+    shortAnswer:
+      "Với điều trị ARV đúng cách, người nhiễm HIV có thể sống khỏe mạnh và gần như bình thường.",
+    detailedContent: (
+      <>
+        <p className="text-gray-700 mb-3">
+          Ngày nay, HIV không còn là án tử. Nhờ điều trị bằng thuốc kháng virus (ARV), người nhiễm HIV có thể sống lâu dài, khỏe mạnh, và hòa nhập cộng đồng.
+        </p>
+        <ul className="list-disc pl-5 mb-4 text-gray-700">
+          <li>Tuân thủ điều trị giúp giảm tải lượng virus xuống mức không thể phát hiện</li>
+          <li>Người nhiễm HIV có thể làm việc, học tập, sinh hoạt, lập gia đình như người không nhiễm</li>
+          <li>Phụ nữ nhiễm HIV vẫn có thể sinh con khỏe mạnh nếu điều trị đúng cách</li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    question: "Làm thế nào để phòng tránh lây nhiễm HIV?",
+    shortAnswer:
+      "Sử dụng bao cao su, không dùng chung kim tiêm, xét nghiệm định kỳ và điều trị sớm nếu nhiễm.",
+    detailedContent: (
+      <>
+        <p className="text-gray-700 mb-3">
+          Phòng tránh HIV hiệu quả bằng cách thay đổi hành vi và duy trì các biện pháp an toàn:
+        </p>
+        <ul className="list-disc pl-5 mb-4 text-gray-700">
+          <li>Luôn dùng bao cao su đúng cách khi quan hệ tình dục</li>
+          <li>Không dùng chung bơm kim tiêm hoặc dụng cụ có thể gây chảy máu</li>
+          <li>Xét nghiệm HIV định kỳ, đặc biệt là nhóm nguy cơ</li>
+          <li>Tham gia điều trị dự phòng trước phơi nhiễm (PrEP) nếu có nguy cơ cao</li>
+          <li>Phụ nữ mang thai cần kiểm tra HIV sớm để can thiệp kịp thời</li>
+        </ul>
+      </>
+    ),
+  },
+];
+
+// Animation cho item
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 export default function KnowledgePage() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openFAQIndex, setOpenFAQIndex] = useState(null);
+
+  const toggleFAQ = (index) => {
+    setOpenFAQIndex(openFAQIndex === index ? null : index);
+  };
 
   useEffect(() => {
     fetch('http://localhost:8080/api/blogs')
@@ -171,12 +243,100 @@ export default function KnowledgePage() {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <div className="text-3xl font-bold text-center mb-8 flex items-center justify-center gap-2">
-        <BookOpenText className="w-8 h-8 text-blue-600" />
+      <h1 className="text-3xl font-extrabold text-red-700 mb-8 flex items-center justify-center gap-2">
         Kiến Thức Về HIV
+      </h1>
+
+      <p className="text-center text-gray-600 text-base md:text-lg max-w-3xl mx-auto mb-10">
+        Khám phá những thông tin quan trọng về HIV – bao gồm cách lây truyền, cách phòng tránh, và phương pháp điều trị hiện đại. Cùng nâng cao nhận thức để bảo vệ bản thân và cộng đồng.
+      </p>
+
+      {/* Kiến Thức Nền Tảng */}
+      <motion.section
+        className="mb-20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={{
+          visible: {
+            transition: { staggerChildren: 0.1 },
+          },
+        }}
+      >
+        <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+          Kiến thức nền tảng về HIV/AIDS
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {blogs.slice(0, 2).map((blog, idx) => (
+            <motion.div
+              key={blog.id}
+              className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition"
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h4 className="text-lg font-semibold text-gray-900 mb-2">{blog.title}</h4>
+              <p className="text-sm text-gray-600 mb-4">{blog.description}</p>
+              <a
+                href={blog.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-blue-600 text-sm font-medium hover:underline"
+              >
+                Xem chi tiết →
+              </a>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+
+
+
+      {/* Phần câu hỏi thường gặp (FAQ) */}
+      <div className="mt-16">
+        <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
+          Câu Hỏi Thường Gặp
+        </h2>
+        <div className="space-y-4 px-4">
+          {faqItems.map((faq, i) => (
+            <motion.div
+              key={i}
+              className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={itemVariants}
+              transition={{ duration: 0.4 }}
+            >
+              <button
+                onClick={() => toggleFAQ(i)}
+                className="w-full flex justify-between items-center px-6 py-4 text-left text-gray-900 font-semibold hover:bg-red-50 transition-colors"
+                aria-expanded={openFAQIndex === i}
+              >
+                <span className="text-base">{faq.question}</span>
+                <ChevronDown
+                  className={`w-5 h-5 transform transition-transform duration-200 ${openFAQIndex === i ? "rotate-180" : ""}`}
+                />
+              </button>
+              {openFAQIndex === i && (
+                <motion.div
+                  className="px-6 py-5 bg-red-50 text-gray-700 text-sm leading-relaxed"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {faq.detailedContent}
+                </motion.div>
+              )}
+            </motion.div>
+          ))}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Danh sách blog */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16 mb-12">
         {blogs.map((blog) => (
           <motion.div
             key={blog.id}
@@ -190,8 +350,8 @@ export default function KnowledgePage() {
             </div>
             <p className="text-sm text-gray-600 mb-2">{blog.description}</p>
             <div className="text-sm text-gray-400 mb-2">
-              <span>🖊 {blog.author}</span> •{' '}
-              <span>🗓 {new Date(blog.createdAt).toLocaleDateString('vi-VN')}</span>
+              <span>🖊 {blog.author}</span> •{" "}
+              <span>🗓 {new Date(blog.createdAt).toLocaleDateString("vi-VN")}</span>
             </div>
             <a
               href={blog.link}
