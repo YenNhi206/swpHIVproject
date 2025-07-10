@@ -15,45 +15,45 @@ export default function AdminAccountsPage() {
     });
     const [activeRole, setActiveRole] = useState("DOCTOR");
 
-    // Fetch accounts from API
     useEffect(() => {
-        const fetchDoctors = async () => {
-            try {
-                const token = JSON.parse(localStorage.getItem("user"))?.token;
-                if (!token) {
-                    message.error("Vui lòng đăng nhập để tiếp tục.");
-                    return;
-                }
-                setLoading(true);
-                const response = await fetch(
-                    `http://localhost:8080/api/doctors?page=0&size=10&search=&searchBy=name`,
-                    {
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                if (!response.ok) throw new Error("Không thể tải danh sách bác sĩ");
-                const data = await response.json();
-                // Giả định tất cả đều là DOCTOR, bạn cần mở rộng API để bao gồm STAFF và PATIENT
-                const doctorAccounts = data.content.map((doctor) => ({
-                    id: doctor.id,
-                    fullName: doctor.fullName,
-                    email: doctor.email,
-                    phone: doctor.phoneNumber || "",
-                    role: "DOCTOR",
-                }));
-                setAccounts(doctorAccounts);
-            } catch (error) {
-                console.error("Lỗi khi tải danh sách bác sĩ:", error);
-                message.error("Lỗi khi tải danh sách: " + error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchDoctors();
     }, []);
+
+    const fetchDoctors = async () => {
+        try {
+            const token = JSON.parse(localStorage.getItem("user"))?.token;
+            if (!token) {
+                message.error("Vui lòng đăng nhập để tiếp tục.");
+                return;
+            }
+            setLoading(true);
+            const response = await fetch(
+                `http://localhost:8080/api/doctors?page=0&size=100`,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (!response.ok) throw new Error("Không thể tải danh sách bác sĩ");
+            const data = await response.json();
+
+            const doctorAccounts = data.content.map((doctor) => ({
+                id: doctor.id,
+                fullName: doctor.fullName,
+                email: doctor.email,
+                phone: doctor.phoneNumber || "",
+                role: "DOCTOR",
+            }));
+            setAccounts(doctorAccounts);
+        } catch (error) {
+            console.error("Lỗi khi tải danh sách bác sĩ:", error);
+            message.error("Lỗi khi tải danh sách: " + error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const openAddModal = (role) => {
         setEditingAccount(null);
@@ -103,11 +103,11 @@ export default function AdminAccountsPage() {
         try {
             const token = JSON.parse(localStorage.getItem("user"))?.token;
             if (!token) throw new Error("Vui lòng đăng nhập");
+
             const payload = {
                 fullName: form.fullName,
                 email: form.email,
                 phoneNumber: form.phone,
-                // Thêm các trường khác nếu cần (e.g., specialization, qualification)
             };
 
             if (editingAccount) {
@@ -127,7 +127,11 @@ export default function AdminAccountsPage() {
                 setAccounts(
                     accounts.map((acc) =>
                         acc.id === editingAccount.id
-                            ? { ...acc, ...updatedDoctor, phone: updatedDoctor.phoneNumber }
+                            ? {
+                                ...acc,
+                                ...updatedDoctor,
+                                phone: updatedDoctor.phoneNumber,
+                            }
                             : acc
                     )
                 );
@@ -145,10 +149,15 @@ export default function AdminAccountsPage() {
                 const newDoctor = await response.json();
                 setAccounts([
                     ...accounts,
-                    { ...newDoctor, phone: newDoctor.phoneNumber, role: "DOCTOR" },
+                    {
+                        ...newDoctor,
+                        phone: newDoctor.phoneNumber,
+                        role: "DOCTOR",
+                    },
                 ]);
                 message.success("Thêm tài khoản thành công");
             }
+
             setIsModalOpen(false);
         } catch (error) {
             console.error("Lỗi khi lưu tài khoản:", error);
@@ -208,19 +217,25 @@ export default function AdminAccountsPage() {
             <Tabs
                 defaultActiveKey="DOCTOR"
                 onChange={(key) => setActiveRole(key)}
-            >
-                <Tabs.TabPane tab="Bác sĩ" key="DOCTOR">
-                    {renderTable("DOCTOR")}
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="Nhân viên" key="STAFF">
-                    {renderTable("STAFF")}
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="Bệnh nhân" key="PATIENT">
-                    {renderTable("PATIENT")}
-                </Tabs.TabPane>
-            </Tabs>
+                items={[
+                    {
+                        label: "Bác sĩ",
+                        key: "DOCTOR",
+                        children: renderTable("DOCTOR"),
+                    },
+                    {
+                        label: "Nhân viên",
+                        key: "STAFF",
+                        children: renderTable("STAFF"),
+                    },
+                    {
+                        label: "Bệnh nhân",
+                        key: "PATIENT",
+                        children: renderTable("PATIENT"),
+                    },
+                ]}
+            />
 
-            {/* Modal thêm/sửa */}
             <Modal
                 open={isModalOpen}
                 title={editingAccount ? "Chỉnh sửa tài khoản" : "Thêm tài khoản"}
@@ -228,28 +243,36 @@ export default function AdminAccountsPage() {
                 onOk={handleSave}
                 okText="Lưu"
                 cancelText="Hủy"
-                okButtonProps={{ style: { backgroundColor: "#dc2626", borderColor: "#dc2626" } }}
+                okButtonProps={{
+                    style: { backgroundColor: "#dc2626", borderColor: "#dc2626" },
+                }}
             >
                 <div className="space-y-4">
                     <div>
                         <label className="block font-medium mb-1">Họ tên</label>
                         <Input
                             value={form.fullName}
-                            onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+                            onChange={(e) =>
+                                setForm({ ...form, fullName: e.target.value })
+                            }
                         />
                     </div>
                     <div>
                         <label className="block font-medium mb-1">Email</label>
                         <Input
                             value={form.email}
-                            onChange={(e) => setForm({ ...form, email: e.target.value })}
+                            onChange={(e) =>
+                                setForm({ ...form, email: e.target.value })
+                            }
                         />
                     </div>
                     <div>
                         <label className="block font-medium mb-1">Số điện thoại</label>
                         <Input
                             value={form.phone}
-                            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                            onChange={(e) =>
+                                setForm({ ...form, phone: e.target.value })
+                            }
                         />
                     </div>
                 </div>

@@ -47,6 +47,7 @@ import AdminBlogManagement from "./features/admin/AdminBlogManagemen";
 import StaffPatientsPage from "./features/staff/StaffPatientsPage";
 import StaffAppointment from "./features/staff/StaffAppointment";
 import StaffPatientListPage from "./features/staff/StaffPatientListPage";
+import StaffTestManagement from "./features/staff/StaffTestManagement";
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -361,6 +362,14 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <StaffPatientListPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/staff/testsmanagement"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <StaffTestManagement />
             </MainLayout>
           }
         />
