@@ -6,11 +6,11 @@ export default function AnonymousAppointmentForm() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    aliasName: 'Anh',   // tên gọi
+    aliasName: '',
     gender: 'FEMALE',
-    description: '',    // lý do cần tư vấn
+    description: '',
     date: '',
-    birthDate: '',      // thêm nếu cần, có thể để trống
+    birthDate: '',
     doctorId: '',
     phone: '',
   });
@@ -40,14 +40,16 @@ export default function AnonymousAppointmentForm() {
     setError('');
 
     const payload = {
-      aliasName: formData.aliasName,
+      aliasName: formData.aliasName.trim(),
       gender: formData.gender,
-      description: formData.description,
+      description: formData.description.trim(),
       date: formData.date,
-      birthDate: formData.birthDate || null,
+      birthDate: formData.birthDate?.trim() ? formData.birthDate : null,
       doctorId: formData.doctorId ? Number(formData.doctorId) : null,
-      phone: formData.phone,
+      phone: formData.phone.trim(),
     };
+
+    console.log('Payload gửi lên:', payload);
 
     try {
       const res = await fetch('http://localhost:8080/api/appointments/anonymous-online', {
@@ -66,7 +68,7 @@ export default function AnonymousAppointmentForm() {
           appointmentData: {
             doctor: doctors.find(d => d.id === Number(formData.doctorId))?.fullName,
             date: formData.date,
-            time: '',       // không có time trong DTO
+            time: '',
             anonymous: true,
           },
         },
@@ -161,7 +163,17 @@ export default function AnonymousAppointmentForm() {
                 placeholder="Nhập số điện thoại"
               />
             </div>
+          </div>
 
+          <div>
+            <label>Ngày sinh (nếu có)</label>
+            <input
+              type="date"
+              name="birthDate"
+              value={formData.birthDate}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-200 rounded-lg"
+            />
           </div>
 
           <div>
@@ -181,9 +193,6 @@ export default function AnonymousAppointmentForm() {
               ))}
             </select>
           </div>
-
-
-
 
           <div>
             <label>Lý do cần tư vấn</label>
@@ -214,7 +223,6 @@ export default function AnonymousAppointmentForm() {
               {isLoading ? 'Đang gửi...' : 'Xác nhận đặt lịch'}
             </button>
           </div>
-
         </form>
       </div>
     </div>

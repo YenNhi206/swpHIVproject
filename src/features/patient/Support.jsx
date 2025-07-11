@@ -47,7 +47,7 @@ export default function Support() {
       description: formData.problem,
       aliasName: formData.name,
       birthDate: '',
-      doctorId: formData.doctorId,
+      doctorId: Number(formData.doctorId), // Sửa ở đây: convert sang số
     };
 
     try {
@@ -60,13 +60,17 @@ export default function Support() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || 'Đặt lịch thất bại');
 
-      const selectedDoctor = doctors.find(d => d.id === parseInt(formData.doctorId));
+      // Lấy giờ từ appointmentDate trả về
+      const appointmentDate = new Date(data.appointmentDate);
+      const timeString = appointmentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      const selectedDoctor = doctors.find(d => d.id === Number(formData.doctorId));
       navigate('/payment', {
         state: {
           appointmentData: {
             doctor: selectedDoctor?.fullName || 'Không xác định',
             date: formData.date,
-            time: 'Không rõ giờ',
+            time: timeString,
             anonymous: false,
           },
         },
