@@ -26,15 +26,10 @@ export default function PatientProfile() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache',
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     })
       .then(async (res) => {
-        if (res.status === 304) {
-          message.warning('Hồ sơ chưa có thay đổi (304 Not Modified)');
-          return null;
-        }
         if (!res.ok) throw new Error('Lỗi khi lấy hồ sơ');
         return await res.json();
       })
@@ -43,11 +38,11 @@ export default function PatientProfile() {
           setUserInfo({
             fullName: data.fullName || '',
             gender: genderDisplayMap[data.gender] || '',
-            birthDate: data.birthDate || '',
+            birthDate: data.birthDate ? data.birthDate.slice(0, 10) : '',
             phone: data.phone || '',
             address: data.address || '',
             hivStatus: data.hivStatus || '',
-            treatmentStartDate: data.treatmentStartDate || '',
+            treatmentStartDate: data.treatmentStartDate ? data.treatmentStartDate.slice(0, 10) : '',
           });
         }
       })
@@ -84,6 +79,8 @@ export default function PatientProfile() {
         setUserInfo({
           ...data,
           gender: genderDisplayMap[data.gender] || data.gender,
+          birthDate: data.birthDate ? data.birthDate.slice(0, 10) : '',
+          treatmentStartDate: data.treatmentStartDate ? data.treatmentStartDate.slice(0, 10) : '',
         });
         message.success('Hồ sơ đã được lưu thành công!');
         setIsEditing(false);
@@ -234,7 +231,10 @@ function ProfileField({ label, name, value, icon, isEditing, onChange, type = 't
             />
           )
         ) : (
-          <span className="text-lg text-gray-800">{value}</span>
+          // Hiển thị ngày theo yyyy-MM-dd nếu type = date
+          <span className="text-lg text-gray-800">
+            {type === 'date' && value ? value.slice(0, 10) : value}
+          </span>
         )}
       </div>
     </div>

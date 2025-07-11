@@ -254,8 +254,19 @@ export default function AppointmentForm() {
 
       const data = await response.json();
       if (response.ok) {
-        navigate("/payment", { state: { appointmentData: data } });
-      } else {
+  navigate("/payment", {
+    state: {
+      appointmentData: {
+        doctor:  doctors.find(d => d.id === Number(formData.doctorId))?.fullName,
+        date: formData.date,
+        time: new Date(formData.time).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      },
+    },
+  });
+} else {
         setSubmitError(data.error || data.message || "Đặt lịch thất bại");
       }
     } catch (error) {
@@ -530,7 +541,7 @@ export default function AppointmentForm() {
           >
             Xác nhận đặt lịch
           </button>
-          {submitError && (
+          {submitError && ( 
             <p className="text-red-600 text-sm mt-2 text-center">
               {submitError}
             </p>
