@@ -1,55 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { LoaderCircle } from 'lucide-react';
+import { CheckCircle, ShieldCheck, ChevronRight } from 'lucide-react';
 import Button from '../components/Button';
 import hivCareImg from "../assets/hiv-care.png";
 import educationImg from "../assets/education.png";
-import hiv1Img from "../assets/hiv1.jpg";
-import hivbhytImg from "../assets/hivbhyt.webp";
-import hivpaitentImg from "../assets/hivpaitent.jpg";
-import img1 from "../assets/DYT.jpg";
-import img2 from "../assets/hiv2.jpg";
-import img3 from "../assets/doctor1.jpg";
-import img4 from "../assets/hiv-3.jpg";
-import img5 from "../assets/hiv-4.jpg";
-import img6 from "../assets/hiv-5.jpg";
-import img7 from "../assets/hiv-6.jpg";
-import img8 from "../assets/hiv-7.jpg";
-import camhungVideo from '../assets/camhung.mp4';
-import { CalendarDays } from "lucide-react";
 
 
-import { ShieldCheck } from "lucide-react";
 
 
-const carouselImages = [
-  { src: img1, alt: 'HIV Care 1' },
-  { src: img2, alt: 'HIV Care 2' },
-  { src: img3, alt: 'HIV Care 3' },
-  { src: img4, alt: 'HIV Care 4' },
-  { src: img5, alt: 'HIV Care 5' },
-  { src: img6, alt: 'HIV Care 6' },
-  { src: img7, alt: 'HIV Care 7' },
-  { src: img8, alt: 'HIV Care 8' },
+const HomePage = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-];
-
-export default function HomePage() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-
-  useEffect(() => {
-    if (isHovered) return;
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [isHovered]);
-
-  const nextSlide = () =>
-    setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
-  const prevSlide = () =>
-    setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
+  const itemVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -62,91 +29,101 @@ export default function HomePage() {
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  };
-
   const imageVariants = {
     initial: { scale: 1 },
     hover: { scale: 1.05, transition: { duration: 0.3 } },
   };
 
+
+  useEffect(() => {
+    fetch('http://localhost:8080/api/blogs')
+      .then((res) => res.json())
+      .then((data) => {
+        setBlogs(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching blogs:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  function Section({ title, blogs }) {
+    return (
+      <motion.section
+        className="mb-20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={{
+          visible: { transition: { staggerChildren: 0.1 } },
+        }}
+      >
+        <motion.h2 className="text-3xl font-bold text-red-600 mb-8 text-center flex items-center gap-2">
+          <CheckCircle className="w-6 h-6" />
+          {title}
+        </motion.h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {blogs.map((blog) => (
+            <motion.div
+              key={blog.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="bg-white shadow-md p-5 rounded-2xl border border-gray-200 hover:shadow-lg transition-all flex flex-col h-full"
+            >
+              <div className="text-lg font-semibold text-black mb-2">
+                {blog.title}
+              </div>
+              <p className="text-sm text-gray-600 mb-2">
+                {blog.description || blog.content?.slice(0, 100) + '...'}
+              </p>
+              <div className="text-sm text-gray-400 mb-3 mt-auto">
+                <span>🖊 {blog.author}</span> •{' '}
+                <span>
+                  🗓 {new Date(blog.createdAt).toLocaleDateString('vi-VN')}
+                </span>
+              </div>
+              {blog.link && (
+                <a
+                  href={blog.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium text-red-600 hover:underline"
+                >
+                  Đọc thêm →
+                </a>
+              )}
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh] text-gray-600">
+        <LoaderCircle className="animate-spin mr-2" /> Đang tải dữ liệu...
+      </div>
+    );
+  }
+
   return (
-    <motion.div
-      className="w-full px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 font-sans"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="p-4">
       {/* Header */}
       <motion.header
         className="text-center mb-10"
         variants={itemVariants}
+        initial="hidden"
+        animate="visible"
       >
         <h1 className="text-3xl font-extrabold text-red-700">
           Chăm sóc và Hỗ trợ HIV – Vì một cuộc sống khỏe mạnh
         </h1>
       </motion.header>
 
-      {/* Carousel */}
-      <motion.div
-        className="mb-10 rounded-xl overflow-hidden shadow-sm border border-gray-100 relative h-[300px] md:h-[380px]"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <AnimatePresence mode="wait">
-          <motion.img
-            key={currentSlide}
-            src={carouselImages[currentSlide].src}
-            alt={carouselImages[currentSlide].alt}
-            className="w-full h-full object-cover absolute top-0 left-0"
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.6 }}
-          />
-        </AnimatePresence>
-
-        {/* Hover effect */}
-        <motion.div
-          className="absolute inset-0"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.3 }}
-        />
-
-        {/* Navigation Buttons */}
-        <motion.button
-          onClick={prevSlide}
-          className="absolute top-1/2 left-4 z-10 bg-red-600 text-white p-2 rounded-full hover:bg-red-700"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </motion.button>
-        <motion.button
-          onClick={nextSlide}
-          className="absolute top-1/2 right-4 z-10 bg-red-600 text-white p-2 rounded-full hover:bg-red-700"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <ChevronRight className="w-5 h-5" />
-        </motion.button>
-
-        {/* Dots Indicator */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
-          {carouselImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-red-600 scale-110' : 'bg-gray-300'
-                }`}
-            />
-          ))}
-        </div>
-      </motion.div>
-
-      {/* Giới thiệu cơ sở y tế */}
+      {/* giới thiệu cơ sở y tế */}
       <motion.section
         className="grid md:grid-cols-2 gap-8 items-center py-12"
         variants={containerVariants}
@@ -194,383 +171,23 @@ export default function HomePage() {
         </motion.div>
       </motion.section>
 
-      {/* Tài liệu giáo dục */}
-      <motion.section
-        className="grid md:grid-cols-2 gap-8 items-stretch py-12"
-        variants={containerVariants}
-      >
-        <motion.div variants={itemVariants} whileHover={imageVariants}>
-          <img
-            src={educationImg}
-            alt="Giáo dục và giảm kỳ thị"
-            className="w-full h-full object-cover rounded-xl shadow-sm"
-          />
-        </motion.div>
-        <motion.div className="flex flex-col justify-start space-y-6" variants={containerVariants}>
-          <h2 className="text-3xl font-bold text-red-600 mb-4 flex items-center gap-2">
-            <CheckCircle className="w-6 h-6" />
-            Tài liệu giáo dục & giảm kỳ thị
-          </h2>
-          {[
-            {
-              title: "HIV là gì?, HIV lây nhiễm như thế nào?",
-              description:
-                "Hầu như tất cả mọi người đều đã từng nghe đến HIV và AIDS, tuy nhiên có rất ít người hiểu đúng về nó...",
-              link: "https://www.vinmec.com/vie/bai-viet/hiv-va-aids-nhung-dieu-ban-can-nho-vi",
-            },
-            {
-              title: "4 bí quyết sống lâu, sống khỏe cho người nhiễm HIV",
-              description:
-                "SKĐS - Khi phát hiện mình bị nhiễm HIV, nhiều người cứ nghĩ cuộc đời mình sẽ mất tất cả...",
-              link: "https://bvquan5.medinet.gov.vn/hivaids/4-bi-quyet-song-lau-song-khoe-cho-nguoi-nhiem-hiv-cmobile16896-191243.aspx",
-            },
-            {
-              title: "Xóa bỏ kỳ thị và phân biệt đối xử với người nhiễm HIV/AIDS",
-              description:
-                "Chỉ thị 54-CT/TW, ngày 30/1/2005 của Ban Bí thư đã nêu rõ về việc chống kỳ thị...",
-              link: "https://btgtu.binhthuan.dcs.vn/Trang-chu/post/1520/xoa-bo-ky-thi-va-phan-biet-doi-xu-voi-nguoi-nhiem-hivaids",
-            },
-            {
-              title: "Làm thế nào để bảo vệ bản thân, hỗ trợ người khác và xóa bỏ định kiến về HIV?",
-              description:
-                " Tài liệu này là một trong số 9 tài liệu hướng dẫn kịch bản giảng dạy chi tiết...",
-              link: "https://amaze.org/wp-content/uploads/2024/03/Vietnamese_Lesson-Plan-8_HIV.pdf",
-            },
-          ].map(({ title, description, link }, idx) => (
-            <motion.div
-              key={title}
-              className="bg-white shadow-sm rounded-xl p-6 border border-gray-100 hover:shadow-md transition"
-              variants={itemVariants}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-            >
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">{title}</h3>
-              <p className="text-gray-600 mb-4">{description}</p>
-              <Button
-                label="Đọc thêm"
-                onClick={() => window.open(link, '_blank')}
-                icon={<ChevronRight className="w-4 h-4" />}
-              />
-            </motion.div>
-          ))}
-        </motion.div>
-      </motion.section>
+      {/* Tài liệu giáo dục và giảm kỳ thị */}
+      <Section
+        title="Tài Liệu Giáo Dục Và Giảm Kỳ Thị"
+        blogs={blogs.slice(10, 14)}
+      />
 
-      {/* Tin tức và bài báo */}
-      <motion.section
-        variants={containerVariants}
-      >
-        <h2 className="text-3xl font-bold text-red-600 mb-8 text-center flex items-center gap-2">
-          <CheckCircle className="w-6 h-6" />
-          Tin tức & Bài báo về HIV
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            {
-              img: hiv1Img,
-              alt: "Phát hiện liệu pháp mới",
-              title: "Thử nghiệm lâm sàng trên người liệu pháp mới điều trị HIV",
-              description:
-                "Nhóm chuyên gia công nghệ sinh học từ Hoa Kỳ đang thử nghiệm liệu pháp CRISPR trên 3 bệnh nhân HIV, với kỳ vọng tìm ra cách chữa dứt điểm “căn bệnh thế kỷ” HIV/AIDS.",
-              link: "https://vaac.gov.vn/thu-nghiem-lam-sang-tren-nguoi-lieu-phap-moi-dieu-tri-hiv.html",
-            },
-            {
-              img: hivbhytImg,
-              alt: "Chương trình hỗ trợ ARV miễn phí",
-              title: "TP. Hồ Chí Minh: Sẵn sàng công tác điều trị cho người nhiễm HIV thông qua BHYT",
-              description:
-                "Nếu không có thẻ BHYT, người nhiễm HIV sẽ phải chi một số tiền khá lớn để điều trị bằng thuốc ARV.",
-              link: "https://baohiemxahoi.gov.vn/gioithieu/Pages/gioi-thieu-chung.aspx?CateID=0&ItemID=11910",
-            },
-            {
-              img: hivpaitentImg,
-              alt: "Hành trình sống chung với HIV",
-              title: "Bệnh nhân HIV: HIV không phải là dấu chấm hết, sự đồng cảm giúp tôi vững bước",
-              description:
-                "SKĐS - Tôi - một bệnh nhân đang sống chung với HIV, hai từ khó khăn không đủ để diễn tả về hành trình của bản thân.",
-              link: "https://bvquan5.medinet.gov.vn/hivaids/benh-nhan-hiv-hiv-khong-phai-la-dau-cham-het-su-dong-cam-giup-toi-vung-buoc-cmobile16896-199511.aspx",
-            },
-          ].map(({ img, alt, title, description, link }, idx) => (
-            <motion.div
-              key={title}
-              className="bg-white shadow-sm rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition h-full flex flex-col"
-              variants={itemVariants}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-            >
-
-              <motion.img
-                src={img}
-                alt={alt}
-                className="w-full h-40 object-cover"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
-              />
-              <div className="p-6 flex flex-col justify-between h-full">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-3">{title}</h3>
-                  <p className="text-gray-600 mb-4">{description}</p>
-                </div>
-                <div className="mt-auto">
-                  <Button
-                    label="Đọc thêm"
-                    onClick={() => window.open(link, '_blank')}
-                    icon={<ChevronRight className="w-4 h-4" />}
-                  />
-                </div>
-              </div>
-
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
+      {/* Tin Tức & Bài Báo Về HIV */}
+      <Section
+        title="Tin Tức & Bài Báo Về HIV"
+        blogs={blogs.slice(14, 17)}
+      />
 
       {/* Tin tức & tiến bộ y học mới */}
-      <motion.section
-        variants={containerVariants} className="mt-20">
-        <motion.div className="mb-12" variants={itemVariants}>
-          <h2 className="text-3xl font-bold text-red-600 mb-4 flex items-center gap-2">
-            <CheckCircle className="w-6 h-6 text-red-600" />
-            <span>Tin tức & tiến bộ y học mới</span>
-          </h2>
-          <p className="text-gray-600 max-w-xl">
-            Cập nhật các diễn biến và bước tiến nổi bật trong nghiên cứu, điều trị, và chính sách HIV/AIDS trên toàn cầu.
-          </p>
-        </motion.div>
-
-        {/* Lưới: 1 tin nổi bật + danh sách tin phụ */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          {/* Tin nổi bật */}
-          <motion.div
-            variants={itemVariants}
-            className="lg:col-span-2 bg-white rounded-2xl shadow hover:shadow-lg transition p-10 flex flex-col justify-between relative"
-          >
-            <a
-              href="https://www.gilead.com/news/news-details/2025/yeztugo-lenacapavir-is-now-the-first-and-only-fda-approved-hiv-prevention-option-offering-6-months-of-protection"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block space-y-4"
-            >
-              <div className="inline-block px-3 py-1 bg-red-100 text-red-600 text-xs font-medium rounded-full">
-                Tin nổi bật
-              </div>
-
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Ngày 18/06/2025, FDA chính thức phê duyệt lenacapavir dưới tên thương mại Yeztugo — thuốc tiêm PrEP đầu tiên kéo dài 6 tháng, mở ra kỳ vọng thay đổi phòng ngừa HIV toàn cầu.
-              </p>
-
-              <h3 className="text-2xl font-bold text-gray-800 hover:text-red-600 transition">
-                FDA chấp thuận thuốc tiêm PrEP lenacapavir (Yeztugo) 6 tháng/lần
-              </h3>
-
-              <ul className="text-gray-600 text-sm space-y-2 leading-relaxed list-disc list-inside">
-                <li>Phương pháp PrEP đầu tiên kéo dài đến 6 tháng.</li>
-                <li>Một bước ngoặt lớn trong phòng ngừa HIV toàn cầu.</li>
-                <li>Giảm đáng kể rào cản tuân thủ so với thuốc hàng ngày.</li>
-              </ul>
-
-              <blockquote className="text-sm italic text-gray-500 border-l-4 border-red-200 pl-4">
-                “Lenacapavir có thể cách mạng hóa phòng ngừa HIV trong thập kỷ tới.” — WHO
-              </blockquote>
-
-              <span className="text-sm font-medium text-red-500 hover:underline block">
-                Xem chi tiết →
-              </span>
-            </a>
-
-            <ShieldCheck className="w-16 h-16 text-red-100 absolute bottom-6 right-6 opacity-10" />
-          </motion.div>
-
-          {/* Danh sách tin nhỏ */}
-          <div className="space-y-4">
-            {[
-              {
-                title: "UNAIDS kêu gọi Gilead giảm giá thuốc còn 25 USD/năm",
-                date: "18/06/2025",
-                link: "https://www.unaids.org/en/resources/presscentre/pressreleaseandstatementarchive/2025/june/20250618_lenacapavir",
-              },
-              {
-                title: "WHO hoan nghênh FDA phê duyệt lenacapavir",
-                date: "19/06/2025",
-                link: "https://www.who.int/news/item/19-06-2025-fda-approval-of-injectable-lenacapavir-marks-progress-for-hiv-prevention",
-              },
-              {
-                title: "The New Yorker: lenacapavir có thể cách mạng hóa phòng ngừa HIV",
-                date: "24/06/2025",
-                link: "https://www.newyorker.com/news/the-lede/the-drug-that-could-revolutionize-the-fight-against-hiv",
-              },
-
-              {
-                title: "Tòa án Tối cao Mỹ giữ yêu cầu bảo hiểm bao gồm PrEP",
-                date: "27/06/2025",
-                link: "https://www.reuters.com/business/healthcare-pharmaceuticals/gilead-shares-rise-after-us-top-court-ruling-preventative-coverage-2025-06-27/",
-              },
-
-            ].map(({ title, date, link }, idx) => (
-              <motion.div
-                key={idx}
-                variants={itemVariants}
-                className="p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition"
-              >
-                <a href={link} target="_blank" rel="noopener noreferrer" className="block">
-                  <p className="text-xs text-gray-400 mb-1">{date}</p>
-                  <h4 className="text-sm font-medium text-gray-800 hover:text-red-600 transition leading-snug">
-                    {title}
-                  </h4>
-                  <span className="text-xs text-red-500 hover:underline mt-1 inline-block">
-                    Xem chi tiết →
-                  </span>
-                </a>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
-
-
-      {/* Góc sáng tạo */}
-      <motion.section
-        className="mt-16"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.h2
-          variants={itemVariants}
-          className="text-3xl font-bold text-red-600 mb-8 text-center flex items-center gap-2"
-        >
-          <CheckCircle className="w-6 h-6" />
-          Góc sáng tạo – nghệ thuật từ cộng đồng
-        </motion.h2>
-
-        {/* Mô tả mục tiêu */}
-        <motion.div variants={itemVariants}>
-          <p className="text-gray-700 mb-3">Một phần độc đáo để:</p>
-          <ul className="list-disc list-inside text-gray-800 space-y-2 mb-6">
-            <li>Trưng bày tranh, thơ, video của người sống chung với HIV</li>
-            <li>Truyền cảm hứng tích cực, giảm kỳ thị</li>
-            <li>Kết nối cảm xúc mạnh mẽ với cộng đồng</li>
-            <li>Khơi dậy sự đồng cảm qua nghệ thuật và câu chuyện chân thực</li>
-            <li>Tạo không gian sáng tạo để lan tỏa thông điệp yêu thương</li>
-          </ul>
-        </motion.div>
-
-        {/* Gợi ý đóng góp */}
-        <motion.div variants={itemVariants} className="mb-8">
-          <h3 className="text-lg font-semibold text-red-500 mb-2">💡 Gợi ý đóng góp</h3>
-          <ul className="list-disc list-inside text-gray-700 space-y-1">
-            <li>Vẽ tranh hoặc gửi ảnh về hành trình sống tích cực</li>
-            <li>Viết thơ, truyện ngắn hoặc nhật ký truyền cảm hứng</li>
-            <li>Gửi video chia sẻ trải nghiệm, thông điệp yêu thương</li>
-          </ul>
-        </motion.div>
-
-        {/* Ví dụ tác phẩm minh họa (mock) */}
-        <motion.div variants={itemVariants} className="mb-10">
-          <h3 className="text-lg font-semibold text-red-500 mb-4">🌟 Một vài tác phẩm tiêu biểu</h3>
-          <div className="grid md:grid-cols-3 gap-4">
-            {/* PHẦN 1 */}
-            <div className="bg-gray-100 rounded-lg p-4 shadow flex flex-col justify-between h-full">
-              <div>
-                <img
-                  src="https://thtanthanh2.pgdtpthainguyen.edu.vn/upload/s/20171225/90e5cfa9791316a4d96830ff5762c426hiv4.jpg"
-                  alt="Tác phẩm 1"
-                  className="rounded mb-2"
-                />
-              </div>
-              <p className="text-black hover:text-red-500 block text-center">
-                <a
-                  href="https://thtanthanh2.pgdtpthainguyen.edu.vn/tin-tuc-su-kien/bai-tuyen-truyen-ve-hiv-aids-va-khong-ki-thi-phan-biet-doi-x.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-black hover:text-red-500 block"
-                >
-                  "Bài tuyên truyền về HIV – AIDS và không kì thị, phân biệt, đối xử với trẻ em bị nhiễm hoặc bị ảnh hưởng bởi HIV"
-                </a>
-              </p>
-            </div>
-
-            {/* PHẦN 2 */}
-            <div className="bg-gray-100 rounded-lg p-4 shadow flex flex-col justify-between h-full">
-              <div>
-                <div className="text-gray-700 bg-white rounded-md p-4 shadow-inner transition hover:shadow-md duration-200 max-h-64 overflow-y-scroll text-center whitespace-pre-line ">
-                  {`Thơ phòng, chống HIV
-
-Gì nguy bằng HIV
-Đại dịch tàn phá không chê đường nào
-Tế bào nó phá ào ào
-Tan tành miễn dịch cách nào tránh xa
-Chỉ trong một phút trôi qua
-Toàn cầu đã có mười ca nhiễm vào
-Tử vong mỗi lúc một cao
-Tốc độ lây nhiễm nhường nào hiểm nguy.
-
-Nói ra để hết hoài nghi
-Có WHO, UNIAIDS vào
-Đại dịch lây những đường nào?
-Mang thai, tình dục, theo đường máu qua
-Tệ nạn mắc phải nhiều ca
-Mại dâm, ma túy đường xa thêm gần
-Dây vào ta nhẹ lâng lâng
-Con đường đại dịch tiến gần ngay đây
-Tính chi kẻ dại người ngây
-HIV/AIDS nó thề không tha
-Trẻ em từ mới sinh ra
-Đã nhiễm virus mẹ cha truyền vào.
-
-Cách chữa, cách trị làm sao
-Xin thưa chẳng có cách nào chữa xong
-Chỉ hay cách tránh, cách phòng
-Sống sao lành mạnh mới hòng thoát thân
-Không tiêm, không chích, mại dâm
-Sống như thế ấy ko lâm đường cùng
-Đại dịch hết phá lung tung
-Đe dọa tính mạng, hành hung loài người.
-
-Giáo dục tất thẩy mọi người
-Trẻ em, người lớn ko cười nạn nhân
-Ko kỳ thị, chẳng biệt phân
-Hết lòng đối xử nghĩa nhân giúp đời
-Tương lai rạn rỡ ngời ngời
-HIV/AIDS hết thời hại dân.`}
-                </div>
-              </div>
-
-              <p className="text-black hover:text-red-500 block text-center">
-                <a
-                  href="https://tiengchuong.chinhphu.vn/tho-phong-chong-hiv-1-11363.htm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-black hover:text-red-500 block text-center"
-                >
-                  Thơ phòng, chống HIV
-                </a>
-              </p>
-            </div>
-
-
-            {/* PHẦN 3 */}
-            <div className="bg-gray-100 rounded-lg p-4 shadow flex flex-col justify-between h-full items-center text-center">
-              <div>
-                <video controls className="rounded mb-2 w-[300px] max-w-full">
-                  <source src={camhungVideo} type="video/mp4" />
-                </video>
-              </div>
-              <p className="text-black hover:text-red-500 block text-center">
-                <a>
-                  Video về "Những người truyền cảm hứng cho cộng đồng người nhiễm HIV"
-                </a>
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Ghi chú cuối */}
-        <motion.div variants={itemVariants} className="text-sm text-gray-500 italic">
-          * Nội dung được chọn lọc từ cộng đồng & các sự kiện đặc biệt.
-        </motion.div>
-      </motion.section>
-
+            <Section
+        title="Tin Tức & Tiến Bộ Y Học Mới"
+        blogs={blogs.slice(17, 24)}
+      />
       {/* Tài nguyên hỗ trợ cộng đồng */}
       <motion.section
         variants={containerVariants} className="mt-16">
@@ -640,8 +257,8 @@ HIV/AIDS hết thời hại dân.`}
         </div>
       </motion.section>
 
-
-
-    </motion.div >
+    </div>
   );
-}
+};
+
+export default HomePage;
