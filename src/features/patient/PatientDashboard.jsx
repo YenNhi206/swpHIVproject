@@ -60,7 +60,7 @@ export default function PatientDashboard() {
               <DashboardCard
                 title="Kết quả xét nghiệm"
                 description="Theo dõi CD4, tải lượng HIV, phác đồ ARV được sử dụng."
-                to="/treatment-results"
+                to="/patient/result/:patientId"
                 icon={<TestTube className="w-6 h-6 text-red-500" />}
               />
               <DashboardCard

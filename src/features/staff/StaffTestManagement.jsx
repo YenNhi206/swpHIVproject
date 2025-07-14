@@ -9,6 +9,7 @@ export default function StaffTestManagement() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(null); // ID đang cập nhật kết quả
+  const [editingResults, setEditingResults] = useState({}); // lưu kết quả đang nhập
 
   // Gọi API lấy danh sách tất cả kết quả xét nghiệm
   const fetchTestResults = async () => {
@@ -19,8 +20,6 @@ export default function StaffTestManagement() {
         throw new Error("Vui lòng đăng nhập với vai trò STAFF hoặc ADMIN");
       }
       const token = user.token;
-      console.log("Token:", token);
-      console.log("User role:", user.role);
       const response = await fetch("http://localhost:8080/api/test-results", {
         headers: {
           "Content-Type": "application/json",
@@ -32,6 +31,7 @@ export default function StaffTestManagement() {
         throw new Error(`Failed to fetch test results: ${response.status} - ${errorText}`);
       }
       const data = await response.json();
+      console.log("Dữ liệu nhận được:", data);
       setTests(data);
     } catch (error) {
       console.error("Error fetching test results:", error);
@@ -54,13 +54,11 @@ export default function StaffTestManagement() {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       if (!user || !user.token) throw new Error("Vui lòng đăng nhập");
-      const response = await fetch(`http://localhost:8080/api/test-results/${id}/status`, {
+      const response = await fetch(`http://localhost:8080/api/test-results/${id}/status?status=${newStatus}`, {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${user.token}`,
         },
-        body: JSON.stringify({ status: newStatus }),
       });
       if (!response.ok) {
         const errorText = await response.text();
@@ -105,28 +103,25 @@ export default function StaffTestManagement() {
   // Lọc danh sách theo tìm kiếm
   const filteredTests = tests.filter(
     (test) =>
-      test.patient?.fullName?.toLowerCase().includes(searchTerm) || // Sử dụng fullName từ patient
+      test.patient?.fullName?.toLowerCase().includes(searchTerm) ||
       test.status?.toLowerCase().includes(searchTerm)
   );
 
   const columns = [
     {
       title: "Bệnh nhân",
-      dataIndex: "patientName",
       key: "patientName",
-      render: (text, record) => record.patient?.fullName || "Chưa có", // Lấy từ patient
+      render: (text, record) => record.patient?.fullName || "Chưa có",
     },
     {
       title: "Xét nghiệm",
-      dataIndex: "testName",
       key: "testName",
-      render: (text, record) => record.testCategory?.name || "Chưa có", // Lấy từ testCategory
+      render: (text, record) => record.testCategory?.name || "Chưa có",
     },
     {
       title: "Bác sĩ",
-      dataIndex: "doctorName",
       key: "doctorName",
-      render: (text, record) => record.doctor?.fullName || "Chưa chỉ định", // Lấy từ doctor
+      render: (text, record) => record.doctor?.fullName || "Chưa chỉ định",
     },
     {
       title: "Trạng thái",
@@ -146,23 +141,26 @@ export default function StaffTestManagement() {
     {
       title: "Kết quả",
       key: "result",
-      render: (text, record) => {
-        const [inputValue, setInputValue] = useState(record.resultValue || "");
-
-        return (
-          <Space>
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onBlur={(e) => handleResultChange(record.id, e.target.value)}
-              placeholder="Nhập kết quả"
-              disabled={updating === record.id}
-              style={{ width: 200 }}
-            />
-            {updating === record.id && <span>Đang lưu...</span>}
-          </Space>
-        );
-      },
+      render: (text, record) => (
+        <Space>
+          <Input
+            value={editingResults[record.id] ?? record.resultValue ?? ""}
+            onChange={(e) =>
+              setEditingResults((prev) => ({
+                ...prev,
+                [record.id]: e.target.value,
+              }))
+            }
+            onBlur={() =>
+              handleResultChange(record.id, editingResults[record.id] || "")
+            }
+            placeholder="Nhập kết quả"
+            disabled={updating === record.id}
+            style={{ width: 200 }}
+          />
+          {updating === record.id && <span>Đang lưu...</span>}
+        </Space>
+      ),
     },
   ];
 
