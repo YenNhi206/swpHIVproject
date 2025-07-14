@@ -48,6 +48,7 @@ import StaffPatientsPage from "./features/staff/StaffPatientsPage";
 import StaffAppointment from "./features/staff/StaffAppointment";
 import StaffPatientListPage from "./features/staff/StaffPatientListPage";
 import StaffTestManagement from "./features/staff/StaffTestManagement";
+import DoctorPatientList from "./features/doctor/DoctorPatientList";
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -136,7 +137,7 @@ export default function App() {
           }
         />
         <Route
-          path="/treatment/:id/edit"
+          path="/treatment/edit/:id"
           element={
             <MainLayout user={user} setUser={setUser}>
               <EditTreatment />
@@ -144,7 +145,7 @@ export default function App() {
           }
         />
         <Route
-          path="/treatment-results"
+          path="/patient/result/:patientId"
           element={
             <MainLayout user={user} setUser={setUser}>
               <ResultPage />
@@ -285,6 +286,15 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <DoctorAlertsPage />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/doctor/patientlists"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <DoctorPatientList />
             </MainLayout>
           }
         />

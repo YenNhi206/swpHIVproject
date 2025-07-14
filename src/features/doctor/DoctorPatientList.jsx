@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { User, Phone, Venus, Mars, Pill, Circle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { message } from "antd";
 
+// Màu sắc tương ứng với trạng thái đơn thuốc
 const statusColors = {
     ACTIVE: "text-green-600 bg-green-100",
     COMPLETED: "text-gray-600 bg-gray-200",
@@ -11,32 +11,49 @@ const statusColors = {
     MODIFIED: "text-blue-600 bg-blue-100",
 };
 
+// Dữ liệu giả bệnh nhân có phác đồ và trạng thái đơn thuốc
+const mockPatients = [
+    {
+        patientId: 1,
+        fullName: "Nguyễn Văn A",
+        gender: "Nam",
+        dateOfBirth: "1990-01-15",
+        phone: "0909123456",
+        address: "Hà Nội",
+        regimenName: "Phác đồ 1",
+        status: "ACTIVE",
+    },
+    {
+        patientId: 2,
+        fullName: "Trần Thị B",
+        gender: "Nữ",
+        dateOfBirth: "1985-06-20",
+        phone: "0912345678",
+        address: "Hồ Chí Minh",
+        regimenName: "Phác đồ 2",
+        status: "COMPLETED",
+    },
+    {
+        patientId: 3,
+        fullName: "Lê Văn C",
+        gender: "Nam",
+        dateOfBirth: "1995-12-05",
+        phone: "0987654321",
+        address: "Đà Nẵng",
+        regimenName: "Phác đồ 3",
+        status: "DISCONTINUED",
+    },
+];
+
 export default function StaffPatientListPage() {
     const [patients, setPatients] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchPatients = async () => {
-            try {
-                const res = await fetch("http://localhost:8080/api/prescriptions/doctor", {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-                    },
-                });
-                if (!res.ok) throw new Error("Không thể tải danh sách bệnh nhân");
-
-                const data = await res.json();
-
-                // Lọc chỉ lấy bệnh nhân có đơn thuốc đang ACTIVE
-                const activePatients = data.filter(p => p.status === "ACTIVE");
-                setPatients(activePatients);
-            } catch (err) {
-                console.error(err);
-                message.error("Lỗi khi tải bệnh nhân");
-            }
-        };
-
-        fetchPatients();
+        // Giả lập gọi API lấy dữ liệu bệnh nhân
+        setTimeout(() => {
+            setPatients(mockPatients);
+        }, 500);
     }, []);
 
     return (
@@ -46,7 +63,7 @@ export default function StaffPatientListPage() {
             </h1>
 
             {patients.length === 0 ? (
-                <p className="text-center text-red-600">Không có bệnh nhân nào đang điều trị.</p>
+                <p className="text-center text-red-600">Không có bệnh nhân nào.</p>
             ) : (
                 <div className="overflow-x-auto">
                     <table className="w-full table-auto bg-white border border-red-300 rounded shadow">
@@ -64,7 +81,11 @@ export default function StaffPatientListPage() {
                         </thead>
                         <tbody>
                             {patients.map((p, index) => (
-                                <tr key={index} className="border-t text-center hover:bg-red-50">
+                                <tr
+                                    key={index}
+                                    className="border-t text-center hover:bg-red-50 cursor-pointer"
+                                    onClick={() => navigate(`/patient/${p.patientId}`)} // có thể dẫn tới trang chi tiết patient
+                                >
                                     <td className="p-3 flex items-center gap-2 justify-center">
                                         <User size={16} /> {p.fullName}
                                     </td>
@@ -93,7 +114,10 @@ export default function StaffPatientListPage() {
                                     </td>
                                     <td className="p-3">
                                         <button
-                                            onClick={() => navigate(`/prescription/create?patientId=${p.patientId}`)}
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // tránh bấm row
+                                                navigate(`/treatment/create?patientId=${p.patientId}`);
+                                            }}
                                             className="text-sm text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded flex items-center gap-1 mx-auto"
                                         >
                                             <Pill size={14} /> Kê đơn
