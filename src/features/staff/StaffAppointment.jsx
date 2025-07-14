@@ -1,24 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Table, Button, message } from "antd";
-import { Clock, Check, Stethoscope, UserCheck, UserX } from "lucide-react";
+import { Tabs, Table, message, Select } from "antd";
 
 const { TabPane } = Tabs;
+
+const tabStatusMap = {
+  "Tất cả": "",
+  "Chưa đến": "PENDING",
+  "Đã đến": "CHECKED_IN",
+  "Đang khám": "IN_PROGRESS",
+  "Hoàn tất": "COMPLETED",
+  "Vắng": "ABSENT",
+};
+
+const statusOptions = [
+  { value: "PENDING", label: "Chưa đến" },
+  { value: "CHECKED_IN", label: "Đã đến" },
+  { value: "IN_PROGRESS", label: "Đang khám" },
+  { value: "COMPLETED", label: "Hoàn tất" },
+  { value: "ABSENT", label: "Vắng" },
+];
 
 export default function StaffAppointment() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("Tất cả");
-
-  const tabStatusMap = {
-    "Tất cả": "",
-    "Chưa đến": "PENDING",
-    "Đã đến": "CHECKED_IN",
-    "Đang khám": "IN_PROGRESS",
-    "Hoàn tất": "COMPLETED",
-    "Vắng": "ABSENT",
-    "Đang chờ online": "ONLINE_PENDING",
-    "Đang chờ online ẩn danh": "ONLINE_ANONYMOUS_PENDING",
-  };
+  const [updatingId, setUpdatingId] = useState(null);
 
   const token = JSON.parse(localStorage.getItem("user"))?.token;
 
@@ -28,6 +34,7 @@ export default function StaffAppointment() {
       if (!token) {
         throw new Error("Vui lòng đăng nhập để xem lịch hẹn.");
       }
+
       const status = tabStatusMap[activeTab];
       const url = status
         ? `http://localhost:8080/api/appointments?status=${status}`
@@ -46,8 +53,6 @@ export default function StaffAppointment() {
       }
 
       const data = await res.json();
-      console.log("Fetched appointments data:", data);
-
       const appointmentsData = data.content ? data.content : Array.isArray(data) ? data : [];
       setAppointments(appointmentsData);
     } catch (err) {
@@ -62,16 +67,8 @@ export default function StaffAppointment() {
     fetchAppointments();
   }, [activeTab, token]);
 
-  const getNextStatus = (status) => {
-    const flow = ["PENDING", "CHECKED_IN", "IN_PROGRESS", "COMPLETED"];
-    const index = flow.indexOf(status);
-    return index >= 0 && index < flow.length - 1 ? flow[index + 1] : null;
-  };
-
-  const handleUpdateStatus = async (id, currentStatus) => {
-    const nextStatus = getNextStatus(currentStatus);
-    if (!nextStatus) return;
-
+  const handleStatusUpdate = async (id, newStatus) => {
+    setUpdatingId(id);
     try {
       const res = await fetch(`http://localhost:8080/api/appointments/${id}/status`, {
         method: "PATCH",
@@ -79,12 +76,12 @@ export default function StaffAppointment() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ status: nextStatus }),
+        body: JSON.stringify({ status: newStatus }),
       });
 
       if (!res.ok) {
         const errorText = await res.text();
-        throw new Error(`Failed to update: ${res.status} - ${errorText}`);
+        throw new Error(`Cập nhật lỗi: ${res.status} - ${errorText}`);
       }
 
       const updated = await res.json();
@@ -95,33 +92,8 @@ export default function StaffAppointment() {
     } catch (err) {
       console.error("Error updating status:", err);
       message.error("Lỗi khi cập nhật trạng thái: " + err.message);
-    }
-  };
-
-  const handleSetAbsent = async (id) => {
-    try {
-      const res = await fetch(`http://localhost:8080/api/appointments/${id}/status`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status: "ABSENT" }),
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Failed to update: ${res.status} - ${errorText}`);
-      }
-
-      const updated = await res.json();
-      setAppointments((prev) =>
-        prev.map((a) => (a.id === id ? { ...a, ...updated } : a))
-      );
-      message.success("Đã đánh dấu vắng mặt");
-    } catch (err) {
-      console.error("Error setting absent:", err);
-      message.error("Lỗi khi cập nhật vắng mặt: " + err.message);
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -156,55 +128,16 @@ export default function StaffAppointment() {
     },
     {
       title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      render: (text) => {
-        const statusMap = {
-          PENDING: "Chưa đến",
-          CHECKED_IN: "Đã đến",
-          IN_PROGRESS: "Đang khám",
-          COMPLETED: "Hoàn tất",
-          ABSENT: "Vắng",
-          ONLINE_PENDING: "Đang chờ online",
-          ONLINE_ANONYMOUS_PENDING: "Đang chờ online ẩn danh",
-        };
-        return statusMap[text] || text;
-      },
-    },
-    {
-      title: "Hành động",
       key: "actions",
-      render: (_, record) => {
-        const next = getNextStatus(record.status);
-        return (
-          <div className="flex gap-2">
-            {next && (
-              <Button
-                size="small"
-                type="primary"
-                onClick={() => handleUpdateStatus(record.id, record.status)}
-                icon={<Check size={14} />}
-              >
-                {next === "CHECKED_IN"
-                  ? "Đã đến"
-                  : next === "IN_PROGRESS"
-                  ? "Khám"
-                  : "Hoàn tất"}
-              </Button>
-            )}
-            {record.status !== "COMPLETED" && record.status !== "ABSENT" && (
-              <Button
-                size="small"
-                danger
-                onClick={() => handleSetAbsent(record.id)}
-                icon={<UserX size={14} />}
-              >
-                Vắng
-              </Button>
-            )}
-          </div>
-        );
-      },
+      render: (_, record) => (
+        <Select
+          value={record.status}
+          onChange={(value) => handleStatusUpdate(record.id, value)}
+          options={statusOptions}
+          style={{ width: 200 }}
+          loading={updatingId === record.id}
+        />
+      ),
     },
   ];
 
