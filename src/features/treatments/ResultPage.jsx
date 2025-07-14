@@ -13,10 +13,12 @@ import {
 } from 'lucide-react';
 import Button from '../../components/Button';
 
+
 export default function ResultPage() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [result, setResult] = useState(null);
+
 
   useEffect(() => {
     const fetchResult = async () => {
@@ -31,13 +33,17 @@ export default function ResultPage() {
         const data = await res.json();
         if (!Array.isArray(data) || data.length === 0) throw new Error('Không có kết quả xét nghiệm');
 
+
         const latest = data[data.length - 1];
+
 
         const cd4 = latest.resultValue?.includes('CD4')
           ? parseInt(latest.resultValue.match(/\d+/)[0])
           : 0;
 
+
         const viralLoad = latest.resultNote || '';
+
 
         const statusData = cd4 > 500 && viralLoad.includes('Không phát hiện')
           ? {
@@ -48,6 +54,7 @@ export default function ResultPage() {
             status: 'Không đáp ứng tốt',
             note: 'CD4 giảm nhanh, cần đánh giá lại phác đồ.',
           };
+
 
         setResult({
           patientName: latest.patientName,
@@ -67,20 +74,25 @@ export default function ResultPage() {
       }
     };
 
+
     fetchResult();
   }, []);
 
+
   const handlePrint = () => window.print();
+
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
   };
 
+
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
+
 
   return (
     <motion.div
@@ -95,6 +107,7 @@ export default function ResultPage() {
       >
         Kết quả điều trị
       </motion.h1>
+
 
       <motion.div className="bg-white rounded-2xl shadow-lg p-8" variants={itemVariants}>
         {isLoading ? (
@@ -130,6 +143,7 @@ export default function ResultPage() {
               </div>
             </motion.section>
 
+
             <motion.section variants={containerVariants}>
               <h2 className="text-2xl font-bold text-red-600 mb-4">Kết quả xét nghiệm</h2>
               <div className="grid sm:grid-cols-3 gap-4">
@@ -147,6 +161,7 @@ export default function ResultPage() {
                 ))}
               </div>
             </motion.section>
+
 
             <motion.section variants={itemVariants}>
               <h2 className="text-2xl font-bold text-red-600 mb-4">Đánh giá tổng quan</h2>
@@ -168,6 +183,7 @@ export default function ResultPage() {
               </p>
             </motion.section>
 
+
             <motion.section className="flex flex-wrap gap-4 justify-center" variants={containerVariants}>
               <Button label="In kết quả" onClick={handlePrint} icon={<Printer className="w-4 h-4" />} />
               <Button
@@ -183,3 +199,8 @@ export default function ResultPage() {
     </motion.div>
   );
 }
+
+
+
+
+
