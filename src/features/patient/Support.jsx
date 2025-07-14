@@ -60,9 +60,11 @@ export default function Support() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || 'Đặt lịch thất bại');
 
-      // Lấy giờ từ appointmentDate trả về
+
       const appointmentDate = new Date(data.appointmentDate);
-      const timeString = appointmentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const timeString = !isNaN(appointmentDate)
+        ? appointmentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        : '';
 
       const selectedDoctor = doctors.find(d => d.id === Number(formData.doctorId));
       navigate('/payment', {
