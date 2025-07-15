@@ -1,23 +1,23 @@
+// src/features/patient/PatientDashboard.jsx
+
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   History,
   TestTube,
   Calendar,
-  Bell,
   MessageCircle,
   User,
 } from "lucide-react";
 
-
 export default function PatientDashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
-
   useEffect(() => {
-    setTimeout(() => setIsLoading(false), 1000); // Giả lập loading
+    // Giả lập loading 1s
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer); // cleanup nếu component unmount
   }, []);
-
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
@@ -32,7 +32,6 @@ export default function PatientDashboard() {
           </p>
         </div>
 
-
         {/* Banner CTA */}
         <div className="bg-white rounded-2xl shadow-lg p-6 text-center animate-fade-in [animation-delay:0.2s]">
           <p className="text-gray-800 font-semibold">
@@ -46,7 +45,6 @@ export default function PatientDashboard() {
             Đặt lịch ngay
           </Link>
         </div>
-
 
         {/* Grid Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -68,7 +66,7 @@ export default function PatientDashboard() {
               <DashboardCard
                 title="Lịch sử khám & điều trị"
                 description="Xem lại các lần khám, đơn thuốc và quá trình điều trị."
-                to="/history"
+                to={`/history/${localStorage.getItem("patientId")}`}
                 icon={<History className="w-6 h-6 text-red-500" />}
               />
               <DashboardCard
@@ -83,8 +81,6 @@ export default function PatientDashboard() {
                 to="/appointments"
                 icon={<Calendar className="w-6 h-6 text-red-500" />}
               />
-
-
               <DashboardCard
                 title="Tư vấn trực tuyến"
                 description="Đặt lịch tư vấn online với bác sĩ nếu cần hỗ trợ."
@@ -105,7 +101,6 @@ export default function PatientDashboard() {
   );
 }
 
-
 function DashboardCard({ title, description, to, icon }) {
   return (
     <Link
@@ -120,8 +115,3 @@ function DashboardCard({ title, description, to, icon }) {
     </Link>
   );
 }
-
-
-
-
-

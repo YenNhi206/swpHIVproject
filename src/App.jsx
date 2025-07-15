@@ -198,7 +198,7 @@ export default function App() {
           }
         />
         <Route
-          path="/history"
+          path="/history/:patientId"
           element={
             <MainLayout user={user} setUser={setUser}>
               <History />
