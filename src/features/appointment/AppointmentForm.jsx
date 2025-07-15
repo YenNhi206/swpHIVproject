@@ -219,7 +219,6 @@ export default function AppointmentForm() {
       const appointmentDate = formData.time; // slot.startTime đã là ISO string
 
 
-
       const body = {
         doctorId: Number(selectedDoctor.id),
         serviceId: Number(selectedService.id),
@@ -257,12 +256,10 @@ export default function AppointmentForm() {
         navigate("/payment", {
           state: {
             appointmentData: {
-              doctor: doctors.find(d => d.id === Number(formData.doctorId))?.fullName,
-              date: formData.date,
-              time: new Date(formData.time).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              }),
+              doctorName: selectedDoctor.fullName,
+              appointmentDate: appointmentDate,
+              price: selectedService.price,
+              anonymous: false, // hoặc true nếu có hỗ trợ đặt lịch ẩn danh
             },
           },
         });
@@ -308,7 +305,9 @@ export default function AppointmentForm() {
 
             {/* Ngày sinh */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Ngày sinh
+              </label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                 <CalendarIcon className="w-5 h-5 text-gray-400 mx-3" />
                 <input
@@ -475,14 +474,15 @@ export default function AppointmentForm() {
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
-                min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
+                min={
+                  new Date(Date.now() + 86400000).toISOString().split("T")[0]
+                }
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               />
               {errors.date && (
                 <p className="text-red-600 text-sm mt-1">{errors.date}</p>
               )}
             </div>
-
 
 
             {/* Giờ hẹn */}
@@ -549,7 +549,6 @@ export default function AppointmentForm() {
     </div>
   );
 }
-
 
 
 

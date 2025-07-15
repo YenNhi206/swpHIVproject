@@ -30,25 +30,30 @@ import UserAppointmentList from "./features/appointment/UserAppointments";
 import PatientProfile from "./features/users/PatientProfile";
 import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmentForm";
 import PaymentPage from "./features/payment/PaymentPage";
+import PaymentResultPage from "./features/payment/PaymentResultPage";
 
 import ChatWidget from "./components/ChatWidget";
-import StaffDashboard from "./features/staff/StaffDashboard";
+import Footer from "./components/Footer";
+
 import KnowledgePage from "./pages/KnowledgePage";
 import DoctorsPage from "./pages/DoctorsPage";
 import ServicesPage from "./pages/ServicesPage";
+
 import PatientAppointments from "./features/doctor/PatientAppointments";
-import Footer from "./components/Footer";
 import DoctorAlertsPage from "./features/doctor/DoctorAlertsPage";
+import DoctorPatientList from "./features/doctor/DoctorPatientList";
 import PatientDetailForDoctor from "./features/doctor/PatientDetailForDoctor";
+
 import AdminAccountsPage from "./features/admin/AdminAccountsPage";
 import AdminStatisticsPage from "./features/admin/AdminStatisticsPage";
 import AdminFinancePage from "./features/admin/AdminFinancePage";
 import AdminBlogManagement from "./features/admin/AdminBlogManagemen";
+
+import StaffDashboard from "./features/staff/StaffDashboard";
 import StaffPatientsPage from "./features/staff/StaffPatientsPage";
 import StaffAppointment from "./features/staff/StaffAppointment";
 import StaffPatientListPage from "./features/staff/StaffPatientListPage";
 import StaffTestManagement from "./features/staff/StaffTestManagement";
-import DoctorPatientList from "./features/doctor/DoctorPatientList";
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -113,7 +118,7 @@ export default function App() {
           }
         />
         <Route
-          path="doctor/treatment"
+          path="/doctor/treatment"
           element={
             <MainLayout user={user} setUser={setUser}>
               <TreatmentList />
@@ -169,18 +174,6 @@ export default function App() {
             </MainLayout>
           }
         />
-
-
-        <Route
-          path="/doctor/patientappointments"
-          element={
-            <MainLayout user={user} setUser={setUser}>
-              <PatientAppointments />
-            </MainLayout>
-          }
-        />
-
-
         <Route
           path="/anonymous-appointment"
           element={
@@ -230,7 +223,6 @@ export default function App() {
             </MainLayout>
           }
         />
-
         <Route
           path="/patient"
           element={
@@ -265,6 +257,14 @@ export default function App() {
           }
         />
         <Route
+          path="/payment/result"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <PaymentResultPage />
+            </MainLayout>
+          }
+        />
+        <Route
           path="/doctorappointments"
           element={
             <AuthLayout>
@@ -280,7 +280,14 @@ export default function App() {
             </AuthLayout>
           }
         />
-
+        <Route
+          path="/doctor/patientappointments"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <PatientAppointments />
+            </MainLayout>
+          }
+        />
         <Route
           path="/doctor/alerts"
           element={
@@ -289,7 +296,6 @@ export default function App() {
             </MainLayout>
           }
         />
-
         <Route
           path="/doctor/patientlists"
           element={
@@ -298,25 +304,6 @@ export default function App() {
             </MainLayout>
           }
         />
-
-        <Route
-          path="/admin/accounts"
-          element={
-            <MainLayout user={user} setUser={setUser}>
-              <AdminAccountsPage />
-            </MainLayout>
-          }
-        />
-
-        <Route
-          path="/admin/blogs"
-          element={
-            <MainLayout user={user} setUser={setUser}>
-              <AdminBlogManagement />
-            </MainLayout>
-          }
-        />
-
         <Route
           path="/doctor/patientappointments/:patientId"
           element={
@@ -325,21 +312,19 @@ export default function App() {
             </MainLayout>
           }
         />
-
         <Route
-          path="/admin/statistics"
+          path="/admin/accounts"
           element={
             <MainLayout user={user} setUser={setUser}>
-              <AdminStatisticsPage />
+              <AdminAccountsPage />
             </MainLayout>
           }
         />
-
         <Route
-          path="/admin/finance"
+          path="/admin/blogs"
           element={
             <MainLayout user={user} setUser={setUser}>
-              <AdminFinancePage />
+              <AdminBlogManagement />
             </MainLayout>
           }
         />
@@ -348,6 +333,22 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <AdminBlogManagement />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/admin/statistics"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <AdminStatisticsPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/admin/finance"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <AdminFinancePage />
             </MainLayout>
           }
         />
@@ -383,7 +384,6 @@ export default function App() {
             </MainLayout>
           }
         />
-
         <Route
           path="*"
           element={
@@ -393,6 +393,7 @@ export default function App() {
           }
         />
       </Routes>
+
       <ChatWidget />
     </Router>
   );
