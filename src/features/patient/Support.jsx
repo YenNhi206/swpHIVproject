@@ -124,9 +124,22 @@ export default function Support() {
               <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-lg" />
             </div>
             <div>
-              <label>Ngày tư vấn</label>
-              <input type="date" name="date" value={formData.date} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-lg" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Ngày tư vấn
+              </label>
+              <input
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                required
+                min={new Date(new Date().setDate(new Date().getDate() + 1))
+                  .toISOString()
+                  .split("T")[0]}
+                className="w-full p-3 border border-gray-300 rounded-lg"
+              />
             </div>
+
           </div>
 
           {/* Chọn bác sĩ */}

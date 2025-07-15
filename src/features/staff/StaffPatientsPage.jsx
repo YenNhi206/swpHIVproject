@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { PlusCircle, User, Phone, MapPin, Venus, Mars } from "lucide-react";
 import { Col, Input, Row, Form, Select } from "antd";
+import dayjs from "dayjs";
+
 
 const { Option } = Select;
 
@@ -60,16 +62,16 @@ export default function StaffPatientPage() {
                                     className="w-full border border-gray-300 rounded-lg"
                                     style={{ height: "42px" }}
                                 >
-                                    <Option value="Nam">
-                                        <div className="flex items-center gap-2">
-                                            <Mars className="w-4 h-4 text-blue-500" />
-                                            Nam
-                                        </div>
-                                    </Option>
                                     <Option value="Nữ">
                                         <div className="flex items-center gap-2">
                                             <Venus className="w-4 h-4 text-pink-500" />
                                             Nữ
+                                        </div>
+                                    </Option>
+                                    <Option value="Nam">
+                                        <div className="flex items-center gap-2">
+                                            <Mars className="w-4 h-4 text-blue-500" />
+                                            Nam
                                         </div>
                                     </Option>
                                 </Select>
@@ -86,11 +88,13 @@ export default function StaffPatientPage() {
                             >
                                 <Input
                                     type="date"
+                                    max={dayjs().format("YYYY-MM-DD")} // ⬅️ Ngày hôm nay
                                     className="border border-gray-300 rounded-lg"
                                     style={{ height: "42px", padding: "0 12px", lineHeight: "42px" }}
                                 />
                             </Form.Item>
                         </Col>
+
 
                         <Col span={12}>
                             <Form.Item
