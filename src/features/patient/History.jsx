@@ -1,159 +1,119 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useEffect } from 'react';
 
-export default function History({ patientId }) {
+export default function HistoryPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [history, setHistory] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [searchInput, setSearchInput] = useState("");
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch(`/api/patients/${patientId}/history`);
-        if (!response.ok) {
-          throw new Error("Lỗi khi tải dữ liệu lịch sử");
+        const patientId = localStorage.getItem('patientId');
+        const token = localStorage.getItem('token') || '';
+
+        const res = await fetch(`http://localhost:8080/api/patients/${patientId}/history`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!res.ok) {
+          const errorBody = await res.json().catch(() => ({}));
+          throw new Error(`Lỗi khi tải dữ liệu lịch sử: ${res.status} - ${errorBody.error || res.statusText}`);
         }
-        const data = await response.json();
+
+        const data = await res.json();
         setHistory(data);
-      } catch (error) {
-        console.error("Lỗi khi tải dữ liệu:", error);
+      } catch (err) {
+        setError(err.message);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchHistory();
-  }, [patientId]);
+  }, []);
 
-  const availableYears = useMemo(() => {
-    const years = new Set();
-    if (history) {
-      [...history.appointments, ...history.testResults, ...history.prescriptions].forEach((item) => {
-        const date = item.appointmentDate || item.createdAt || item.prescribedDate;
-        if (date) years.add(new Date(date).getFullYear());
-      });
-    }
-    return Array.from(years).sort((a, b) => b - a);
-  }, [history]);
-
-  const filterByYearAndSearch = (items, dateKey) => {
-    return items
-      .filter(item => {
-        const year = new Date(item[dateKey]).getFullYear();
-        return year === selectedYear;
-      })
-      .filter(item => {
-        const search = searchInput.toLowerCase().trim();
-        return (
-          !search ||
-          Object.values(item).some((value) =>
-            typeof value === "string" && value.toLowerCase().includes(search)
-          )
-        );
-      })
-      .sort((a, b) => new Date(b[dateKey]) - new Date(a[dateKey]));
-  };
-
-  if (loading) return <p className="text-gray-500 italic">Đang tải dữ liệu...</p>;
-  if (!history) return <p className="text-red-500">Không thể tải lịch sử bệnh nhân.</p>;
-
-  const appointments = filterByYearAndSearch(history.appointments || [], "appointmentDate");
-  const testResults = filterByYearAndSearch(history.testResults || [], "createdAt");
-  const prescriptions = filterByYearAndSearch(history.prescriptions || [], "prescribedDate");
+  if (isLoading) return <p className="text-center text-red-400 mt-10 animate-pulse">Đang tải dữ liệu lịch sử...</p>;
+  if (error) return <p className="text-center text-red-600 mt-10 font-semibold">{error}</p>;
+  if (!history) return <p className="text-center text-red-500 mt-10 italic">Không có dữ liệu lịch sử.</p>;
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4 text-primary">Lịch sử khám & điều trị</h1>
+    <div className="max-w-5xl mx-auto p-6 font-sans text-base text-gray-900">
+      <h2 className="text-4xl font-extrabold mb-8 text-red-700 border-b-4 border-red-600 pb-2">
+        Lịch sử khám &amp; điều trị
+      </h2>
 
-      <div className="flex flex-wrap gap-6 mb-6 items-end">
-        <div>
-          <label className="block mb-1 text-sm font-medium text-gray-700">Chọn năm</label>
-          <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-            className="border border-gray-300 rounded px-3 py-2 text-sm"
-          >
-            {availableYears.map((year) => (
-              <option key={year} value={year}>{year}</option>
+      {/* Cuộc hẹn */}
+      <section className="mb-12">
+        <h3 className="text-2xl font-semibold text-red-600 mb-4 border-l-4 border-red-500 pl-3">
+          Cuộc hẹn (Appointments)
+        </h3>
+        {history.appointments && history.appointments.length > 0 ? (
+          <ul className="space-y-4">
+            {history.appointments.map((appt) => (
+              <li
+                key={appt.id}
+                className="p-5 bg-red-50 border border-red-200 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+              >
+                <p><span className="font-semibold text-red-700">Ngày hẹn:</span> {appt.appointmentDate?.slice(0, 10)}</p>
+                <p><span className="font-semibold text-red-700">Loại hẹn:</span> {appt.appointmentType || 'N/A'}</p>
+                <p><span className="font-semibold text-red-700">Trạng thái:</span> {appt.status || 'N/A'}</p>
+                <p><span className="font-semibold text-red-700">Ghi chú:</span> {appt.note || 'Không có'}</p>
+              </li>
             ))}
-          </select>
-        </div>
-
-        <div className="flex-1 min-w-[200px]">
-          <label className="block mb-1 text-sm font-medium text-gray-700">Tìm kiếm</label>
-          <input
-            type="text"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Tìm theo từ khóa..."
-            className="border border-gray-300 rounded px-3 py-2 text-sm w-full"
-          />
-        </div>
-      </div>
-
-      {/* Appointments */}
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-3 text-blue-600">Lịch hẹn</h2>
-        {appointments.length === 0 ? (
-          <p className="text-gray-500 italic">Không có lịch hẹn phù hợp.</p>
+          </ul>
         ) : (
-          appointments.map((a) => (
-            <div key={a.id} className="bg-gray-50 border rounded p-4 mb-3 shadow-sm">
-              <div className="flex justify-between items-center mb-1">
-                <strong>{a.serviceName}</strong>
-                <span className="text-sm text-gray-500">
-                  {new Date(a.appointmentDate).toLocaleString("vi-VN")}
-                </span>
-              </div>
-              <p className="text-sm text-gray-700">{a.description || "Không có mô tả"}</p>
-              <p className="text-xs text-gray-500">Trạng thái: {a.status}</p>
-            </div>
-          ))
+          <p className="italic text-red-500">Không có lịch sử cuộc hẹn.</p>
         )}
       </section>
 
-      {/* Test Results */}
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-3 text-green-600">Kết quả xét nghiệm</h2>
-        {testResults.length === 0 ? (
-          <p className="text-gray-500 italic">Không có kết quả xét nghiệm phù hợp.</p>
+      {/* Kết quả xét nghiệm */}
+      <section className="mb-12">
+        <h3 className="text-2xl font-semibold text-red-600 mb-4 border-l-4 border-red-500 pl-3">
+          Kết quả xét nghiệm
+        </h3>
+        {history.testResults && history.testResults.length > 0 ? (
+          <ul className="space-y-4">
+            {history.testResults.map((test) => (
+              <li
+                key={test.id}
+                className="p-5 bg-red-50 border border-red-200 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+              >
+                <p><span className="font-semibold text-red-700">Ngày xét nghiệm:</span> {test.createdAt?.slice(0, 10)}</p>
+                <p><span className="font-semibold text-red-700">Loại xét nghiệm:</span> {test.testCategoryName || 'N/A'}</p>
+                <p><span className="font-semibold text-red-700">Kết quả:</span> {test.resultValue || 'N/A'}</p>
+                <p><span className="font-semibold text-red-700">Ghi chú:</span> {test.resultNote || 'Không có'}</p>
+              </li>
+            ))}
+          </ul>
         ) : (
-          testResults.map((t) => (
-            <div key={t.id} className="bg-gray-50 border rounded p-4 mb-3 shadow-sm">
-              <div className="flex justify-between items-center mb-1">
-                <strong>{t.testName}</strong>
-                <span className="text-sm text-gray-500">
-                  {new Date(t.createdAt).toLocaleDateString("vi-VN")}
-                </span>
-              </div>
-              <p className="text-sm text-gray-700">{t.result || "Chưa có kết quả"}</p>
-              <p className="text-xs text-gray-500">Trạng thái: {t.status}</p>
-            </div>
-          ))
+          <p className="italic text-red-500">Không có kết quả xét nghiệm.</p>
         )}
       </section>
 
-      {/* Prescriptions */}
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-3 text-purple-600">Đơn thuốc</h2>
-        {prescriptions.length === 0 ? (
-          <p className="text-gray-500 italic">Không có đơn thuốc phù hợp.</p>
+      {/* Đơn thuốc */}
+      <section>
+        <h3 className="text-2xl font-semibold text-red-600 mb-4 border-l-4 border-red-500 pl-3">
+          Đơn thuốc
+        </h3>
+        {history.prescriptions && history.prescriptions.length > 0 ? (
+          <ul className="space-y-4">
+            {history.prescriptions.map((presc) => (
+              <li
+                key={presc.id}
+                className="p-5 bg-red-50 border border-red-200 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+              >
+                <p><span className="font-semibold text-red-700">Ngày kê đơn:</span> {presc.prescribedDate?.slice(0, 10)}</p>
+                <p><span className="font-semibold text-red-700">Phác đồ:</span> {presc.protocolName || 'N/A'}</p>
+                <p><span className="font-semibold text-red-700">Trạng thái:</span> {presc.status || 'N/A'}</p>
+                <p><span className="font-semibold text-red-700">Ghi chú:</span> {presc.note || 'Không có'}</p>
+              </li>
+            ))}
+          </ul>
         ) : (
-          prescriptions.map((p) => (
-            <div key={p.id} className="bg-gray-50 border rounded p-4 mb-3 shadow-sm">
-              <div className="flex justify-between items-center mb-1">
-                <strong>Mã đơn: {p.id}</strong>
-                <span className="text-sm text-gray-500">
-                  {new Date(p.prescribedDate).toLocaleDateString("vi-VN")}
-                </span>
-              </div>
-              <p className="text-sm text-gray-700">
-                Phác đồ: {p.regimenName || "Chưa có"} <br />
-                Bác sĩ: {p.doctorName || "Chưa có"}
-              </p>
-              <p className="text-xs text-gray-500">Trạng thái: {p.status}</p>
-            </div>
-          ))
+          <p className="italic text-red-500">Không có đơn thuốc.</p>
         )}
       </section>
     </div>
