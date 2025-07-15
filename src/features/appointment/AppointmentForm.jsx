@@ -308,9 +308,7 @@ export default function AppointmentForm() {
 
             {/* Ngày sinh */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Ngày sinh
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
               <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
                 <CalendarIcon className="w-5 h-5 text-gray-400 mx-3" />
                 <input
@@ -319,11 +317,9 @@ export default function AppointmentForm() {
                   value={formData.dob}
                   onChange={handleChange}
                   className="w-full p-3 border-none rounded-lg focus:outline-none"
+                  max={new Date().toISOString().split("T")[0]} // Chỉ cho phép chọn đến hôm nay
                 />
               </div>
-              {errors.dob && (
-                <p className="text-red-600 text-sm mt-1">{errors.dob}</p>
-              )}
             </div>
 
 
