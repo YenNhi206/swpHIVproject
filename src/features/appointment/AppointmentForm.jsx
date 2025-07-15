@@ -479,12 +479,14 @@ export default function AppointmentForm() {
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
+                min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               />
               {errors.date && (
                 <p className="text-red-600 text-sm mt-1">{errors.date}</p>
               )}
             </div>
+
 
 
             {/* Giờ hẹn */}
