@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stethoscope } from 'lucide-react';
+import { Calendar as CalendarIcon } from "lucide-react";
 
 export default function AnonymousAppointmentForm() {
   const navigate = useNavigate();
@@ -141,7 +142,7 @@ export default function AnonymousAppointmentForm() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label>Ngày tư vấn</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Ngày tư vấn</label>
               <input
                 type="date"
                 name="date"
@@ -149,8 +150,10 @@ export default function AnonymousAppointmentForm() {
                 value={formData.date}
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-200 rounded-lg"
+                min={new Date(Date.now() + 86400000).toISOString().split("T")[0]} // Ngày mai
               />
             </div>
+
             <div>
               <label>Số điện thoại</label>
               <input
@@ -166,14 +169,18 @@ export default function AnonymousAppointmentForm() {
           </div>
 
           <div>
-            <label>Ngày sinh (nếu có)</label>
-            <input
-              type="date"
-              name="birthDate"
-              value={formData.birthDate}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-200 rounded-lg"
-            />
+            <label className="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
+            <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+              <CalendarIcon className="w-5 h-5 text-gray-400 mx-3" />
+              <input
+                type="date"
+                name="dob"
+                value={formData.dob}
+                onChange={handleChange}
+                className="w-full p-3 border-none rounded-lg focus:outline-none"
+                max={new Date().toISOString().split("T")[0]} // Chỉ cho phép chọn đến hôm nay
+              />
+            </div>
           </div>
 
           <div>
