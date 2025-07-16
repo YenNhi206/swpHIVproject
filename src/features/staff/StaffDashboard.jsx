@@ -186,7 +186,7 @@ export default function StaffDashboard() {
         </button>
       </div>
 
-      {/* Form thêm lịch hẹn - Popup đẹp */}
+      {/* Form thêm lịch hẹn  */}
       {showForm && (
         <div className="mt-8">
           <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-4xl mx-auto">

@@ -54,6 +54,7 @@ import StaffPatientsPage from "./features/staff/StaffPatientsPage";
 import StaffAppointment from "./features/staff/StaffAppointment";
 import StaffPatientListPage from "./features/staff/StaffPatientListPage";
 import StaffTestManagement from "./features/staff/StaffTestManagement";
+import StaffTestResult from "./features/staff/StaffTestResult";
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -384,6 +385,15 @@ export default function App() {
             </MainLayout>
           }
         />
+        <Route
+          path="/staff/testsresult"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <StaffTestResult />
+            </MainLayout>
+          }
+        />
+
         <Route
           path="*"
           element={
