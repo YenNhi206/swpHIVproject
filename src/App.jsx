@@ -51,7 +51,6 @@ import AdminFinancePage from "./features/admin/AdminFinancePage";
 import AdminBlogManagement from "./features/admin/AdminBlogManagemen";
 
 import StaffDashboard from "./features/staff/StaffDashboard";
-import StaffPatientsPage from "./features/staff/StaffPatientsPage";
 import StaffAppointment from "./features/staff/StaffAppointment";
 import StaffPatientListPage from "./features/staff/StaffPatientListPage";
 import StaffTestManagement from "./features/staff/StaffTestManagement";
@@ -345,14 +344,7 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route
-          path="/staff/patients"
-          element={
-            <MainLayout user={user} setUser={setUser}>
-              <StaffPatientsPage />
-            </MainLayout>
-          }
-        />
+
         <Route
           path="/staff/appointments"
           element={
