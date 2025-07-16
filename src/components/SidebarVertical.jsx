@@ -55,7 +55,6 @@ export default function SidebarVertical({ user, handleLogout }) {
             { path: "/staff/appointments", label: "Quản lý lịch hẹn", icon: Calendar },
             { path: "/staff/testsmanagement", label: "Quản lý kết quả", icon: Users },
             { path: "/staff/patients", label: "Thêm bệnh nhân", icon: PlusCircle },
-            { path: "/staff/testsresult", label: "Thêm/ Cập nhật xét nghiệm", icon: FlaskRound },
             { path: "/staff/listpatients", label: "Danh sách bệnh nhân", icon: Users }
             
         );

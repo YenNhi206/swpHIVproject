@@ -147,24 +147,6 @@ export default function StaffDashboard() {
         </div>
       </div>
 
-      {/* Danh sách lịch hẹn hôm nay */}
-      <div className="bg-white shadow rounded-xl p-6 mb-8">
-        <h2 className="text-lg font-semibold mb-4 text-red-700">Lịch hẹn hôm nay</h2>
-        {todayAppointments.length === 0 ? (
-          <p>Không có lịch hẹn hôm nay.</p>
-        ) : (
-          <ul className="divide-y">
-            {todayAppointments.slice(0, 5).map((a) => (
-              <li key={a.id} className="py-2 flex justify-between items-center">
-                <span>{a.fullName} - {a.appointmentDate?.slice(11, 16)}</span>
-                <span className="text-sm text-gray-500">{a.status}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* Các nút chức năng */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
         <button
           onClick={() => navigate("/staff/appointments")}
@@ -186,7 +168,7 @@ export default function StaffDashboard() {
         </button>
       </div>
 
-      {/* Form thêm lịch hẹn  */}
+      {/* Form thêm lịch hẹn - Popup đẹp */}
       {showForm && (
         <div className="mt-8">
           <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-4xl mx-auto">
@@ -403,6 +385,6 @@ export default function StaffDashboard() {
         </div>
       )}
 
-    </div>
+    </div >
   );
 }

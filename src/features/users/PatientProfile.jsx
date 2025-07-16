@@ -4,15 +4,45 @@ import {
 } from 'lucide-react';
 import { message } from 'antd';
 
-const genderDisplayMap = { MALE: 'Nam', FEMALE: 'Nữ', OTHER: 'Khác' };
-const genderValueMap = { Nam: 'MALE', Nữ: 'FEMALE', Khác: 'OTHER' };
+const genderDisplayMap = {
+  MALE: 'Nam',
+  FEMALE: 'Nữ',
+  OTHER: 'Khác',
+  Nam: 'Nam',
+  Nữ: 'Nữ',
+  Khác: 'Khác',
+};
+
+const genderValueMap = {
+  Nam: 'MALE',
+  Nữ: 'FEMALE',
+  Khác: 'OTHER',
+};
+
+function normalizeGender(gender) {
+  if (!gender) return 'Khác';
+  const g = gender.trim().toUpperCase();
+  switch (g) {
+    case 'MALE':
+    case 'NAM':
+      return 'Nam';
+    case 'FEMALE':
+    case 'NỮ':
+      return 'Nữ';
+    case 'OTHER':
+    case 'KHÁC':
+      return 'Khác';
+    default:
+      return genderDisplayMap[gender.trim()] || 'Khác';
+  }
+}
 
 export default function PatientProfile() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [userInfo, setUserInfo] = useState({
     fullName: '',
-    gender: '',
+    gender: 'Khác',
     birthDate: '',
     phone: '',
     address: '',
@@ -20,75 +50,76 @@ export default function PatientProfile() {
     treatmentStartDate: '',
   });
 
-  // Lấy hồ sơ
   useEffect(() => {
-    fetch('http://localhost:8080/api/patients/profile', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    })
-      .then(async (res) => {
+    async function fetchProfile() {
+      setIsLoading(true);
+      try {
+        const res = await fetch('http://localhost:8080/api/patients/profile', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         if (!res.ok) throw new Error('Lỗi khi lấy hồ sơ');
-        return await res.json();
-      })
-      .then((data) => {
-        if (data) {
-          setUserInfo({
-            fullName: data.fullName || '',
-            gender: genderDisplayMap[data.gender] || '',
-            birthDate: data.birthDate ? data.birthDate.slice(0, 10) : '',
-            phone: data.phone || '',
-            address: data.address || '',
-            hivStatus: data.hivStatus || '',
-            treatmentStartDate: data.treatmentStartDate ? data.treatmentStartDate.slice(0, 10) : '',
-          });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
+        const data = await res.json();
+
+        setUserInfo({
+          fullName: data.fullName || '',
+          gender: normalizeGender(data.gender),
+          birthDate: data.birthDate ? data.birthDate.slice(0, 10) : '',
+          phone: data.phone || '',
+          address: data.address || '',
+          hivStatus: data.hivStatus || '',
+          treatmentStartDate: data.treatmentStartDate ? data.treatmentStartDate.slice(0, 10) : '',
+        });
+      } catch (error) {
         message.error('Không thể tải hồ sơ bệnh nhân');
-      })
-      .finally(() => setIsLoading(false));
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchProfile();
   }, []);
 
-  // Thay đổi input
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Lưu hồ sơ
-  const handleSave = () => {
+  const handleSave = async () => {
     const payload = {
       ...userInfo,
-      gender: genderValueMap[userInfo.gender] || userInfo.gender,
+      gender: genderValueMap[userInfo.gender] || 'OTHER',
     };
-    fetch('http://localhost:8080/api/patients/profile', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-      body: JSON.stringify(payload),
-    })
-      .then(async (res) => {
-        if (!res.ok) throw new Error('Lỗi khi cập nhật hồ sơ');
-        const data = await res.json();
-        setUserInfo({
-          ...data,
-          gender: genderDisplayMap[data.gender] || data.gender,
-          birthDate: data.birthDate ? data.birthDate.slice(0, 10) : '',
-          treatmentStartDate: data.treatmentStartDate ? data.treatmentStartDate.slice(0, 10) : '',
-        });
-        message.success('Hồ sơ đã được lưu thành công!');
-        setIsEditing(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        message.error('Không thể cập nhật hồ sơ');
+    try {
+      const res = await fetch('http://localhost:8080/api/patients/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(payload),
       });
+      if (!res.ok) throw new Error('Lỗi khi cập nhật hồ sơ');
+      const data = await res.json();
+
+      setUserInfo({
+        fullName: data.fullName || '',
+        gender: normalizeGender(data.gender),
+        birthDate: data.birthDate ? data.birthDate.slice(0, 10) : '',
+        phone: data.phone || '',
+        address: data.address || '',
+        hivStatus: data.hivStatus || '',
+        treatmentStartDate: data.treatmentStartDate ? data.treatmentStartDate.slice(0, 10) : '',
+      });
+      message.success('Hồ sơ đã được lưu thành công!');
+      setIsEditing(false);
+    } catch (error) {
+      message.error('Không thể cập nhật hồ sơ');
+      console.error(error);
+    }
   };
 
   return (
@@ -231,7 +262,6 @@ function ProfileField({ label, name, value, icon, isEditing, onChange, type = 't
             />
           )
         ) : (
-          // Hiển thị ngày theo yyyy-MM-dd nếu type = date
           <span className="text-lg text-gray-800">
             {type === 'date' && value ? value.slice(0, 10) : value}
           </span>
