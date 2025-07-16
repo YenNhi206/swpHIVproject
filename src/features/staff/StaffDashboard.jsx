@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, Users, AlertCircle, Plus } from "lucide-react";
+import { Calendar, Users, AlertCircle, Plus, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { User, Mail, Phone, Calendar as CalendarIcon } from "lucide-react";
+
 
 export default function StaffDashboard() {
   const navigate = useNavigate();
@@ -20,6 +22,25 @@ export default function StaffDashboard() {
     description: '',
     status: 'Chưa đến'
   });
+
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    dob: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -52,8 +73,8 @@ export default function StaffDashboard() {
         const doctorData = await docRes.json();
         const serviceData = await serRes.json();
 
-        setDoctors(Array.isArray(doctorData) ? doctorData : []);
-        setServices(Array.isArray(serviceData) ? serviceData : []);
+        setDoctors(Array.isArray(doctorData.content) ? doctorData.content : []);
+        setServices(Array.isArray(serviceData.content) ? serviceData.content : []);
       } catch (err) {
         console.error("Lỗi khi tải dữ liệu bác sĩ/dịch vụ:", err);
         setDoctors([]);
@@ -126,7 +147,6 @@ export default function StaffDashboard() {
         </div>
       </div>
 
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
         <button
           onClick={() => navigate("/staff/appointments")}
@@ -147,8 +167,6 @@ export default function StaffDashboard() {
           Thêm lịch hẹn
         </button>
       </div>
-
-
 
       {/* Form thêm lịch hẹn */}
       {

@@ -157,8 +157,8 @@ export default function PatientProfile() {
                 onChange={handleChange}
                 type="select"
                 options={[
-                  { value: 'Nam', label: 'Nam' },
                   { value: 'Nữ', label: 'Nữ' },
+                  { value: 'Nam', label: 'Nam' },
                   { value: 'Khác', label: 'Khác' },
                 ]}
               />

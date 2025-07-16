@@ -219,7 +219,6 @@ export default function AppointmentForm() {
       const appointmentDate = formData.time; // slot.startTime đã là ISO string
 
 
-
       const body = {
         doctorId: Number(selectedDoctor.id),
         serviceId: Number(selectedService.id),
@@ -257,12 +256,10 @@ export default function AppointmentForm() {
         navigate("/payment", {
           state: {
             appointmentData: {
-              doctor: doctors.find(d => d.id === Number(formData.doctorId))?.fullName,
-              date: formData.date,
-              time: new Date(formData.time).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              }),
+              doctorName: selectedDoctor.fullName,
+              appointmentDate: appointmentDate,
+              price: selectedService.price,
+              anonymous: false, // hoặc true nếu có hỗ trợ đặt lịch ẩn danh
             },
           },
         });
@@ -319,11 +316,9 @@ export default function AppointmentForm() {
                   value={formData.dob}
                   onChange={handleChange}
                   className="w-full p-3 border-none rounded-lg focus:outline-none"
+                  max={new Date().toISOString().split("T")[0]} // Chỉ cho phép chọn đến hôm nay
                 />
               </div>
-              {errors.dob && (
-                <p className="text-red-600 text-sm mt-1">{errors.dob}</p>
-              )}
             </div>
 
 
@@ -479,6 +474,9 @@ export default function AppointmentForm() {
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
+                min={
+                  new Date(Date.now() + 86400000).toISOString().split("T")[0]
+                }
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               />
               {errors.date && (
@@ -551,7 +549,6 @@ export default function AppointmentForm() {
     </div>
   );
 }
-
 
 
 
