@@ -44,11 +44,11 @@ import AdminAccountsPage from "./features/admin/AdminAccountsPage";
 import AdminStatisticsPage from "./features/admin/AdminStatisticsPage";
 import AdminFinancePage from "./features/admin/AdminFinancePage";
 import AdminBlogManagement from "./features/admin/AdminBlogManagemen";
-import StaffPatientsPage from "./features/staff/StaffPatientsPage";
 import StaffAppointment from "./features/staff/StaffAppointment";
 import StaffPatientListPage from "./features/staff/StaffPatientListPage";
 import StaffTestManagement from "./features/staff/StaffTestManagement";
 import DoctorPatientList from "./features/doctor/DoctorPatientList";
+import CreatePrescription from "./features/doctor/CreatePrescription";
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -180,6 +180,14 @@ export default function App() {
           }
         />
 
+        <Route
+          path="/doctor/prescriptions/create"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <CreatePrescription />
+            </MainLayout>
+          }
+        />
 
         <Route
           path="/anonymous-appointment"
@@ -351,14 +359,7 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route
-          path="/staff/patients"
-          element={
-            <MainLayout user={user} setUser={setUser}>
-              <StaffPatientsPage />
-            </MainLayout>
-          }
-        />
+
         <Route
           path="/staff/appointments"
           element={

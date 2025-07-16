@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { User, Phone, Venus, Mars, Pill, Circle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { User, Phone, Venus, Mars, Pill, Circle } from "lucide-react";
 
-// Màu sắc tương ứng với trạng thái đơn thuốc
 const statusColors = {
     ACTIVE: "text-green-600 bg-green-100",
     COMPLETED: "text-gray-600 bg-gray-200",
@@ -11,7 +10,6 @@ const statusColors = {
     MODIFIED: "text-blue-600 bg-blue-100",
 };
 
-// Dữ liệu giả bệnh nhân có phác đồ và trạng thái đơn thuốc
 const mockPatients = [
     {
         patientId: 1,
@@ -45,14 +43,13 @@ const mockPatients = [
     },
 ];
 
-export default function StaffPatientListPage() {
+export default function DoctorPatientList() {
     const [patients, setPatients] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Giả lập gọi API lấy dữ liệu bệnh nhân
         setTimeout(() => {
-            setPatients(mockPatients);
+            setPatients(mockPatients); // sau này đổi thành fetch API
         }, 500);
     }, []);
 
@@ -84,7 +81,6 @@ export default function StaffPatientListPage() {
                                 <tr
                                     key={index}
                                     className="border-t text-center hover:bg-red-50 cursor-pointer"
-                                    onClick={() => navigate(`/patient/${p.patientId}`)} // có thể dẫn tới trang chi tiết patient
                                 >
                                     <td className="p-3 flex items-center gap-2 justify-center">
                                         <User size={16} /> {p.fullName}
@@ -114,10 +110,9 @@ export default function StaffPatientListPage() {
                                     </td>
                                     <td className="p-3">
                                         <button
-                                            onClick={(e) => {
-                                                e.stopPropagation(); // tránh bấm row
-                                                navigate(`/treatment/create?patientId=${p.patientId}`);
-                                            }}
+                                            onClick={() =>
+                                                navigate(`/doctor/prescriptions/create?patientId=${p.patientId}`)
+                                            }
                                             className="text-sm text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded flex items-center gap-1 mx-auto"
                                         >
                                             <Pill size={14} /> Kê đơn
