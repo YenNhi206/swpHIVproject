@@ -168,42 +168,222 @@ export default function StaffDashboard() {
         </button>
       </div>
 
-      {/* Form thêm lịch hẹn */}
-      {
-        showForm && (
-          <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow mb-6">
-            <h3 className="text-lg font-semibold text-red-700 mb-4">Tạo lịch hẹn mới</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input type="text" placeholder="Họ tên" value={newAppointment.fullName} onChange={(e) => setNewAppointment({ ...newAppointment, fullName: e.target.value })} className="border p-2 rounded" required />
-              <input type="text" placeholder="Số điện thoại" value={newAppointment.phone} onChange={(e) => setNewAppointment({ ...newAppointment, phone: e.target.value })} className="border p-2 rounded" required />
-              <select value={newAppointment.gender} onChange={(e) => setNewAppointment({ ...newAppointment, gender: e.target.value })} className="border p-2 rounded">
-                <option value="Nam">Nam</option>
-                <option value="Nữ">Nữ</option>
-                <option value="Khác">Khác</option>
-              </select>
-              <input type="date" placeholder="Ngày sinh" value={newAppointment.birthDate} onChange={(e) => setNewAppointment({ ...newAppointment, birthDate: e.target.value })} className="border p-2 rounded" />
-              <input type="datetime-local" placeholder="Ngày hẹn" value={newAppointment.appointmentDate} onChange={(e) => setNewAppointment({ ...newAppointment, appointmentDate: e.target.value })} className="border p-2 rounded" required />
-              <select value={newAppointment.appointmentType} onChange={(e) => setNewAppointment({ ...newAppointment, appointmentType: e.target.value })} className="border p-2 rounded">
-                <option value="FIRST_VISIT">Khám lần đầu</option>
-                <option value="FOLLOW_UP">Tái khám</option>
-              </select>
-              <select value={newAppointment.serviceId} onChange={(e) => setNewAppointment({ ...newAppointment, serviceId: e.target.value })} className="border p-2 rounded" required>
-                <option value="">-- Chọn dịch vụ --</option>
-                {Array.isArray(services) && services.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-              </select>
-              <select value={newAppointment.doctorId} onChange={(e) => setNewAppointment({ ...newAppointment, doctorId: e.target.value })} className="border p-2 rounded" required>
-                <option value="">-- Chọn bác sĩ --</option>
-                {Array.isArray(doctors) && doctors.map(d => <option key={d.id} value={d.id}>{d.fullName}</option>)}
-              </select>
-              <textarea placeholder="Ghi chú" value={newAppointment.description} onChange={(e) => setNewAppointment({ ...newAppointment, description: e.target.value })} className="border p-2 rounded col-span-1 md:col-span-2"></textarea>
-            </div>
-            <div className="mt-4 flex gap-2">
-              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Lưu</button>
-              <button type="button" onClick={() => setShowForm(false)} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">Hủy</button>
-            </div>
-          </form>
-        )
-      }
+      {/* Form thêm lịch hẹn - Popup đẹp */}
+      {showForm && (
+        <div className="mt-8">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-4xl mx-auto">
+            <h2 className="text-xl font-bold mb-4">Thêm lịch hẹn</h2>
+
+            {/* Nút đóng */}
+            <button
+              onClick={() => setShowForm(false)}
+              className="absolute top-3 right-4 text-gray-500 hover:text-red-500 text-2xl"
+            >
+              &times;
+            </button>
+
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Họ tên */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Họ tên</label>
+                  <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                    <User className="w-5 h-5 text-gray-400 mx-3" />
+                    <input
+                      type="text"
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      className="w-full p-3 border-none rounded-lg focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Ngày sinh */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
+                  <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                    <CalendarIcon className="w-5 h-5 text-gray-400 mx-3" />
+                    <input
+                      type="date"
+                      name="dob"
+                      value={formData.dob}
+                      onChange={handleChange}
+                      className="w-full p-3 border-none rounded-lg focus:outline-none"
+                      max={new Date().toISOString().split("T")[0]} // Chỉ cho phép chọn đến hôm nay
+                    />
+                  </div>
+                </div>
+
+
+                {/* Email */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                    <Mail className="w-5 h-5 text-gray-400 mx-3" />
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full p-3 border-none rounded-lg focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Số điện thoại */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
+                  <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                    <Phone className="w-5 h-5 text-gray-400 mx-3" />
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full p-3 border-none rounded-lg focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Giới tính */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
+                  <div className="flex space-x-6 mt-1">
+                    {["Nữ", "Nam", "Khác"].map((gender) => (
+                      <label key={gender} className="flex items-center">
+                        <input
+                          type="radio"
+                          name="gender"
+                          value={gender}
+                          checked={formData.gender === gender}
+                          onChange={handleChange}
+                          className="mr-2 accent-red-500"
+                        />
+                        {gender}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Loại khám */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Loại khám</label>
+                  <div className="flex space-x-6 mt-1">
+                    {["Khám lần đầu", "Tái khám"].map((type) => (
+                      <label key={type} className="flex items-center">
+                        <input
+                          type="radio"
+                          name="visitType"
+                          value={type}
+                          checked={formData.visitType === type}
+                          onChange={handleChange}
+                          className="mr-2 accent-red-500"
+                        />
+                        {type}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Dịch vụ */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Dịch vụ</label>
+                  <select
+                    name="service"
+                    value={formData.service}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                  >
+                    <option value="">-- Chọn dịch vụ --</option>
+                    {services.map((s) => (
+                      <option key={s.id} value={s.name}>
+                        {s.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Bác sĩ */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Bác sĩ</label>
+                  <select
+                    name="doctor"
+                    value={formData.doctor}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                  >
+                    <option value="">-- Chọn bác sĩ --</option>
+                    {doctors.map((d) => (
+                      <option key={d.id} value={d.fullName}>
+                        {d.fullName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Ngày hẹn */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Ngày hẹn</label>
+                  <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                    <CalendarIcon className="w-5 h-5 text-gray-400 mx-3" />
+                    <input
+                      type="date"
+                      name="date"
+                      value={formData.date}
+                      onChange={handleChange}
+                      className="w-full p-3 border-none rounded-lg focus:outline-none"
+                      min={new Date(Date.now() + 86400000).toISOString().split("T")[0]} // ngày mai
+                    />
+                  </div>
+                </div>
+
+
+                {/* Giờ hẹn */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Giờ hẹn</label>
+                  <select
+                    name="time"
+                    value={formData.time}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                  >
+                    <option value="">-- Chọn khung giờ --</option>
+                    {availableTimeSlots.map((slot) => (
+                      <option key={slot.startTime} value={slot.startTime}>
+                        {new Date(slot.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Ghi chú */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Ghi chú</label>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    placeholder="Ghi chú thêm (nếu có)"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                  ></textarea>
+                </div>
+              </div>
+
+              {/* Nút submit */}
+              <div className="flex justify-end mt-6 gap-2">
+                <button type="submit" className="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700">
+                  Lưu
+                </button>
+                <button type="button" onClick={() => navigate(-1)} className="bg-gray-400 text-white px-5 py-2 rounded hover:bg-gray-500">
+                  Hủy
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div >
   );
