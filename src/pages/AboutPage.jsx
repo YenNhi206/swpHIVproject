@@ -331,11 +331,7 @@ export default function AboutPage() {
       </section>
 
 
-      <motion.div className="fixed bottom-24 right-6 flex flex-col gap-2 z-50" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-        <Button label="Nhắn tư vấn" onClick={() => window.open('https://www.facebook.com', '_blank')} icon={<MessageCircle className="w-4 h-4" />} />
-        <Button label="Đặt lịch khám" onClick={() => navigate('/appointments')} icon={<Calendar className="w-4 h-4" />} />
-        <Button label="Tài liệu" onClick={() => window.open('https://www.prepwatch.org/wp-content/uploads/2019/05/Care_and_Treatment_Guidelines_Vietnam_2017.pdf', '_blank')} icon={<FileText className="w-4 h-4" />} />
-      </motion.div>
+
     </motion.div>
   );
 }

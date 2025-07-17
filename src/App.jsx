@@ -12,7 +12,6 @@ import LoginPage from "./features/auth/LoginPage";
 import SignupPage from "./features/auth/SignupPage";
 
 import AdminDashboard from "./features/admin/AdminDashboard";
-import DoctorDashboard from "./features/doctor/DoctorDashboard";
 import PatientDashboard from "./features/patient/PatientDashboard";
 
 import Support from "./features/patient/Support";
@@ -32,7 +31,6 @@ import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmen
 import PaymentPage from "./features/payment/PaymentPage";
 import PaymentResultPage from "./features/payment/PaymentResultPage";
 
-import ChatWidget from "./components/ChatWidget";
 import Footer from "./components/Footer";
 
 import KnowledgePage from "./pages/KnowledgePage";
@@ -77,6 +75,7 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <HomePage />
+              <Footer />
             </MainLayout>
           }
         />
@@ -85,6 +84,8 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <AboutPage />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -93,6 +94,8 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <DoctorsPage />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -101,6 +104,8 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <ServicesPage />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -109,6 +114,8 @@ export default function App() {
           element={
             <MainLayout user={user} setUser={setUser}>
               <KnowledgePage />
+              <Footer />
+
             </MainLayout>
           }
         />
@@ -216,14 +223,7 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route
-          path="/doctor"
-          element={
-            <MainLayout user={user} setUser={setUser}>
-              <DoctorDashboard />
-            </MainLayout>
-          }
-        />
+
         <Route
           path="/staff"
           element={
@@ -379,7 +379,6 @@ export default function App() {
         />
       </Routes>
 
-      <ChatWidget />
     </Router>
   );
 }
