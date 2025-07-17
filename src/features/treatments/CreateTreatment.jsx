@@ -17,6 +17,7 @@ export default function CreateTreatment() {
     category: "",
     duration: "",
     evaluation: "",
+    active: true,
   });
   const [loading, setLoading] = useState(false);
 
@@ -55,7 +56,7 @@ export default function CreateTreatment() {
       }
 
       message.success("Tạo phác đồ thành công!");
-      navigate("/doctor/treatment");
+      navigate("/treatment");
     } catch (err) {
       console.error(err);
       message.error(err.message || "Lỗi khi tạo phác đồ");
@@ -198,7 +199,7 @@ export default function CreateTreatment() {
           </div>
 
           <div className="flex justify-end gap-2 pt-4">
-            <Button label="Quay lại" onClick={() => navigate("/doctor/treatment")} disabled={loading} />
+            <Button label="Quay lại" onClick={() => navigate("/treatment")} disabled={loading} />
             <Button label={loading ? "Đang lưu..." : "Lưu"} type="submit" disabled={loading} />
           </div>
         </form>

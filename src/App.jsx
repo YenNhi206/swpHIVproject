@@ -121,7 +121,7 @@ export default function App() {
           }
         />
         <Route
-          path="/doctor/treatment"
+          path="/treatment"
           element={
             <MainLayout user={user} setUser={setUser}>
               <TreatmentList />
@@ -177,7 +177,7 @@ export default function App() {
           }
         />
         <Route
-          path="/doctor/patientappointments"
+          path="/patientappointments"
           element={
             <MainLayout user={user} setUser={setUser}>
               <PatientAppointments />
@@ -185,7 +185,7 @@ export default function App() {
           }
         />
         <Route
-          path="/doctor/prescriptions/create"
+          path="/prescriptions/create"
           element={
             <MainLayout user={user} setUser={setUser}>
               <CreatePrescription />
@@ -290,7 +290,7 @@ export default function App() {
           }
         />
         <Route
-          path="/doctor/alerts"
+          path="/alerts"
           element={
             <MainLayout user={user} setUser={setUser}>
               <DoctorAlertsPage />
@@ -298,7 +298,7 @@ export default function App() {
           }
         />
         <Route
-          path="/doctor/patientlists"
+          path="/patientlists"
           element={
             <MainLayout user={user} setUser={setUser}>
               <DoctorPatientList />
@@ -306,7 +306,7 @@ export default function App() {
           }
         />
         <Route
-          path="/doctor/patientappointments/:patientId"
+          path="/patientappointments/:patientId"
           element={
             <MainLayout user={user} setUser={setUser}>
               <PatientDetailForDoctor />
