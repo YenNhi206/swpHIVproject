@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "../../components/Button";
-import { message } from "antd";
+import { message, Modal } from "antd";
 
 export default function TreatmentDetail() {
   const { id } = useParams();
@@ -35,6 +35,31 @@ export default function TreatmentDetail() {
     fetchTreatment();
   }, [id, navigate]);
 
+  const handleDelete = () => {
+    Modal.confirm({
+      title: "Xác nhận",
+      content: "Bạn có chắc muốn xóa phác đồ này không?",
+      okText: "Xóa",
+      okButtonProps: { danger: true },
+      cancelText: "Hủy",
+      onOk: async () => {
+        try {
+          const res = await fetch(`http://localhost:8080/api/arv-protocols/${id}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+            },
+          });
+          if (!res.ok) throw new Error("Xóa phác đồ thất bại");
+          message.success("Xóa phác đồ thành công");
+          navigate("/treatment");
+        } catch (error) {
+          message.error(error.message || "Lỗi khi xóa phác đồ");
+        }
+      },
+    });
+  };
+
   if (loading) {
     return (
       <motion.div className="p-6 min-h-screen bg-gradient-to-b from-red-50 to-white font-sans">
@@ -59,7 +84,9 @@ export default function TreatmentDetail() {
       </div>
       <div className="mb-4">
         <strong>Danh sách thuốc:</strong>{" "}
-        {Array.isArray(treatment.medications) ? treatment.medications.join(", ") : treatment.medications}
+        {Array.isArray(treatment.medications)
+          ? treatment.medications.join(", ")
+          : treatment.medications}
       </div>
       <div className="mb-4">
         <strong>Liều dùng:</strong> {treatment.dosage}
@@ -75,10 +102,15 @@ export default function TreatmentDetail() {
       </div>
 
       <div className="flex gap-4 mt-6">
-        <Button label="Quay lại" onClick={() => navigate("/doctor/treatment")} />
+        <Button label="Quay lại" onClick={() => navigate("/treatment")} />
         <Link to={`/treatment/edit/${treatment.id}`}>
           <Button label="Chỉnh sửa" />
         </Link>
+        <Button
+          label="Xóa"
+          onClick={handleDelete}
+          className="bg-red-600 hover:bg-red-700 text-white"
+        />
       </div>
     </motion.div>
   );

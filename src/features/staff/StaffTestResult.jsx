@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { PlusCircle, Edit3 } from "lucide-react";
 
 const StaffTestResult = () => {
-    const [mode, setMode] = useState("create"); // "create" | "update"
+    const [mode, setMode] = useState("create");
 
     const [createData, setCreateData] = useState({
         patientId: "",
@@ -17,35 +16,67 @@ const StaffTestResult = () => {
         id: "",
         resultValue: "",
         resultNote: "",
+        status: "",
     });
 
-    // MOCK DATA (bạn thay bằng fetch API nếu cần)
+    // MOCK DATA
     const patients = [{ id: 1, name: "Nguyễn Văn A" }, { id: 2, name: "Trần Thị B" }];
     const testCategories = [{ id: 1, name: "HIV" }, { id: 2, name: "Viêm gan" }];
     const doctors = [{ id: 10, name: "BS. Hoàng" }, { id: 11, name: "BS. Mai" }];
     const appointments = [{ id: 100, label: "Lịch 1" }, { id: 101, label: "Lịch 2" }];
 
-    // Tạo mới xét nghiệm
+    // Tạo mới xét nghiệm - sử dụng fetch
     const handleCreateSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("/api/test-results", createData);
+            const response = await fetch("/api/test-results", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(createData),
+            });
+
+            if (!response.ok) throw new Error("Tạo xét nghiệm thất bại");
             alert("Tạo xét nghiệm thành công!");
-        } catch (err) {
+        } catch (error) {
+            console.error("Lỗi khi tạo xét nghiệm:", error);
             alert("Lỗi khi tạo xét nghiệm.");
         }
     };
 
-    // Cập nhật kết quả xét nghiệm
+    // Cập nhật kết quả xét nghiệm - sử dụng fetch
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.patch(`/api/test-results/${updateData.id}/result`, {
-                resultValue: updateData.resultValue,
-                resultNote: updateData.resultNote,
+            // Cập nhật kết quả
+            const resultRes = await fetch(`/api/test-results/${updateData.id}/result`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    resultValue: updateData.resultValue,
+                    resultNote: updateData.resultNote,
+                }),
             });
+
+            // Cập nhật trạng thái nếu cần
+            const statusRes = await fetch(`/api/test-results/${updateData.id}/status`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    status: updateData.status,
+                }),
+            });
+
+            if (!resultRes.ok || !statusRes.ok) throw new Error("Cập nhật thất bại");
+
             alert("Cập nhật kết quả thành công!");
-        } catch (err) {
+        } catch (error) {
+            console.error("Lỗi khi cập nhật:", error);
             alert("Lỗi khi cập nhật kết quả.");
         }
     };
@@ -153,8 +184,6 @@ const StaffTestResult = () => {
                             Huỷ
                         </button>
                     </div>
-
-
                 </form>
             )}
 
@@ -225,7 +254,6 @@ const StaffTestResult = () => {
                     </div>
                 </form>
             )}
-
         </div>
     );
 };

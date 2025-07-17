@@ -41,10 +41,10 @@ export default function SidebarVertical({ user, handleLogout }) {
 
     if (user.role === "DOCTOR") {
         sidebarLinks.push(
-            { path: "/doctor/patientlists", label: "Danh sách bệnh nhân", icon: Users },
-            { path: "/doctor/patientappointments", label: "Lịch hẹn bệnh nhân", icon: Calendar },
-            { path: "/doctor/treatment", label: "Phác đồ điều trị", icon: FileText },
-            { path: "/doctor/alerts", label: "Cảnh báo", icon: AlertTriangle }
+            { path: "/patientlists", label: "Danh sách bệnh nhân", icon: Users },
+            { path: "/patientappointments", label: "Lịch hẹn bệnh nhân", icon: Calendar },
+            { path: "/treatment", label: "Phác đồ điều trị", icon: FileText },
+            { path: "/alerts", label: "Cảnh báo", icon: AlertTriangle }
         );
     }
 
@@ -53,7 +53,6 @@ export default function SidebarVertical({ user, handleLogout }) {
             { path: "/staff", label: "Trang Nhân viên", icon: Home },
             { path: "/staff/appointments", label: "Quản lý lịch hẹn", icon: Calendar },
             { path: "/staff/testsmanagement", label: "Quản lý kết quả", icon: Users },
-            { path: "/staff/patients", label: "Thêm bệnh nhân", icon: PlusCircle },
             { path: "/staff/testsresult", label: "Thêm/ Cập nhật xét nghiệm", icon: FlaskConical },
             { path: "/staff/listpatients", label: "Danh sách bệnh nhân", icon: Users }
 

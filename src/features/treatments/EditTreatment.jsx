@@ -26,13 +26,11 @@ export default function EditTreatment() {
         setForm({
           name: data.name || "",
           category: data.targetGroup || "",
-          ingredients: Array.isArray(data.medications) ? data.medications.join(", ") : data.medications || "",
+          ingredients: Array.isArray(data.medications) ? data.medications.join(", ") : "",
           dosage: data.dosage || "",
           indication: data.description || "",
           sideEffects: data.sideEffects || "",
           monitoring: data.monitoring || "",
-          duration: data.duration || "",
-          evaluation: data.evaluation || "",
           precautions: data.contraindications || "",
         });
       } catch (err) {
@@ -57,29 +55,39 @@ export default function EditTreatment() {
     setSaving(true);
 
     try {
+      const payload = {
+        name: form.name,
+        targetGroup: form.category,
+        medications:
+          form.ingredients.trim() === ""
+            ? []
+            : form.ingredients.split(",").map((s) => s.trim()),
+        dosage: form.dosage,
+        description: form.indication,
+        sideEffects: form.sideEffects,
+        monitoring: form.monitoring,
+        contraindications: form.precautions,
+      };
+
       const res = await fetch(`http://localhost:8080/api/arv-protocols/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
         },
-        body: JSON.stringify({
-          name: form.name,
-          targetGroup: form.category,
-          medications: form.ingredients.split(",").map((s) => s.trim()),
-          dosage: form.dosage,
-          description: form.indication,
-          sideEffects: form.sideEffects,
-          monitoring: form.monitoring,
-          contraindications: form.precautions,
-          duration: form.duration,
-          evaluation: form.evaluation,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.message || "Lỗi khi lưu thay đổi");
+        let errorMessage = "Lỗi khi lưu thay đổi";
+        try {
+          const errData = await res.json();
+          errorMessage = errData.message || errorMessage;
+        } catch {
+          const text = await res.text();
+          console.error("Server response:", text);
+        }
+        throw new Error(errorMessage);
       }
 
       message.success("Cập nhật phác đồ thành công!");
@@ -131,15 +139,13 @@ export default function EditTreatment() {
             </select>
           </div>
 
-          {/* Các field chia đều 2 cột */}
+          {/* Các field còn lại chia 2 cột */}
           {[
             { key: "ingredients", label: "Danh sách thuốc (cách nhau dấu phẩy)" },
             { key: "dosage", label: "Liều dùng" },
             { key: "indication", label: "Chỉ định" },
             { key: "sideEffects", label: "Tác dụng phụ" },
             { key: "monitoring", label: "Theo dõi" },
-            { key: "duration", label: "Thời gian điều trị" },
-            { key: "evaluation", label: "Đánh giá" },
             { key: "precautions", label: "Chống chỉ định / Thận trọng" },
           ].map(({ key, label }) => (
             <div key={key} className="col-span-1">
@@ -155,7 +161,7 @@ export default function EditTreatment() {
             </div>
           ))}
 
-          {/* Button */}
+          {/* Nút hành động */}
           <div className="col-span-full flex justify-end gap-3 mt-4">
             <Button
               label="Quay lại"
