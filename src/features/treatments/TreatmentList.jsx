@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "../../components/Button";
 import { message } from "antd";
@@ -7,9 +7,11 @@ import { message } from "antd";
 export default function TreatmentList() {
   const [treatments, setTreatments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchTreatments = async () => {
+      setLoading(true);
       try {
         const res = await fetch("http://localhost:8080/api/arv-protocols/active", {
           headers: {
@@ -30,13 +32,12 @@ export default function TreatmentList() {
     };
 
     fetchTreatments();
-  }, []);
+  }, [location.state?.refresh]); // chạy lại khi location.state.refresh thay đổi
 
   return (
     <motion.div className="p-6 min-h-screen bg-gradient-to-b from-red-50 to-white font-sans">
       <h1 className="text-3xl font-bold text-red-600 mb-6">Danh sách phác đồ</h1>
 
-      {/* Nút nằm bên phải */}
       <div className="mt-6 flex justify-end">
         <Link to="/treatment/create">
           <Button label="Tạo phác đồ mới" />

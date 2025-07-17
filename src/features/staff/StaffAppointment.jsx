@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Table, message, Select } from "antd";
+import { Tabs, Table, message, Select, Tooltip } from "antd";
 
 const { TabPane } = Tabs;
 
 const tabStatusMap = {
-  "Tất cả": "",
   "Chưa đến": "PENDING",
   "Đã đến": "CHECKED_IN",
   "Đang khám": "IN_PROGRESS",
@@ -20,10 +19,204 @@ const statusOptions = [
   { value: "ABSENT", label: "Vắng" },
 ];
 
+const bookingModeOptions = [
+  { value: "NORMAL", label: "Lịch thường" },
+  { value: "ANONYMOUS", label: "Lịch Online" },
+  { value: "ONLINE_ANONYMOUS", label: "Lịch Online Ẩn danh" },
+];
+
+// Columns cho lịch thường (bạn giữ nguyên cột này y như cũ)
+const columnsNormal = [
+  {
+    title: "Họ tên / Bí danh",
+    render: (_, record) => record.fullName || record.aliasName || <i>Chưa cung cấp</i>,
+    width: 150,
+  },
+  {
+    title: "Số điện thoại",
+    dataIndex: "phone",
+    width: 120,
+  },
+  {
+    title: "Giới tính",
+    dataIndex: "gender",
+    width: 80,
+  },
+  {
+    title: "Ngày hẹn",
+    dataIndex: "appointmentDate",
+    render: (text) => new Date(text).toLocaleString("vi-VN"),
+    width: 180,
+  },
+  {
+    title: "Dịch vụ",
+    dataIndex: "serviceName",
+    width: 130,
+  },
+  {
+    title: "Loại lịch hẹn",
+    dataIndex: "appointmentType",
+    render: (text) =>
+      text === "FIRST_VISIT" ? "Khám lần đầu" : text === "FOLLOW_UP" ? "Tái khám" : text,
+    width: 120,
+  },
+  {
+    title: "Giá tiền",
+    dataIndex: "price",
+    render: (text) => (text ? `${text} đ` : "Miễn phí"),
+    width: 100,
+  },
+  {
+    title: "Bác sĩ",
+    render: (_, record) => (
+      <>
+        <div>{record.doctorName || <i>Chưa chỉ định</i>}</div>
+        {record.specialization && (
+          <div style={{ fontSize: 11, color: "#888", fontStyle: "italic" }}>
+            {record.specialization}
+          </div>
+        )}
+      </>
+    ),
+    width: 140,
+  },
+  {
+    title: "Mô tả",
+    dataIndex: "description",
+    ellipsis: true,
+    render: (text) => (
+      <Tooltip title={text}>
+        <div
+          style={{
+            maxWidth: 150,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {text || <i>Không có</i>}
+        </div>
+      </Tooltip>
+    ),
+    width: 150,
+  },
+  {
+    title: "Trạng thái",
+    key: "status",
+    render: (_, record) => (
+      <Select
+        value={record.status}
+        options={statusOptions}
+        style={{ width: 160 }}
+        onChange={(value) => record.handleStatusUpdate(record.id, value)}
+        loading={record.updating}
+      />
+    ),
+    width: 160,
+  },
+];
+
+// Columns cho lịch online
+const columnsAnonymous = [
+  {
+    title: "Bí danh",
+    dataIndex: "aliasName",
+    width: 150,
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+    width: 150,
+  },
+  {
+    title: "Số điện thoại",
+    dataIndex: "phone",
+    width: 120,
+  },
+  {
+    title: "Giới tính",
+    dataIndex: "gender",
+    width: 80,
+  },
+  {
+    title: "Ngày hẹn",
+    dataIndex: "appointmentDate",
+    render: (text) => new Date(text).toLocaleString("vi-VN"),
+    width: 180,
+  },
+  {
+    title: "Mô tả",
+    dataIndex: "description",
+    ellipsis: true,
+    render: (text) => (
+      <Tooltip title={text}>
+        <div
+          style={{
+            maxWidth: 150,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {text || <i>Không có</i>}
+        </div>
+      </Tooltip>
+    ),
+    width: 150,
+  },
+];
+
+// Columns cho lịch online ẩn danh
+const columnsOnlineAnonymous = [
+  {
+    title: "Bí danh",
+    dataIndex: "aliasName",
+    width: 150,
+  },
+
+  {
+    title: "Số điện thoại",
+    dataIndex: "phone",
+    width: 120,
+  },
+  {
+    title: "Giới tính",
+    dataIndex: "gender",
+    width: 80,
+  },
+  {
+    title: "Ngày hẹn",
+    dataIndex: "appointmentDate",
+    render: (text) => new Date(text).toLocaleString("vi-VN"),
+    width: 180,
+  },
+  {
+    title: "Mô tả",
+    dataIndex: "description",
+    ellipsis: true,
+    render: (text) => (
+      <Tooltip title={text}>
+        <div
+          style={{
+            maxWidth: 150,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {text || <i>Không có</i>}
+        </div>
+      </Tooltip>
+    ),
+    width: 150,
+  },
+];
+
 export default function StaffAppointment() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("Tất cả");
+  const [activeTab, setActiveTab] = useState("Chưa đến");
+  const [bookingMode, setBookingMode] = useState("NORMAL");
   const [updatingId, setUpdatingId] = useState(null);
 
   const token = JSON.parse(localStorage.getItem("user"))?.token;
@@ -31,14 +224,18 @@ export default function StaffAppointment() {
   const fetchAppointments = async () => {
     setLoading(true);
     try {
-      if (!token) {
-        throw new Error("Vui lòng đăng nhập để xem lịch hẹn.");
-      }
+      if (!token) throw new Error("Vui lòng đăng nhập để xem lịch hẹn.");
 
+      let url = "";
       const status = tabStatusMap[activeTab];
-      const url = status
-        ? `http://localhost:8080/api/appointments?status=${status}`
-        : "http://localhost:8080/api/appointments";
+
+      if (bookingMode === "NORMAL") {
+        url = `http://localhost:8080/api/appointments?status=${status}`;
+      } else if (bookingMode === "ANONYMOUS") {
+        url = `http://localhost:8080/api/appointments/anonymous?status=ONLINE_ANONYMOUS_PENDING`;
+      } else if (bookingMode === "ONLINE_ANONYMOUS") {
+        url = `http://localhost:8080/api/appointments/online-anonymous?status=ONLINE_PENDING`;
+      }
 
       const res = await fetch(url, {
         headers: {
@@ -47,17 +244,13 @@ export default function StaffAppointment() {
         },
       });
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Failed to fetch appointments: ${res.status} - ${errorText}`);
-      }
+      if (!res.ok) throw new Error("Lỗi khi gọi API lịch hẹn");
 
       const data = await res.json();
-      const appointmentsData = data.content ? data.content : Array.isArray(data) ? data : [];
-      setAppointments(appointmentsData);
+      setAppointments(Array.isArray(data) ? data : data.content || []);
     } catch (err) {
-      console.error("Error fetching appointments:", err);
-      message.error("Lỗi khi tải lịch hẹn: " + (err.message || "Lỗi không xác định"));
+      message.error("Lỗi khi tải lịch hẹn: " + err.message);
+      setAppointments([]);
     } finally {
       setLoading(false);
     }
@@ -65,7 +258,7 @@ export default function StaffAppointment() {
 
   useEffect(() => {
     fetchAppointments();
-  }, [activeTab, token]);
+  }, [activeTab, bookingMode]);
 
   const handleStatusUpdate = async (id, newStatus) => {
     setUpdatingId(id);
@@ -73,16 +266,13 @@ export default function StaffAppointment() {
       const res = await fetch(`http://localhost:8080/api/appointments/${id}/status`, {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ status: newStatus }),
       });
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Cập nhật lỗi: ${res.status} - ${errorText}`);
-      }
+      if (!res.ok) throw new Error("Cập nhật trạng thái thất bại");
 
       const updated = await res.json();
       setAppointments((prev) =>
@@ -90,73 +280,62 @@ export default function StaffAppointment() {
       );
       message.success("Cập nhật trạng thái thành công");
     } catch (err) {
-      console.error("Error updating status:", err);
-      message.error("Lỗi khi cập nhật trạng thái: " + err.message);
+      message.error(err.message);
     } finally {
       setUpdatingId(null);
     }
   };
 
-  const columns = [
-    {
-      title: "Họ tên / Bí danh",
-      dataIndex: "fullName",
-      key: "fullName",
-      render: (text, record) => text || record.aliasName || <i>Chưa cung cấp</i>,
-    },
-    {
-      title: "Bác sĩ",
-      dataIndex: "doctorName",
-      key: "doctorName",
-      render: (text) => text || <i>Chưa chỉ định</i>,
-    },
-    {
-      title: "Dịch vụ",
-      dataIndex: "serviceName",
-      key: "serviceName",
-    },
-    {
-      title: "Giới tính",
-      dataIndex: "gender",
-      key: "gender",
-    },
-    {
-      title: "Ngày hẹn",
-      dataIndex: "appointmentDate",
-      key: "appointmentDate",
-      render: (text) => new Date(text).toLocaleString("vi-VN"),
-    },
-    {
-      title: "Trạng thái",
-      key: "actions",
-      render: (_, record) => (
-        <Select
-          value={record.status}
-          onChange={(value) => handleStatusUpdate(record.id, value)}
-          options={statusOptions}
-          style={{ width: 200 }}
-          loading={updatingId === record.id}
-        />
-      ),
-    },
-  ];
+  const appointmentsWithHandlers = appointments.map((item) => ({
+    ...item,
+    handleStatusUpdate,
+    updating: updatingId === item.id,
+  }));
+
+  const getColumns = () => {
+    if (bookingMode === "ANONYMOUS") return columnsAnonymous;
+    if (bookingMode === "ONLINE_ANONYMOUS") return columnsOnlineAnonymous;
+    return columnsNormal;
+  };
 
   return (
-    <div className="p-6">
+    <div
+      className="p-6"
+      style={{ maxWidth: 1200, margin: "auto", overflowX: "auto", background: "#fff", borderRadius: 8 }}
+    >
       <h2 className="text-xl font-semibold mb-4">Quản lý lịch hẹn</h2>
-      <Tabs activeKey={activeTab} onChange={setActiveTab}>
-        {Object.keys(tabStatusMap).map((key) => (
-          <TabPane tab={key} key={key}>
-            <Table
-              columns={columns}
-              dataSource={appointments}
-              rowKey="id"
-              loading={loading}
-              pagination={{ pageSize: 10 }}
-            />
-          </TabPane>
-        ))}
-      </Tabs>
+
+      <div style={{ marginBottom: 12, display: "flex", alignItems: "center", gap: 16 }}>
+        <div>
+          <span style={{ marginRight: 8 }}>Chọn loại lịch:</span>
+          <Select
+            options={bookingModeOptions}
+            value={bookingMode}
+            onChange={setBookingMode}
+            style={{ width: 180 }}
+          />
+        </div>
+
+        {/* Chỉ show tab trạng thái khi là lịch thường */}
+        {bookingMode === "NORMAL" && (
+          <div style={{ flex: 1 }}>
+            <Tabs activeKey={activeTab} onChange={setActiveTab} type="line" size="small">
+              {Object.keys(tabStatusMap).map((key) => (
+                <TabPane tab={key} key={key} />
+              ))}
+            </Tabs>
+          </div>
+        )}
+      </div>
+
+      <Table
+        columns={getColumns()}
+        dataSource={appointmentsWithHandlers}
+        rowKey="id"
+        loading={loading}
+        pagination={{ pageSize: 10 }}
+        scroll={{ x: 1300 }}
+      />
     </div>
   );
 }
