@@ -11,14 +11,20 @@ export default function Support() {
     phone: '',
     gender: 'FEMALE',
     date: '',
+    time: '', // Thêm trường này để chọn giờ
     problem: '',
-    doctorId: '',
+    doctor: '', // Lưu tên bác sĩ
+    service: '', // Lưu tên dịch vụ
+    birthDate: '',
   });
 
   const [doctors, setDoctors] = useState([]);
+  const [services, setServices] = useState([]);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Lấy danh sách bác sĩ
   useEffect(() => {
     fetch('http://localhost:8080/api/doctors')
       .then(res => res.json())
@@ -27,6 +33,36 @@ export default function Support() {
       })
       .catch(() => setError('Không thể tải danh sách bác sĩ.'));
   }, []);
+
+  // Lấy danh sách dịch vụ
+  useEffect(() => {
+    fetch('http://localhost:8080/api/services')
+      .then(res => res.json())
+      .then(data => setServices(data))
+      .catch(() => setError('Không thể tải danh sách dịch vụ.'));
+  }, []);
+
+  // Lấy giờ trống khi chọn bác sĩ và ngày
+  useEffect(() => {
+    const fetchAvailableTimeSlots = async () => {
+      setAvailableTimeSlots([]);
+      setFormData(prev => ({ ...prev, time: '' })); // reset time khi đổi bác sĩ/ngày
+      if (!formData.doctor || !formData.date) return;
+      const selectedDoctor = doctors.find(d => d.fullName === formData.doctor);
+      if (!selectedDoctor) return;
+      try {
+        const res = await fetch(
+          `http://localhost:8080/api/doctors/${selectedDoctor.id}/schedules?date=${formData.date}`
+        );
+        const data = await res.json();
+        setAvailableTimeSlots(data || []);
+      } catch {
+        setAvailableTimeSlots([]);
+      }
+    };
+    fetchAvailableTimeSlots();
+    // eslint-disable-next-line
+  }, [formData.doctor, formData.date, doctors]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +74,23 @@ export default function Support() {
     setIsLoading(true);
     setError('');
 
+    const selectedDoctor = doctors.find(d => d.fullName === formData.doctor);
+    const selectedService = services.find(s => s.name === formData.service);
+
+    if (!selectedDoctor || !selectedService) {
+      setError('Vui lòng chọn dịch vụ và bác sĩ!');
+      setIsLoading(false);
+      return;
+    }
+    if (!formData.time) {
+      setError('Vui lòng chọn giờ tư vấn!');
+      setIsLoading(false);
+      return;
+    }
+
+    // appointmentDate là ISO string từ slot đã chọn
+    const appointmentDate = formData.time;
+
     const payload = {
       fullName: formData.name,
       email: formData.email,
@@ -46,8 +99,10 @@ export default function Support() {
       date: formData.date,
       description: formData.problem,
       aliasName: formData.name,
-      birthDate: '',
-      doctorId: Number(formData.doctorId), // Sửa ở đây: convert sang số
+      birthDate: formData.birthDate,
+      doctorId: selectedDoctor.id,
+      serviceId: selectedService.id,
+      appointmentDate,
     };
 
     try {
@@ -58,20 +113,22 @@ export default function Support() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || 'Đặt lịch thất bại');
+      if (!res.ok) throw new Error(data?.message || data?.error || 'Đặt lịch thất bại');
 
       // Lấy giờ từ appointmentDate trả về
-      const appointmentDate = new Date(data.appointmentDate);
-      const timeString = appointmentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const appointmentDateObj = new Date(data.appointmentDate || appointmentDate);
+      const timeString = appointmentDateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      const selectedDoctor = doctors.find(d => d.id === Number(formData.doctorId));
       navigate('/payment', {
         state: {
           appointmentData: {
-            doctor: selectedDoctor?.fullName || 'Không xác định',
+            doctorName: selectedDoctor.fullName,
+            appointmentDate: appointmentDate,
             date: formData.date,
             time: timeString,
             anonymous: false,
+            service: selectedService.name,
+            price: selectedService.price,
           },
         },
       });
@@ -81,6 +138,9 @@ export default function Support() {
       setIsLoading(false);
     }
   };
+
+  // Lấy giá dịch vụ đã chọn để hiển thị
+  const selectedService = services.find(s => s.name === formData.service);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white p-4">
@@ -139,16 +199,67 @@ export default function Support() {
                 className="w-full p-3 border border-gray-300 rounded-lg"
               />
             </div>
+          </div>
 
+          {/* Chọn giờ trống */}
+          <div>
+            <label>Giờ tư vấn</label>
+            <select
+              name="time"
+              value={formData.time}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg"
+              disabled={availableTimeSlots.length === 0}
+            >
+              <option value="">
+                {availableTimeSlots.length > 0 ? "-- Chọn giờ trống --" : "Không có giờ trống"}
+              </option>
+              {availableTimeSlots.map(slot => (
+                <option key={slot.id} value={slot.startTime}>
+                  {new Date(slot.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Ngày sinh (nếu cần) */}
+          <div>
+            <label>Ngày sinh</label>
+            <input
+              type="date"
+              name="birthDate"
+              value={formData.birthDate}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-lg"
+            />
+          </div>
+
+          {/* Chọn dịch vụ */}
+          <div>
+            <label>Dịch vụ</label>
+            <select name="service" value={formData.service} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-lg">
+              <option value="">-- Chọn dịch vụ --</option>
+              {services.map(service => (
+                <option key={service.id} value={service.name}>
+                  {service.name} - {service.price?.toLocaleString()} VND
+                </option>
+              ))}
+            </select>
+            {selectedService && (
+              <div className="text-green-600 font-bold mt-2">
+                Giá tư vấn: {selectedService.price?.toLocaleString()} VND
+              </div>
+            )}
           </div>
 
           {/* Chọn bác sĩ */}
           <div>
             <label>Bác sĩ</label>
-            <select name="doctorId" value={formData.doctorId} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-lg">
+            <select name="doctor" value={formData.doctor} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-lg">
               <option value="">-- Chọn bác sĩ --</option>
               {doctors.map((doctor) => (
-                <option key={doctor.id} value={doctor.id}>
+                <option key={doctor.id} value={doctor.fullName}>
                   {doctor.fullName} - {doctor.specialization}
                 </option>
               ))}
