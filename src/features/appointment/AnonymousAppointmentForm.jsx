@@ -1,25 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Stethoscope } from 'lucide-react';
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Stethoscope, Calendar as CalendarIcon } from 'lucide-react';
 
 export default function AnonymousAppointmentForm() {
   const navigate = useNavigate();
 
+  
   const [formData, setFormData] = useState({
     aliasName: '',
     gender: 'FEMALE',
     description: '',
     date: '',
+    time: '',
     birthDate: '',
     doctorId: '',
     phone: '',
+    serviceId: '',
   });
 
   const [doctors, setDoctors] = useState([]);
+  const [services, setServices] = useState([]);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Lấy danh sách bác sĩ
   useEffect(() => {
     fetch('http://localhost:8080/api/doctors')
       .then(res => res.json())
@@ -30,56 +35,99 @@ export default function AnonymousAppointmentForm() {
       .catch(() => setError('Không thể tải danh sách bác sĩ'));
   }, []);
 
+  // Lấy danh sách dịch vụ
+  useEffect(() => {
+    fetch('http://localhost:8080/api/services')
+      .then(res => res.json())
+      .then(data => setServices(data))
+      .catch(() => setError('Không thể tải danh sách dịch vụ'));
+  }, []);
+
+  // Lấy giờ trống khi chọn bác sĩ và ngày
+  useEffect(() => {
+    const fetchAvailableTimeSlots = async () => {
+      setAvailableTimeSlots([]);
+      setFormData(prev => ({ ...prev, time: '' })); // reset time khi đổi bác sĩ/ngày
+      if (!formData.doctorId || !formData.date) return;
+      try {
+        const res = await fetch(
+          `http://localhost:8080/api/doctors/${formData.doctorId}/schedules?date=${formData.date}`
+        );
+        const data = await res.json();
+        setAvailableTimeSlots(data || []);
+      } catch {
+        setAvailableTimeSlots([]);
+      }
+    };
+    fetchAvailableTimeSlots();
+    // eslint-disable-next-line
+  }, [formData.doctorId, formData.date]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setError('');
 
-    const payload = {
-      aliasName: formData.aliasName.trim(),
-      gender: formData.gender,
-      description: formData.description.trim(),
-      date: formData.date,
-      birthDate: formData.birthDate?.trim() ? formData.birthDate : null,
-      doctorId: formData.doctorId ? Number(formData.doctorId) : null,
-      phone: formData.phone.trim(),
-    };
+  if (!formData.time) {
+    setError('Vui lòng chọn giờ tư vấn!');
+    setIsLoading(false);
+    return;
+  }
+  if (!formData.serviceId) {
+    setError('Vui lòng chọn dịch vụ!');
+    setIsLoading(false);
+    return;
+  }
 
-    console.log('Payload gửi lên:', payload);
-
-    try {
-      const res = await fetch('http://localhost:8080/api/appointments/anonymous-online', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      const text = await res.text();
-      const data = text ? JSON.parse(text) : null;
-
-      if (!res.ok) throw new Error(data?.error || 'Đặt lịch thất bại');
-
-      navigate('/payment', {
-        state: {
-          appointmentData: {
-            doctor: doctors.find(d => d.id === Number(formData.doctorId))?.fullName,
-            date: formData.date,
-            time: '',
-            anonymous: true,
-          },
-        },
-      });
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
+  const payload = {
+    aliasName: formData.aliasName.trim(),
+    gender: formData.gender,
+    description: formData.description.trim(),
+    date: formData.date,
+    birthDate: formData.birthDate?.trim() ? formData.birthDate : null,
+    doctorId: formData.doctorId ? Number(formData.doctorId) : null,
+    phone: formData.phone.trim(),
+    appointmentDate: formData.time, // ISO string từ slot đã chọn
+    serviceId: formData.serviceId ? Number(formData.serviceId) : null,
   };
+
+  try {
+    const res = await fetch('http://localhost:8080/api/appointments/anonymous-online', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const text = await res.text();
+    const data = text ? JSON.parse(text) : null;
+
+    if (!res.ok) throw new Error(data?.error || 'Đặt lịch thất bại');
+
+    const selectedDoctor = doctors.find(d => d.id === Number(formData.doctorId));
+    const selectedService = services.find(s => s.id === Number(formData.serviceId));
+    const appointmentDate = data.appointmentDate || formData.time;
+
+    navigate('/payment', {
+      state: {
+        appointmentData: {
+          doctorName: selectedDoctor?.fullName,
+          appointmentDate: appointmentDate,
+          price: selectedService?.price,
+          anonymous: true,
+        },
+      },
+    });
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white p-4">
@@ -141,18 +189,21 @@ export default function AnonymousAppointmentForm() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Ngày tư vấn</label>
+              <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
+            <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+              <CalendarIcon className="w-5 h-5 text-gray-400 mx-3" />
               <input
                 type="date"
-                name="date"
-                required
-                value={formData.date}
+                name="birthDate"
+                value={formData.birthDate}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-200 rounded-lg"
-                min={new Date(Date.now() + 86400000).toISOString().split("T")[0]} // Ngày mai
+                className="w-full p-3 border-none rounded-lg focus:outline-none"
+                max={new Date().toISOString().split("T")[0]}
               />
             </div>
+          </div>
+
 
             <div>
               <label>Số điện thoại</label>
@@ -167,20 +218,36 @@ export default function AnonymousAppointmentForm() {
               />
             </div>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
-            <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-              <CalendarIcon className="w-5 h-5 text-gray-400 mx-3" />
+      
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Ngày tư vấn</label>
               <input
                 type="date"
-                name="dob"
-                value={formData.dob}
+                name="date"
+                required
+                value={formData.date}
                 onChange={handleChange}
-                className="w-full p-3 border-none rounded-lg focus:outline-none"
-                max={new Date().toISOString().split("T")[0]} // Chỉ cho phép chọn đến hôm nay
+                className="w-full p-3 border border-gray-200 rounded-lg"
+                min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
               />
             </div>
+        
+          <div>
+            <label>Chọn dịch vụ</label>
+            <select
+              name="serviceId"
+              value={formData.serviceId}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-200 rounded-lg"
+              required
+            >
+              <option value="">-- Chọn dịch vụ --</option>
+              {services.map(service => (
+                <option key={service.id} value={service.id}>
+                  {service.name} - {service.price?.toLocaleString()} VND
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -196,6 +263,27 @@ export default function AnonymousAppointmentForm() {
               {doctors.map((doctor) => (
                 <option key={doctor.id} value={doctor.id}>
                   {doctor.fullName} ({doctor.specialization})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label>Giờ tư vấn</label>
+            <select
+              name="time"
+              value={formData.time}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border border-gray-200 rounded-lg"
+              disabled={availableTimeSlots.length === 0}
+            >
+              <option value="">
+                {availableTimeSlots.length > 0 ? "-- Chọn giờ trống --" : "Không có giờ trống"}
+              </option>
+              {availableTimeSlots.map(slot => (
+                <option key={slot.id} value={slot.startTime}>
+                  {new Date(slot.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </option>
               ))}
             </select>
