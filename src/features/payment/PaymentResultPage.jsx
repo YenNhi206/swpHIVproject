@@ -12,7 +12,7 @@ export default function PaymentResultPage() {
     const resultCode = searchParams.get('resultCode');
     const orderId = searchParams.get('orderId');
     const message = searchParams.get('message');
-
+    const appointmentId = searchParams.get('appointmentId');
     if (!orderId || !resultCode) {
       setIsSuccess(false);
       setMessage('Không nhận được thông tin từ MoMo.');
@@ -23,6 +23,26 @@ export default function PaymentResultPage() {
     if (resultCode === '0') {
       setIsSuccess(true);
       setMessage('Thanh toán thành công!');
+      // Gọi API xác nhận thanh toán
+      if (appointmentId) {
+        fetch(`http://localhost:8080/api/appointments/confirm-payment/${appointmentId}`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+          },
+        })
+        .then(res => {
+          if (!res.ok) throw new Error("Xác nhận thanh toán thất bại");
+          return res.json();
+        })
+        .then(data => {
+          console.log("Xác nhận thanh toán thành công:", data);
+        })
+        .catch(err => {
+          console.error(err);
+          setMessage('Thanh toán thành công, nhưng xác nhận thất bại.');
+        });
+      }
     } else {
       setIsSuccess(false);
       setMessage(`Thanh toán thất bại: ${message || 'Vui lòng thử lại.'}`);
@@ -62,3 +82,4 @@ export default function PaymentResultPage() {
     </div>
   );
 }
+

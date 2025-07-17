@@ -260,7 +260,7 @@ export default function App() {
         <Route
           path="/payment"
           element={
-            <AuthLayout>
+            <AuthLayout user={user} setUser={setUser}>
               <PaymentPage />
             </AuthLayout>
           }
