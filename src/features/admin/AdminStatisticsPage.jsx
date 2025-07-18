@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Table } from 'antd';
-import axios from 'axios';
 
 export default function AdminStatisticsPage() {
   const [doctorCount, setDoctorCount] = useState(0);
@@ -15,45 +14,54 @@ export default function AdminStatisticsPage() {
 
   const token = localStorage.getItem('token');
 
+  // Hàm fetch bác sĩ
+  const fetchDoctors = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/doctors', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!response.ok) throw new Error('Lỗi khi lấy bác sĩ');
+      const data = await response.json();
+      setDoctors(data.content || data);
+      setDoctorCount(data.totalElements || data.length || 0);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Hàm fetch bệnh nhân
+  const fetchPatients = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/patients', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!response.ok) throw new Error('Lỗi khi lấy bệnh nhân');
+      const data = await response.json();
+      setPatients(data.content || data);
+      setPatientCount(data.totalElements || data.length || 0);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Hàm fetch lịch hẹn
+  const fetchAppointments = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/appointments', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!response.ok) throw new Error('Lỗi khi lấy lịch hẹn');
+      const data = await response.json();
+      setAppointments(data.content || data);
+      setTotalAppointments(data.totalElements || data.length || 0);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchDoctorCount = async () => {
-      try {
-        const res = await axios.get('http://localhost:8080/api/doctors', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setDoctors(res.data.content || res.data); // Gán danh sách
-        setDoctorCount(res.data.totalElements || res.data.length || 0);
-      } catch (error) {
-        console.error('Lỗi khi lấy bác sĩ:', error);
-      }
-    };
-
-    const fetchPatientCount = async () => {
-      try {
-        const res = await axios.get('http://localhost:8080/api/patients', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setPatients(res.data.content || res.data);
-        setPatientCount(res.data.totalElements || res.data.length || 0);
-      } catch (error) {
-        console.error('Lỗi khi lấy bệnh nhân:', error);
-      }
-    };
-
-    const fetchAppointments = async () => {
-      try {
-        const res = await axios.get('http://localhost:8080/api/appointments', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setAppointments(res.data.content || res.data);
-        setTotalAppointments(res.data.totalElements || res.data.length || 0);
-      } catch (error) {
-        console.error('Lỗi khi lấy lịch hẹn:', error);
-      }
-    };
-
-    fetchDoctorCount();
-    fetchPatientCount();
+    fetchDoctors();
+    fetchPatients();
     fetchAppointments();
   }, []);
 
@@ -67,7 +75,6 @@ export default function AdminStatisticsPage() {
     setSelectedType(prev => prev === type ? "" : type); // toggle
   };
 
-  // Tùy theo selectedType, lấy data và cột
   const getTableProps = () => {
     switch (selectedType) {
       case 'doctors':
@@ -135,8 +142,8 @@ export default function AdminStatisticsPage() {
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-4 text-red-700">
             Danh sách {selectedType === 'doctors' ? 'bác sĩ' :
-                      selectedType === 'patients' ? 'bệnh nhân' :
-                      'lịch hẹn'}
+              selectedType === 'patients' ? 'bệnh nhân' :
+                'lịch hẹn'}
           </h2>
           <Table
             dataSource={data}
