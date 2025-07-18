@@ -1,53 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Stethoscope, Calendar as CalendarIcon } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Stethoscope, Calendar as CalendarIcon } from "lucide-react";
 
 export default function AnonymousAppointmentForm() {
   const navigate = useNavigate();
 
-  
   const [formData, setFormData] = useState({
-    aliasName: '',
-    gender: 'FEMALE',
-    description: '',
-    date: '',
-    time: '',
-    birthDate: '',
-    doctorId: '',
-    phone: '',
-    serviceId: '',
+    aliasName: "",
+    gender: "FEMALE",
+    description: "",
+    date: "",
+    time: "",
+    birthDate: "",
+    doctorId: "",
+    phone: "",
+    serviceId: "",
   });
 
   const [doctors, setDoctors] = useState([]);
   const [services, setServices] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // Lấy danh sách bác sĩ
   useEffect(() => {
-    fetch('http://localhost:8080/api/doctors')
-      .then(res => res.json())
-      .then(data => {
+    fetch("http://localhost:8080/api/doctors")
+      .then((res) => res.json())
+      .then((data) => {
         const list = data.content || [];
         setDoctors(list);
       })
-      .catch(() => setError('Không thể tải danh sách bác sĩ'));
+      .catch(() => setError("Không thể tải danh sách bác sĩ"));
   }, []);
 
   // Lấy danh sách dịch vụ
   useEffect(() => {
-    fetch('http://localhost:8080/api/services')
-      .then(res => res.json())
-      .then(data => setServices(data))
-      .catch(() => setError('Không thể tải danh sách dịch vụ'));
+    fetch("http://localhost:8080/api/services")
+      .then((res) => res.json())
+      .then((data) => setServices(data))
+      .catch(() => setError("Không thể tải danh sách dịch vụ"));
   }, []);
 
   // Lấy giờ trống khi chọn bác sĩ và ngày
   useEffect(() => {
     const fetchAvailableTimeSlots = async () => {
       setAvailableTimeSlots([]);
-      setFormData(prev => ({ ...prev, time: '' })); // reset time khi đổi bác sĩ/ngày
+      setFormData((prev) => ({ ...prev, time: "" })); // reset time khi đổi bác sĩ/ngày
       if (!formData.doctorId || !formData.date) return;
       try {
         const res = await fetch(
@@ -65,69 +64,81 @@ export default function AnonymousAppointmentForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
-  setError('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
-  if (!formData.time) {
-    setError('Vui lòng chọn giờ tư vấn!');
-    setIsLoading(false);
-    return;
-  }
-  if (!formData.serviceId) {
-    setError('Vui lòng chọn dịch vụ!');
-    setIsLoading(false);
-    return;
-  }
+    if (!formData.time) {
+      setError("Vui lòng chọn giờ tư vấn!");
+      setIsLoading(false);
+      return;
+    }
+    if (!formData.serviceId) {
+      setError("Vui lòng chọn dịch vụ!");
+      setIsLoading(false);
+      return;
+    }
 
-  const payload = {
-    aliasName: formData.aliasName.trim(),
-    gender: formData.gender,
-    description: formData.description.trim(),
-    date: formData.date,
-    birthDate: formData.birthDate?.trim() ? formData.birthDate : null,
-    doctorId: formData.doctorId ? Number(formData.doctorId) : null,
-    phone: formData.phone.trim(),
-    appointmentDate: formData.time, // ISO string từ slot đã chọn
-    serviceId: formData.serviceId ? Number(formData.serviceId) : null,
-  };
+    const payload = {
+      aliasName: formData.aliasName.trim(),
+      gender: formData.gender,
+      description: formData.description.trim(),
+      date: formData.date,
+      birthDate: formData.birthDate?.trim() ? formData.birthDate : null,
+      doctorId: formData.doctorId ? Number(formData.doctorId) : null,
+      phone: formData.phone.trim(),
+      appointmentDate: formData.time, // ISO string từ slot đã chọn
+      serviceId: formData.serviceId ? Number(formData.serviceId) : null,
+    };
 
-  try {
-    const res = await fetch('http://localhost:8080/api/appointments/anonymous-online', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const res = await fetch(
+        "http://localhost:8080/api/appointments/anonymous-online",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
 
-    const text = await res.text();
-    const data = text ? JSON.parse(text) : null;
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+      console.log("Response status:", res);
+      if (data.appointmentId) {
+        localStorage.setItem("appointmentId", data.appointmentId);
+      }
+      console.log("Response data:", data);
 
-    if (!res.ok) throw new Error(data?.error || 'Đặt lịch thất bại');
+      if (!res.ok) throw new Error(data?.error || "Đặt lịch thất bại");
 
-    const selectedDoctor = doctors.find(d => d.id === Number(formData.doctorId));
-    const selectedService = services.find(s => s.id === Number(formData.serviceId));
-    const appointmentDate = data.appointmentDate || formData.time;
+      const selectedDoctor = doctors.find(
+        (d) => d.id === Number(formData.doctorId)
+      );
+      const selectedService = services.find(
+        (s) => s.id === Number(formData.serviceId)
+      );
+      const appointmentDate = data.appointmentDate || formData.time;
 
-    navigate('/payment', {
-      state: {
-        appointmentData: {
-          doctorName: selectedDoctor?.fullName,
-          appointmentDate: appointmentDate,
-          price: selectedService?.price,
-          anonymous: true,
+      navigate("/payment", {
+        state: {
+          appointmentData: {
+            doctorName: selectedDoctor?.fullName,
+            appointmentDate: appointmentDate,
+            price: selectedService?.price,
+            anonymous: true,
+          },
         },
-      },
-    });
-  } catch (err) {
-    setError(err.message);
-  } finally {
-    setIsLoading(false);
-  }
-};
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white p-4">
@@ -137,7 +148,9 @@ export default function AnonymousAppointmentForm() {
             <Stethoscope className="w-6 h-6" /> Đặt lịch ẩn danh
           </h1>
 
-          {error && <p className="text-red-600 font-semibold text-center">{error}</p>}
+          {error && (
+            <p className="text-red-600 font-semibold text-center">{error}</p>
+          )}
 
           <div>
             <label>Tên gọi</label>
@@ -160,7 +173,7 @@ export default function AnonymousAppointmentForm() {
                   type="radio"
                   name="gender"
                   value="FEMALE"
-                  checked={formData.gender === 'FEMALE'}
+                  checked={formData.gender === "FEMALE"}
                   onChange={handleChange}
                 />
                 Nữ
@@ -170,7 +183,7 @@ export default function AnonymousAppointmentForm() {
                   type="radio"
                   name="gender"
                   value="MALE"
-                  checked={formData.gender === 'MALE'}
+                  checked={formData.gender === "MALE"}
                   onChange={handleChange}
                 />
                 Nam
@@ -180,7 +193,7 @@ export default function AnonymousAppointmentForm() {
                   type="radio"
                   name="gender"
                   value="OTHER"
-                  checked={formData.gender === 'OTHER'}
+                  checked={formData.gender === "OTHER"}
                   onChange={handleChange}
                 />
                 Khác
@@ -189,21 +202,22 @@ export default function AnonymousAppointmentForm() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
-            <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-              <CalendarIcon className="w-5 h-5 text-gray-400 mx-3" />
-              <input
-                type="date"
-                name="birthDate"
-                value={formData.birthDate}
-                onChange={handleChange}
-                className="w-full p-3 border-none rounded-lg focus:outline-none"
-                max={new Date().toISOString().split("T")[0]}
-              />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Ngày sinh
+              </label>
+              <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
+                <CalendarIcon className="w-5 h-5 text-gray-400 mx-3" />
+                <input
+                  type="date"
+                  name="birthDate"
+                  value={formData.birthDate}
+                  onChange={handleChange}
+                  className="w-full p-3 border-none rounded-lg focus:outline-none"
+                  max={new Date().toISOString().split("T")[0]}
+                />
+              </div>
             </div>
-          </div>
-
 
             <div>
               <label>Số điện thoại</label>
@@ -218,20 +232,22 @@ export default function AnonymousAppointmentForm() {
               />
             </div>
           </div>
-      
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Ngày tư vấn</label>
-              <input
-                type="date"
-                name="date"
-                required
-                value={formData.date}
-                onChange={handleChange}
-                className="w-full p-3 border border-gray-200 rounded-lg"
-                min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
-              />
-            </div>
-        
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Ngày tư vấn
+            </label>
+            <input
+              type="date"
+              name="date"
+              required
+              value={formData.date}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-200 rounded-lg"
+              min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
+            />
+          </div>
+
           <div>
             <label>Chọn dịch vụ</label>
             <select
@@ -242,7 +258,7 @@ export default function AnonymousAppointmentForm() {
               required
             >
               <option value="">-- Chọn dịch vụ --</option>
-              {services.map(service => (
+              {services.map((service) => (
                 <option key={service.id} value={service.id}>
                   {service.name} - {service.price?.toLocaleString()} VND
                 </option>
@@ -279,11 +295,16 @@ export default function AnonymousAppointmentForm() {
               disabled={availableTimeSlots.length === 0}
             >
               <option value="">
-                {availableTimeSlots.length > 0 ? "-- Chọn giờ trống --" : "Không có giờ trống"}
+                {availableTimeSlots.length > 0
+                  ? "-- Chọn giờ trống --"
+                  : "Không có giờ trống"}
               </option>
-              {availableTimeSlots.map(slot => (
+              {availableTimeSlots.map((slot) => (
                 <option key={slot.id} value={slot.startTime}>
-                  {new Date(slot.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  {new Date(slot.startTime).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </option>
               ))}
             </select>
@@ -315,7 +336,7 @@ export default function AnonymousAppointmentForm() {
               disabled={isLoading}
               className="flex-1 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition"
             >
-              {isLoading ? 'Đang gửi...' : 'Xác nhận đặt lịch'}
+              {isLoading ? "Đang gửi..." : "Xác nhận đặt lịch"}
             </button>
           </div>
         </form>
