@@ -13,13 +13,14 @@ const tabStatusMap = {
 };
 
 const statusOptions = [
+  { value: "BOOKED", label: "Đã đặt" },
+  { value: "CANCELLED", label: "Đã hủy" },
   { value: "PENDING", label: "Chưa đến" },
   { value: "CHECKED_IN", label: "Đã đến" },
   { value: "IN_PROGRESS", label: "Đang khám" },
   { value: "COMPLETED", label: "Hoàn tất" },
   { value: "ABSENT", label: "Vắng" },
-  { value: "BOOKED", label: "Đã đặt" },
-];
+
 
 const bookingModeOptions = [{ value: "NORMAL", label: "Lịch thường" }];
 
