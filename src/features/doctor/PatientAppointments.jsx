@@ -126,8 +126,17 @@ export default function DoctorAppointments() {
     fetchAppointments();
   }, [doctorId]);
 
-  const handleCreatePrescription = (appointmentId) => {
-    navigate(`/doctor/create-prescription?appointmentId=${appointmentId}`);
+  const handleCreatePrescription = (appointmentId, patientId) => {
+    if (!patientId) {
+      message.error("Không tìm thấy bệnh nhân để kê đơn");
+      return;
+    }
+    navigate("/prescriptions", {
+      state: {
+        appointmentId,
+        patientId,
+      },
+    });
   };
 
   const renderAppointment = (a, color) => (
@@ -141,7 +150,8 @@ export default function DoctorAppointments() {
           {dayjs.utc(a.appointmentDate).local().format("DD/MM/YYYY")}
         </div>
         <div>
-          <strong>Giờ:</strong> {dayjs(a.appointmentDate).format("HH:mm")}
+          <strong>Giờ:</strong>{" "}
+          {dayjs.utc(a.appointmentDate).local().format("HH:mm")}
         </div>
         <div>
           <strong>Loại khám:</strong>{" "}
@@ -183,7 +193,12 @@ export default function DoctorAppointments() {
           )}
         </div>
         <div className="col-span-2 text-right mt-2">
-          <Button type="primary" onClick={() => handleCreatePrescription(a.id)}>
+          <Button
+            type="primary"
+            onClick={() =>
+              handleCreatePrescription(a.id, a.patientId || a.patient_id)
+            }
+          >
             Kê đơn
           </Button>
         </div>
