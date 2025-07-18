@@ -184,6 +184,20 @@ export default function Support() {
               <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-lg" />
             </div>
             <div>
+              <label>Ngày sinh</label>
+              <input
+                type="date"
+                name="birthDate"
+                value={formData.birthDate}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg"
+              />
+            </div>
+
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Ngày tư vấn
               </label>
@@ -199,73 +213,59 @@ export default function Support() {
                 className="w-full p-3 border border-gray-300 rounded-lg"
               />
             </div>
+
+            <div>
+              <label>Dịch vụ</label>
+              <select name="service" value={formData.service} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-lg">
+                <option value="">-- Chọn dịch vụ --</option>
+                {services.map(service => (
+                  <option key={service.id} value={service.name}>
+                    {service.name} - {service.price?.toLocaleString()} VND
+                  </option>
+                ))}
+              </select>
+              {selectedService && (
+                <div className="text-green-600 font-bold mt-2">
+                  Giá tư vấn: {selectedService.price?.toLocaleString()} VND
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Chọn giờ trống */}
-          <div>
-            <label>Giờ tư vấn</label>
-            <select
-              name="time"
-              value={formData.time}
-              onChange={handleChange}
-              required
-              className="w-full p-3 border border-gray-300 rounded-lg"
-              disabled={availableTimeSlots.length === 0}
-            >
-              <option value="">
-                {availableTimeSlots.length > 0 ? "-- Chọn giờ trống --" : "Không có giờ trống"}
-              </option>
-              {availableTimeSlots.map(slot => (
-                <option key={slot.id} value={slot.startTime}>
-                  {new Date(slot.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div>
+              <label>Bác sĩ</label>
+              <select name="doctor" value={formData.doctor} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-lg">
+                <option value="">-- Chọn bác sĩ --</option>
+                {doctors.map((doctor) => (
+                  <option key={doctor.id} value={doctor.fullName}>
+                    {doctor.fullName} - {doctor.specialization}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label>Giờ tư vấn</label>
+              <select
+                name="time"
+                value={formData.time}
+                onChange={handleChange}
+                required
+                className="w-full p-3 border border-gray-300 rounded-lg"
+                disabled={availableTimeSlots.length === 0}
+              >
+                <option value="">
+                  {availableTimeSlots.length > 0 ? "-- Chọn giờ trống --" : "Không có giờ trống"}
                 </option>
-              ))}
-            </select>
+                {availableTimeSlots.map(slot => (
+                  <option key={slot.id} value={slot.startTime}>
+                    {new Date(slot.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-
-          {/* Ngày sinh (nếu cần) */}
-          <div>
-            <label>Ngày sinh</label>
-            <input
-              type="date"
-              name="birthDate"
-              value={formData.birthDate}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-lg"
-            />
-          </div>
-
-          {/* Chọn dịch vụ */}
-          <div>
-            <label>Dịch vụ</label>
-            <select name="service" value={formData.service} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-lg">
-              <option value="">-- Chọn dịch vụ --</option>
-              {services.map(service => (
-                <option key={service.id} value={service.name}>
-                  {service.name} - {service.price?.toLocaleString()} VND
-                </option>
-              ))}
-            </select>
-            {selectedService && (
-              <div className="text-green-600 font-bold mt-2">
-                Giá tư vấn: {selectedService.price?.toLocaleString()} VND
-              </div>
-            )}
-          </div>
-
-          {/* Chọn bác sĩ */}
-          <div>
-            <label>Bác sĩ</label>
-            <select name="doctor" value={formData.doctor} onChange={handleChange} required className="w-full p-3 border border-gray-300 rounded-lg">
-              <option value="">-- Chọn bác sĩ --</option>
-              {doctors.map((doctor) => (
-                <option key={doctor.id} value={doctor.fullName}>
-                  {doctor.fullName} - {doctor.specialization}
-                </option>
-              ))}
-            </select>
-          </div>
-
           {/* Vấn đề cần tư vấn */}
           <div>
             <label>Vấn đề cần tư vấn</label>
