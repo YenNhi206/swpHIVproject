@@ -21,11 +21,9 @@ const statusOptions = [
 
 const bookingModeOptions = [
   { value: "NORMAL", label: "Lịch thường" },
-  { value: "ANONYMOUS", label: "Lịch Online" },
-  { value: "ONLINE_ANONYMOUS", label: "Lịch Online Ẩn danh" },
 ];
 
-// Columns cho lịch thường (bạn giữ nguyên cột này y như cũ)
+// Columns cho lịch thường
 const columnsNormal = [
   {
     title: "Họ tên / Bí danh",
@@ -116,102 +114,6 @@ const columnsNormal = [
   },
 ];
 
-// Columns cho lịch online
-const columnsAnonymous = [
-  {
-    title: "Bí danh",
-    dataIndex: "aliasName",
-    width: 150,
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-    width: 150,
-  },
-  {
-    title: "Số điện thoại",
-    dataIndex: "phone",
-    width: 120,
-  },
-  {
-    title: "Giới tính",
-    dataIndex: "gender",
-    width: 80,
-  },
-  {
-    title: "Ngày hẹn",
-    dataIndex: "appointmentDate",
-    render: (text) => new Date(text).toLocaleString("vi-VN"),
-    width: 180,
-  },
-  {
-    title: "Mô tả",
-    dataIndex: "description",
-    ellipsis: true,
-    render: (text) => (
-      <Tooltip title={text}>
-        <div
-          style={{
-            maxWidth: 150,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {text || <i>Không có</i>}
-        </div>
-      </Tooltip>
-    ),
-    width: 150,
-  },
-];
-
-// Columns cho lịch online ẩn danh
-const columnsOnlineAnonymous = [
-  {
-    title: "Bí danh",
-    dataIndex: "aliasName",
-    width: 150,
-  },
-
-  {
-    title: "Số điện thoại",
-    dataIndex: "phone",
-    width: 120,
-  },
-  {
-    title: "Giới tính",
-    dataIndex: "gender",
-    width: 80,
-  },
-  {
-    title: "Ngày hẹn",
-    dataIndex: "appointmentDate",
-    render: (text) => new Date(text).toLocaleString("vi-VN"),
-    width: 180,
-  },
-  {
-    title: "Mô tả",
-    dataIndex: "description",
-    ellipsis: true,
-    render: (text) => (
-      <Tooltip title={text}>
-        <div
-          style={{
-            maxWidth: 150,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {text || <i>Không có</i>}
-        </div>
-      </Tooltip>
-    ),
-    width: 150,
-  },
-];
-
 export default function StaffAppointment() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -226,16 +128,8 @@ export default function StaffAppointment() {
     try {
       if (!token) throw new Error("Vui lòng đăng nhập để xem lịch hẹn.");
 
-      let url = "";
       const status = tabStatusMap[activeTab];
-
-      if (bookingMode === "NORMAL") {
-        url = `http://localhost:8080/api/appointments?status=${status}`;
-      } else if (bookingMode === "ANONYMOUS") {
-        url = `http://localhost:8080/api/appointments/anonymous?status=ONLINE_ANONYMOUS_PENDING`;
-      } else if (bookingMode === "ONLINE_ANONYMOUS") {
-        url = `http://localhost:8080/api/appointments/online-anonymous?status=ONLINE_PENDING`;
-      }
+      const url = `http://localhost:8080/api/appointments?status=${status}`;
 
       const res = await fetch(url, {
         headers: {
@@ -292,40 +186,38 @@ export default function StaffAppointment() {
     updating: updatingId === item.id,
   }));
 
-  const getColumns = () => {
-    if (bookingMode === "ANONYMOUS") return columnsAnonymous;
-    if (bookingMode === "ONLINE_ANONYMOUS") return columnsOnlineAnonymous;
-    return columnsNormal;
-  };
+  const getColumns = () => columnsNormal;
 
   return (
     <div
       className="p-6"
-      style={{ maxWidth: 1200, margin: "auto", overflowX: "auto", background: "#fff", borderRadius: 8 }}
+      style={{
+        maxWidth: 1200,
+        margin: "auto",
+        overflowX: "auto",
+        background: "#fff",
+        borderRadius: 8,
+      }}
     >
       <h2 className="text-xl font-semibold mb-4">Quản lý lịch hẹn</h2>
 
-      <div style={{ marginBottom: 12, display: "flex", alignItems: "center", gap: 16 }}>
-        <div>
-          <span style={{ marginRight: 8 }}>Chọn loại lịch:</span>
-          <Select
-            options={bookingModeOptions}
-            value={bookingMode}
-            onChange={setBookingMode}
-            style={{ width: 180 }}
-          />
-        </div>
+      <div
+        style={{
+          marginBottom: 12,
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+        }}
+      >
 
-        {/* Chỉ show tab trạng thái khi là lịch thường */}
-        {bookingMode === "NORMAL" && (
-          <div style={{ flex: 1 }}>
-            <Tabs activeKey={activeTab} onChange={setActiveTab} type="line" size="small">
-              {Object.keys(tabStatusMap).map((key) => (
-                <TabPane tab={key} key={key} />
-              ))}
-            </Tabs>
-          </div>
-        )}
+
+        <div style={{ flex: 1 }}>
+          <Tabs activeKey={activeTab} onChange={setActiveTab} type="line" size="small">
+            {Object.keys(tabStatusMap).map((key) => (
+              <TabPane tab={key} key={key} />
+            ))}
+          </Tabs>
+        </div>
       </div>
 
       <Table
