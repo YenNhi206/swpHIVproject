@@ -9,7 +9,7 @@ const tabStatusMap = {
   "Đã đến": "CHECKED_IN",
   "Đang khám": "IN_PROGRESS",
   "Hoàn tất": "COMPLETED",
-  "Vắng": "ABSENT",
+  Vắng: "ABSENT",
 };
 
 const statusOptions = [
@@ -19,17 +19,17 @@ const statusOptions = [
   { value: "CHECKED_IN", label: "Đã đến" },
   { value: "IN_PROGRESS", label: "Đang khám" },
   { value: "COMPLETED", label: "Hoàn tất" },
-];
+  { value: "ABSENT", label: "Vắng" },
 
-const bookingModeOptions = [
-  { value: "NORMAL", label: "Lịch thường" },
-];
+
+const bookingModeOptions = [{ value: "NORMAL", label: "Lịch thường" }];
 
 // Columns cho lịch thường
 const columnsNormal = [
   {
     title: "Họ tên / Bí danh",
-    render: (_, record) => record.fullName || record.aliasName || <i>Chưa cung cấp</i>,
+    render: (_, record) =>
+      record.fullName || record.aliasName || <i>Chưa cung cấp</i>,
     width: 150,
   },
   {
@@ -57,7 +57,11 @@ const columnsNormal = [
     title: "Loại lịch hẹn",
     dataIndex: "appointmentType",
     render: (text) =>
-      text === "FIRST_VISIT" ? "Khám lần đầu" : text === "FOLLOW_UP" ? "Tái khám" : text,
+      text === "FIRST_VISIT"
+        ? "Khám lần đầu"
+        : text === "FOLLOW_UP"
+        ? "Tái khám"
+        : text,
     width: 120,
   },
   {
@@ -119,7 +123,7 @@ const columnsNormal = [
 export default function StaffAppointment() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("Chưa đến");
+  const [activeTab, setActiveTab] = useState("Đã đặt");
   const [bookingMode, setBookingMode] = useState("NORMAL");
   const [updatingId, setUpdatingId] = useState(null);
 
@@ -159,14 +163,17 @@ export default function StaffAppointment() {
   const handleStatusUpdate = async (id, newStatus) => {
     setUpdatingId(id);
     try {
-      const res = await fetch(`http://localhost:8080/api/appointments/${id}/status`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      const res = await fetch(
+        `http://localhost:8080/api/appointments/${id}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
 
       if (!res.ok) throw new Error("Cập nhật trạng thái thất bại");
 
@@ -211,10 +218,13 @@ export default function StaffAppointment() {
           gap: 16,
         }}
       >
-
-
         <div style={{ flex: 1 }}>
-          <Tabs activeKey={activeTab} onChange={setActiveTab} type="line" size="small">
+          <Tabs
+            activeKey={activeTab}
+            onChange={setActiveTab}
+            type="line"
+            size="small"
+          >
             {Object.keys(tabStatusMap).map((key) => (
               <TabPane tab={key} key={key} />
             ))}
@@ -228,7 +238,7 @@ export default function StaffAppointment() {
         rowKey="id"
         loading={loading}
         pagination={{ pageSize: 10 }}
-        scroll={{ x: 1300 }}
+        scroll={{ x: "max-content" }}
       />
     </div>
   );
