@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { PlusCircle, User, Phone, MapPin, Venus, Mars, Mail } from "lucide-react";
+import {
+  PlusCircle,
+  User,
+  Phone,
+  MapPin,
+  Venus,
+  Mars,
+  Mail,
+} from "lucide-react";
 import { Col, Input, Row, Form, Select, message, Modal, Button } from "antd";
 
 const { Option } = Select;
@@ -27,8 +35,11 @@ export default function StaffPatientListPage() {
           Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
         },
       });
+
       if (!res.ok) throw new Error("Không thể tải danh sách bệnh nhân");
+
       const data = await res.json();
+      console.log("Dữ liệu bệnh nhân:", data);
       setPatients(data);
     } catch (err) {
       console.error(err);
@@ -59,10 +70,7 @@ export default function StaffPatientListPage() {
       });
 
       const text = await res.text();
-
-      if (!res.ok) {
-        throw new Error(text || "Lỗi khi thêm bệnh nhân");
-      }
+      if (!res.ok) throw new Error(text || "Lỗi khi thêm bệnh nhân");
 
       message.success("Đã thêm bệnh nhân mới!");
       setModalVisible(false);
@@ -70,6 +78,25 @@ export default function StaffPatientListPage() {
     } catch (error) {
       console.error(error);
       message.error(error.message || "Không thể thêm bệnh nhân");
+    }
+  };
+
+  const renderGender = (gender) => {
+    const g = (gender || "").toString().toUpperCase();
+    if (["MALE", "NAM"].includes(g)) {
+      return (
+        <span className="text-blue-500 flex items-center justify-center gap-1">
+          <Mars size={14} /> Nam
+        </span>
+      );
+    } else if (["FEMALE", "NỮ", "NU"].includes(g)) {
+      return (
+        <span className="text-pink-500 flex items-center justify-center gap-1">
+          <Venus size={14} /> Nữ
+        </span>
+      );
+    } else {
+      return <span>Không xác định</span>;
     }
   };
 
@@ -98,12 +125,7 @@ export default function StaffPatientListPage() {
         destroyOnClose
         width={650}
       >
-        <Form
-          layout="vertical"
-          onFinish={handleAddPatient}
-          preserve={false}
-          size="large"
-        >
+        <Form layout="vertical" onFinish={handleAddPatient} preserve={false} size="large">
           <Row gutter={24}>
             <Col span={12}>
               <Form.Item
@@ -128,14 +150,12 @@ export default function StaffPatientListPage() {
                 <Select placeholder="Chọn giới tính" className="rounded-md">
                   <Option value="Nam">
                     <div className="flex items-center gap-2">
-                      <Mars className="text-blue-500" />
-                      Nam
+                      <Mars className="text-blue-500" /> Nam
                     </div>
                   </Option>
                   <Option value="Nữ">
                     <div className="flex items-center gap-2">
-                      <Venus className="text-pink-500" />
-                      Nữ
+                      <Venus className="text-pink-500" /> Nữ
                     </div>
                   </Option>
                   <Option value="Khác">Khác</Option>
@@ -224,37 +244,20 @@ export default function StaffPatientListPage() {
                 <th className="p-3">Ngày sinh</th>
                 <th className="p-3">SĐT</th>
                 <th className="p-3">Địa chỉ</th>
-                <th className="p-3">Email</th>
               </tr>
             </thead>
             <tbody>
               {patients.map((p, index) => (
-                <tr
-                  key={index}
-                  className="border-t text-center hover:bg-red-50"
-                >
+                <tr key={index} className="border-t text-center hover:bg-red-50">
                   <td className="p-3">{p.fullName || "N/A"}</td>
-                  <td className="p-3">
-                    {p.gender === "MALE" ? (
-                      <span className="text-blue-500 flex items-center justify-center gap-1">
-                        <Mars size={14} /> Nam
-                      </span>
-                    ) : p.gender === "FEMALE" ? (
-                      <span className="text-pink-500 flex items-center justify-center gap-1">
-                        <Venus size={14} /> Nữ
-                      </span>
-                    ) : (
-                      <span>Không xác định</span>
-                    )}
-                  </td>
+                  <td className="p-3">{renderGender(p.gender)}</td>
                   <td className="p-3">
                     {p.dateOfBirth
                       ? new Date(p.dateOfBirth).toLocaleDateString("vi-VN")
                       : "N/A"}
                   </td>
-                  <td className="p-3">{p.phoneNumber || "N/A"}</td>
+                  <td className="p-3">{p.phone || p.phoneNumber || "N/A"}</td>
                   <td className="p-3">{p.address || "N/A"}</td>
-                  <td className="p-3">{p.email || "N/A"}</td>
                 </tr>
               ))}
             </tbody>

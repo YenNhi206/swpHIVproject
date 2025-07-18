@@ -88,9 +88,9 @@ export default function StaffDashboard() {
 
   const today = new Date().toISOString().split("T")[0];
   const todayAppointments = appointments.filter(a => a.appointmentDate?.startsWith(today));
-  const arrived = todayAppointments.filter(a => a.status === "Đã đến").length;
-  const notArrived = todayAppointments.filter(a => a.status === "Chưa đến").length;
-  const absent = todayAppointments.filter(a => a.status === "Vắng").length;
+  const arrived = todayAppointments.filter(a => a.status === "CHECKED_IN ").length;
+  const notArrived = todayAppointments.filter(a => a.status === "PENDING").length;
+  const absent = todayAppointments.filter(a => a.status === "ABSENT").length;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -123,7 +123,7 @@ export default function StaffDashboard() {
       <h1 className="text-3xl font-bold text-center text-red-700 mb-8">Trang Chủ Nhân Viên</h1>
 
       {/* Thống kê nhanh */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 gap-6 mb-8">
         <div className="bg-white shadow rounded-xl p-6 flex items-center gap-4 border-l-4 border-red-500">
           <Calendar size={32} className="text-red-500" />
           <div>
@@ -131,20 +131,7 @@ export default function StaffDashboard() {
             <p className="text-xl font-bold">{todayAppointments.length}</p>
           </div>
         </div>
-        <div className="bg-white shadow rounded-xl p-6 flex items-center gap-4 border-l-4 border-green-500">
-          <Users size={32} className="text-green-500" />
-          <div>
-            <p className="text-gray-500">Đã đến</p>
-            <p className="text-xl font-bold">{arrived}</p>
-          </div>
-        </div>
-        <div className="bg-white shadow rounded-xl p-6 flex items-center gap-4 border-l-4 border-yellow-500">
-          <AlertCircle size={32} className="text-yellow-500" />
-          <div>
-            <p className="text-gray-500">Chưa đến / Vắng</p>
-            <p className="text-xl font-bold">{notArrived + absent}</p>
-          </div>
-        </div>
+
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
