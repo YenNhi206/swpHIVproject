@@ -39,13 +39,11 @@ import ServicesPage from "./pages/ServicesPage";
 
 import PatientAppointments from "./features/doctor/PatientAppointments";
 import DoctorAlertsPage from "./features/doctor/DoctorAlertsPage";
-import DoctorPatientList from "./features/doctor/DoctorPatientList";
 import PatientDetailForDoctor from "./features/doctor/PatientDetailForDoctor";
 import CreatePrescription from "./features/doctor/CreatePrescription";
 
 import AdminAccountsPage from "./features/admin/AdminAccountsPage";
 import AdminStatisticsPage from "./features/admin/AdminStatisticsPage";
-import AdminFinancePage from "./features/admin/AdminFinancePage";
 import AdminBlogManagement from "./features/admin/AdminBlogManagemen";
 
 import StaffDashboard from "./features/staff/StaffDashboard";
@@ -185,7 +183,7 @@ export default function App() {
           }
         />
         <Route
-          path="/prescriptions/create"
+          path="/prescriptions"
           element={
             <MainLayout user={user} setUser={setUser}>
               <CreatePrescription />
@@ -297,14 +295,7 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route
-          path="/patientlists"
-          element={
-            <MainLayout user={user} setUser={setUser}>
-              <DoctorPatientList />
-            </MainLayout>
-          }
-        />
+
         <Route
           path="/patientappointments/:patientId"
           element={
@@ -337,14 +328,7 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route
-          path="/admin/finance"
-          element={
-            <MainLayout user={user} setUser={setUser}>
-              <AdminFinancePage />
-            </MainLayout>
-          }
-        />
+
 
         <Route
           path="/staff/appointments"

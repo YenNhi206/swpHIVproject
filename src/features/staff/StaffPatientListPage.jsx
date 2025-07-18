@@ -6,22 +6,19 @@ import {
   MapPin,
   Venus,
   Mars,
-  Mail,
+  Activity,
+  CalendarDays,
 } from "lucide-react";
 import { Col, Input, Row, Form, Select, message, Modal, Button } from "antd";
 
 const { Option } = Select;
 
-const genderValueMap = {
-  Nam: "MALE",
-  Nữ: "FEMALE",
-  Khác: "OTHER",
-};
-
 export default function StaffPatientListPage() {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const genderOptions = ["Nam", "Nữ", "Khác"];
 
   useEffect(() => {
     fetchPatients();
@@ -39,7 +36,6 @@ export default function StaffPatientListPage() {
       if (!res.ok) throw new Error("Không thể tải danh sách bệnh nhân");
 
       const data = await res.json();
-      console.log("Dữ liệu bệnh nhân:", data);
       setPatients(data);
     } catch (err) {
       console.error(err);
@@ -53,11 +49,12 @@ export default function StaffPatientListPage() {
     try {
       const payload = {
         fullName: values.fullName,
-        gender: genderValueMap[values.gender] || "OTHER",
-        dateOfBirth: values.dateOfBirth,
-        phoneNumber: values.phoneNumber,
+        gender: values.gender,
+        birthDate: values.birthDate,
+        phone: values.phone,
         address: values.address,
-        email: values.email,
+        hivStatus: values.hivStatus,
+        treatmentStartDate: values.treatmentStartDate,
       };
 
       const res = await fetch("http://localhost:8080/api/staff/patients", {
@@ -69,34 +66,33 @@ export default function StaffPatientListPage() {
         body: JSON.stringify(payload),
       });
 
-      const text = await res.text();
-      if (!res.ok) throw new Error(text || "Lỗi khi thêm bệnh nhân");
+      if (!res.ok) throw new Error("Không thể thêm bệnh nhân");
 
       message.success("Đã thêm bệnh nhân mới!");
       setModalVisible(false);
       fetchPatients();
     } catch (error) {
       console.error(error);
-      message.error(error.message || "Không thể thêm bệnh nhân");
+      message.error(error.message || "Thêm bệnh nhân thất bại");
     }
   };
 
   const renderGender = (gender) => {
-    const g = (gender || "").toString().toUpperCase();
-    if (["MALE", "NAM"].includes(g)) {
+    const g = (gender || "").toUpperCase();
+    if (g === "NAM") {
       return (
         <span className="text-blue-500 flex items-center justify-center gap-1">
           <Mars size={14} /> Nam
         </span>
       );
-    } else if (["FEMALE", "NỮ", "NU"].includes(g)) {
+    } else if (g === "NỮ" || g === "NU") {
       return (
         <span className="text-pink-500 flex items-center justify-center gap-1">
           <Venus size={14} /> Nữ
         </span>
       );
     } else {
-      return <span>Không xác định</span>;
+      return <span>Khác</span>;
     }
   };
 
@@ -111,36 +107,35 @@ export default function StaffPatientListPage() {
           type="text"
           icon={<PlusCircle className="text-white" />}
           onClick={() => setModalVisible(true)}
-          className="bg-red-600 text-white hover:bg-red-700 rounded-md shadow-sm transition duration-300"
+          className="bg-red-600 text-white hover:bg-red-700 rounded-md shadow-sm"
         >
           Thêm bệnh nhân
         </Button>
       </div>
 
       <Modal
-        title="Thêm Bệnh Nhân Mới"
+        title="Thêm Bệnh Nhân"
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
         destroyOnClose
         width={650}
       >
-        <Form layout="vertical" onFinish={handleAddPatient} preserve={false} size="large">
+        <Form layout="vertical" onFinish={handleAddPatient} size="large">
           <Row gutter={24}>
             <Col span={12}>
               <Form.Item
-                label="Họ tên bệnh nhân"
+                label="Họ tên"
                 name="fullName"
                 rules={[{ required: true, message: "Họ tên là bắt buộc" }]}
               >
                 <Input
-                  prefix={<User className="text-gray-400" />}
+                  prefix={<User />}
                   placeholder="Nhập họ tên"
                   className="rounded-md"
                 />
               </Form.Item>
             </Col>
-
             <Col span={12}>
               <Form.Item
                 label="Giới tính"
@@ -148,17 +143,9 @@ export default function StaffPatientListPage() {
                 rules={[{ required: true, message: "Vui lòng chọn giới tính" }]}
               >
                 <Select placeholder="Chọn giới tính" className="rounded-md">
-                  <Option value="Nam">
-                    <div className="flex items-center gap-2">
-                      <Mars className="text-blue-500" /> Nam
-                    </div>
-                  </Option>
-                  <Option value="Nữ">
-                    <div className="flex items-center gap-2">
-                      <Venus className="text-pink-500" /> Nữ
-                    </div>
-                  </Option>
-                  <Option value="Khác">Khác</Option>
+                  {genderOptions.map((g) => (
+                    <Option key={g} value={g}>{g}</Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
@@ -168,21 +155,21 @@ export default function StaffPatientListPage() {
             <Col span={12}>
               <Form.Item
                 label="Ngày sinh"
-                name="dateOfBirth"
+                name="birthDate"
                 rules={[{ required: true, message: "Ngày sinh là bắt buộc" }]}
               >
-                <Input type="date" className="rounded-md" />
+                <Input type="date" prefix={<CalendarDays />} className="rounded-md" />
               </Form.Item>
             </Col>
 
             <Col span={12}>
               <Form.Item
-                label="Số điện thoại"
-                name="phoneNumber"
+                label="SĐT"
+                name="phone"
                 rules={[{ required: true, message: "Số điện thoại là bắt buộc" }]}
               >
                 <Input
-                  prefix={<Phone className="text-gray-400" />}
+                  prefix={<Phone />}
                   placeholder="Nhập số điện thoại"
                   className="rounded-md"
                 />
@@ -196,35 +183,40 @@ export default function StaffPatientListPage() {
             rules={[{ required: true, message: "Địa chỉ là bắt buộc" }]}
           >
             <Input
-              prefix={<MapPin className="text-gray-400" />}
+              prefix={<MapPin />}
               placeholder="Nhập địa chỉ"
               className="rounded-md"
             />
           </Form.Item>
 
           <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              { required: true, message: "Email là bắt buộc" },
-              { type: "email", message: "Email không hợp lệ" },
-            ]}
+            label="Tình trạng HIV"
+            name="hivStatus"
+            rules={[{ required: true, message: "Tình trạng HIV là bắt buộc" }]}
           >
             <Input
-              prefix={<Mail className="text-gray-400" />}
-              placeholder="Nhập email bệnh nhân"
+              prefix={<Activity />}
+              placeholder="Dương tính / Âm tính / Không rõ"
               className="rounded-md"
             />
+          </Form.Item>
+
+          <Form.Item
+            label="Ngày bắt đầu điều trị"
+            name="treatmentStartDate"
+            rules={[{ required: true, message: "Vui lòng nhập ngày điều trị" }]}
+          >
+            <Input type="date" prefix={<CalendarDays />} className="rounded-md" />
           </Form.Item>
 
           <Form.Item>
             <Button
               type="text"
               htmlType="submit"
-              className="w-full bg-red-700 hover:bg-red-800 transition duration-300 rounded-md"
+              className="w-full bg-red-700 hover:bg-red-800 text-white"
               size="large"
             >
-              Thêm bệnh nhân
+              Lưu
             </Button>
           </Form.Item>
         </Form>
@@ -244,6 +236,8 @@ export default function StaffPatientListPage() {
                 <th className="p-3">Ngày sinh</th>
                 <th className="p-3">SĐT</th>
                 <th className="p-3">Địa chỉ</th>
+                <th className="p-3">Tình trạng HIV</th>
+                <th className="p-3">Ngày điều trị</th>
               </tr>
             </thead>
             <tbody>
@@ -252,12 +246,16 @@ export default function StaffPatientListPage() {
                   <td className="p-3">{p.fullName || "N/A"}</td>
                   <td className="p-3">{renderGender(p.gender)}</td>
                   <td className="p-3">
-                    {p.dateOfBirth
-                      ? new Date(p.dateOfBirth).toLocaleDateString("vi-VN")
+                    {p.birthDate ? new Date(p.birthDate).toLocaleDateString("vi-VN") : "N/A"}
+                  </td>
+                  <td className="p-3">{p.phone || "N/A"}</td>
+                  <td className="p-3">{p.address || "N/A"}</td>
+                  <td className="p-3">{p.hivStatus || "N/A"}</td>
+                  <td className="p-3">
+                    {p.treatmentStartDate
+                      ? new Date(p.treatmentStartDate).toLocaleDateString("vi-VN")
                       : "N/A"}
                   </td>
-                  <td className="p-3">{p.phone || p.phoneNumber || "N/A"}</td>
-                  <td className="p-3">{p.address || "N/A"}</td>
                 </tr>
               ))}
             </tbody>

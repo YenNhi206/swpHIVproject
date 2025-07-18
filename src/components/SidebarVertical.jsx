@@ -33,7 +33,6 @@ export default function SidebarVertical({ user, handleLogout }) {
         sidebarLinks.push(
             { path: "/admin", label: "Trang chủ Admin", icon: Home },
             { path: "/admin/accounts", label: "Quản lý tài khoản", icon: Users },
-            { path: "/admin/finance", label: "Quản lý tài chính", icon: DollarSign },
             { path: "/admin/statistics", label: "Báo cáo thống kê", icon: BarChart },
             { path: "/admin/blogs", label: "Quản lý bài viết", icon: BookOpen }
         );
@@ -41,10 +40,8 @@ export default function SidebarVertical({ user, handleLogout }) {
 
     if (user.role === "DOCTOR") {
         sidebarLinks.push(
-            { path: "/patientlists", label: "Danh sách bệnh nhân", icon: Users },
             { path: "/patientappointments", label: "Lịch hẹn bệnh nhân", icon: Calendar },
             { path: "/treatment", label: "Phác đồ điều trị", icon: FileText },
-            { path: "/alerts", label: "Cảnh báo", icon: AlertTriangle }
         );
     }
 

@@ -108,7 +108,7 @@ export default function LoginPage({ setUser }) {
             } else {
               switch (data.role) {
                 case "DOCTOR":
-                  navigate("/patientlists");
+                  navigate("/patientappointments");
                   break;
                 case "ADMIN":
                   navigate("/admin");

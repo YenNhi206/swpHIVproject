@@ -30,6 +30,7 @@ export default function Breadcrumb() {
     '/admin/blogs': 'Quản lý bài viết',
     '/patientlists': 'Danh sách bệnh nhân',
     '/result/:patientId': 'Kết quả xét nghiệm',
+    '/prescriptions': 'Tạo đơn thuốc',
     '/result': 'Kết quả',
     '/patientappointments': 'Lịch hẹn bệnh nhân',
     '/alerts': 'Cảnh báo',
