@@ -4,6 +4,7 @@ import { Tabs, Table, message, Select, Tooltip } from "antd";
 const { TabPane } = Tabs;
 
 const tabStatusMap = {
+  "Đã đặt": "BOOKED",
   "Chưa đến": "PENDING",
   "Đã đến": "CHECKED_IN",
   "Đang khám": "IN_PROGRESS",
@@ -12,11 +13,12 @@ const tabStatusMap = {
 };
 
 const statusOptions = [
+  { value: "BOOKED", label: "Đã đặt" },
+  { value: "CANCELLED", label: "Đã hủy" },
   { value: "PENDING", label: "Chưa đến" },
   { value: "CHECKED_IN", label: "Đã đến" },
   { value: "IN_PROGRESS", label: "Đang khám" },
   { value: "COMPLETED", label: "Hoàn tất" },
-  { value: "ABSENT", label: "Vắng" },
 ];
 
 const bookingModeOptions = [
