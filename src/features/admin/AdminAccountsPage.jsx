@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Modal, Input, message } from "antd";
+import { Table, Button, Modal, Input, Tabs, message } from "antd";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 
 const emptyForm = {
@@ -41,6 +41,7 @@ export default function AdminAccountsPage() {
             );
             if (!res.ok) throw new Error("Không thể tải danh sách bác sĩ");
             const data = await res.json();
+            // data.content chứa danh sách doctor DTO
             setDoctors(data.content);
         } catch (error) {
             message.error(error.message);
@@ -105,39 +106,28 @@ export default function AdminAccountsPage() {
             const token = JSON.parse(localStorage.getItem("user"))?.token;
             if (!token) throw new Error("Vui lòng đăng nhập");
 
-            let payload;
-            if (editingDoctor) {
-                // Khi sửa, KHÔNG gửi password, confirmPassword
-                payload = {
-                    email: form.email,
-                    fullName: form.fullName,
-                    qualification: form.qualification,
-                    specialization: form.specialization,
-                    phoneNumber: form.phoneNumber,
-                    imageUrl: form.imageUrl,
-                    workingSchedule: form.workingSchedule,
-                };
-            } else {
-                // Khi thêm mới, gửi đủ các trường
-                if (form.password !== form.confirmPassword) {
-                    message.error("Mật khẩu và xác nhận mật khẩu không khớp");
-                    return;
-                }
-                payload = {
-                    email: form.email,
-                    password: form.password,
-                    confirmPassword: form.confirmPassword,
-                    fullName: form.fullName,
-                    qualification: form.qualification,
-                    specialization: form.specialization,
-                    phoneNumber: form.phoneNumber,
-                    imageUrl: form.imageUrl,
-                    workingSchedule: form.workingSchedule,
-                };
+            // Validate password confirm only khi thêm mới
+            if (!editingDoctor && form.password !== form.confirmPassword) {
+                message.error("Mật khẩu và xác nhận mật khẩu không khớp");
+                return;
             }
+
+            // Prepare payload matching RegisterDoctorRequest
+            const payload = {
+                email: form.email,
+                password: form.password,
+                confirmPassword: form.confirmPassword,
+                fullName: form.fullName,
+                qualification: form.qualification,
+                specialization: form.specialization,
+                phoneNumber: form.phoneNumber,
+                imageUrl: form.imageUrl,
+                workingSchedule: form.workingSchedule,
+            };
 
             let res;
             if (editingDoctor) {
+                // Update bác sĩ: backend bạn có PUT /api/doctors/{id}
                 res = await fetch(`http://localhost:8080/api/doctors/${editingDoctor.id}`, {
                     method: "PUT",
                     headers: {
@@ -149,6 +139,7 @@ export default function AdminAccountsPage() {
                 if (!res.ok) throw new Error("Cập nhật thất bại");
                 message.success("Cập nhật bác sĩ thành công");
             } else {
+                // Thêm mới bác sĩ: gọi API bạn có là POST /api/admin/register-doctor
                 res = await fetch(`http://localhost:8080/api/admin/register-doctor`, {
                     method: "POST",
                     headers: {
