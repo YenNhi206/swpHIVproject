@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { CreditCard, AlertCircle } from "lucide-react";
 
-
 export default function PaymentPage() {
   const location = useLocation();
   const { appointmentData } = location.state || {};
@@ -10,14 +9,12 @@ export default function PaymentPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-
   useEffect(() => {
     if (!appointmentData || !appointmentData.price) {
       setError("Thiếu thông tin giá thanh toán");
       setLoading(false);
       return;
     }
-
 
     const fetchMoMoUrl = async () => {
       try {
@@ -29,10 +26,8 @@ export default function PaymentPage() {
           appointmentData.doctorName || "bác sĩ"
         }`;
 
-
         const redirectUrl = "http://localhost:5173/payment/result";
         const ipnUrl = "http://localhost:8080/api/payment/momo-ipn";
-
 
         const res = await fetch("/api/payment/momo", {
           method: "POST",
@@ -48,7 +43,6 @@ export default function PaymentPage() {
           }),
         });
 
-
         const data = await res.json();
         if (res.ok && data.payUrl) {
           setPayUrl(data.payUrl);
@@ -63,10 +57,8 @@ export default function PaymentPage() {
       }
     };
 
-
     fetchMoMoUrl();
   }, [appointmentData]);
-
 
   if (!appointmentData) {
     return (
@@ -82,11 +74,20 @@ export default function PaymentPage() {
     );
   }
 
-
   const displayPrice = appointmentData.price
     ? parseInt(appointmentData.price).toLocaleString()
     : "---";
 
+  const price = Math.floor(Number(appointmentData.price));
+  if (!Number.isInteger(price) || price <= 0) {
+    alert("Giá trị thanh toán không hợp lệ!");
+    return;
+  }
+
+  const body = {
+    ...appointmentData,
+    price: price.toString(), // nếu BE yêu cầu chuỗi số
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex items-center justify-center p-6">
@@ -95,7 +96,6 @@ export default function PaymentPage() {
           <CreditCard className="w-6 h-6" />
           Thanh toán MoMo
         </h1>
-
 
         <div className="space-y-6 text-gray-700">
           <div className="border border-gray-200 p-4 rounded-lg">
@@ -120,7 +120,6 @@ export default function PaymentPage() {
               </p>
             )}
           </div>
-
 
           <div className="text-center mt-6">
             {loading ? (
@@ -148,7 +147,3 @@ export default function PaymentPage() {
     </div>
   );
 }
-
-
-
-
