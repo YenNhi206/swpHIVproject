@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
 import { User, Lock, Mail, Key } from "lucide-react";
 
-
 export default function LoginPage({ setUser }) {
   const [credentials, setCredentials] = useState({
     identifier: "",
@@ -21,13 +20,11 @@ export default function LoginPage({ setUser }) {
   const location = useLocation();
   const from = location.state?.from?.pathname || null;
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredentials((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
-
 
   const validateLoginForm = () => {
     const newErrors = {};
@@ -44,7 +41,6 @@ export default function LoginPage({ setUser }) {
     return Object.keys(newErrors).length === 0;
   };
 
-
   const handleLogin = async (e) => {
     e.preventDefault();
     if (validateLoginForm()) {
@@ -59,7 +55,6 @@ export default function LoginPage({ setUser }) {
           body: JSON.stringify(payload),
         });
 
-
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(
@@ -67,13 +62,20 @@ export default function LoginPage({ setUser }) {
           );
         }
 
-
         const data = await response.json();
         if (data.success) {
           // Lưu token vào localStorage
           localStorage.setItem("token", data.token);
-          // Lưu patientId riêng biệt
-          localStorage.setItem("patientId", data.patientId);
+
+          // Lưu id theo role
+          if (data.role === "DOCTOR") {
+            localStorage.setItem("doctorId", data.doctorId);
+          } else if (data.role === "PATIENT") {
+            localStorage.setItem("patientId", data.patientId);
+          } else if (data.role === "ADMIN") {
+            localStorage.setItem("adminId", data.adminId);
+          }
+
           // Lưu user object
           localStorage.setItem(
             "user",
@@ -82,19 +84,21 @@ export default function LoginPage({ setUser }) {
               role: data.role,
               token: data.token,
               fullName: data.fullName,
+              doctorId: data.doctorId,
               patientId: data.patientId,
+              adminId: data.adminId,
             })
           );
-
 
           setUser({
             username: data.username,
             role: data.role,
             token: data.token,
             fullName: data.fullName,
+            doctorId: data.doctorId,
             patientId: data.patientId,
+            adminId: data.adminId,
           });
-
 
           const pending = JSON.parse(
             sessionStorage.getItem("pendingAppointment")
@@ -130,7 +134,6 @@ export default function LoginPage({ setUser }) {
       }
     }
   };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex flex-col">
@@ -209,6 +212,3 @@ export default function LoginPage({ setUser }) {
     </div>
   );
 }
-
-
-
