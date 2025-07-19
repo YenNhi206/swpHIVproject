@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Calendar, Phone, Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Calendar, Phone, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import Button from "../components/Button";
 
 export default function DoctorsPage() {
   const [doctors, setDoctors] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(0);
   const [size] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
@@ -15,6 +15,7 @@ export default function DoctorsPage() {
   const [showModal, setShowModal] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [schedule, setSchedule] = useState([]);
+  const [doctorInfo, setDoctorInfo] = useState(null);
 
   const navigate = useNavigate();
 
@@ -23,15 +24,17 @@ export default function DoctorsPage() {
       setIsLoading(true);
       try {
         const response = await fetch(
-          `http://localhost:8080/api/doctors?page=${page}&size=${size}&search=${encodeURIComponent(searchTerm)}&searchBy=name`,
-          { headers: { 'Content-Type': 'application/json' } }
+          `http://localhost:8080/api/doctors?page=${page}&size=${size}&search=${encodeURIComponent(
+            searchTerm
+          )}&searchBy=name`,
+          { headers: { "Content-Type": "application/json" } }
         );
         if (!response.ok) throw new Error(`Lỗi API: ${response.status}`);
         const data = await response.json();
         setDoctors(data.content || []);
         setTotalPages(data.totalPages || 1);
       } catch (error) {
-        console.error('Lỗi khi gọi API danh sách bác sĩ:', error);
+        console.error("Lỗi khi gọi API danh sách bác sĩ:", error);
       } finally {
         setIsLoading(false);
       }
@@ -40,35 +43,42 @@ export default function DoctorsPage() {
   }, [page, size, searchTerm]);
 
   const handleBookAppointment = async (doctor) => {
-    const token = JSON.parse(localStorage.getItem('user'))?.token;
+    const token = JSON.parse(localStorage.getItem("user"))?.token;
     if (!token) {
-      sessionStorage.setItem('pendingAppointment', JSON.stringify({ doctor, from: '/doctors' }));
-      navigate('/login');
+      sessionStorage.setItem(
+        "pendingAppointment",
+        JSON.stringify({ doctor, from: "/doctors" })
+      );
+      navigate("/login");
       return;
     }
 
     try {
-      const currentDate = new Date().toISOString().split('T')[0];
+      const currentDate = new Date().toISOString().split("T")[0];
       const scheduleRes = await fetch(
         `http://localhost:8080/api/doctors/${doctor.id}/schedule?date=${currentDate}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
-      if (!scheduleRes.ok) throw new Error('Không thể tải lịch trống');
+      if (!scheduleRes.ok) throw new Error("Không thể tải lịch trống");
       const scheduleData = await scheduleRes.json();
       const availableTimeSlots = scheduleData.timeSlots || [];
 
-      navigate('/appointments', {
+      navigate("/appointments", {
         state: { doctor, availableTimeSlots, defaultDate: currentDate },
       });
     } catch (error) {
-      console.error('Lỗi lấy lịch trống:', error);
-      navigate('/appointments', {
-        state: { doctor, availableTimeSlots: [], defaultDate: new Date().toISOString().split('T')[0] },
+      console.error("Lỗi lấy lịch trống:", error);
+      navigate("/appointments", {
+        state: {
+          doctor,
+          availableTimeSlots: [],
+          defaultDate: new Date().toISOString().split("T")[0],
+        },
       });
     }
   };
@@ -86,14 +96,28 @@ export default function DoctorsPage() {
     try {
       const response = await fetch(
         `http://localhost:8080/api/doctors/${doctor.id}/schedule`,
-        { headers: { 'Content-Type': 'application/json' } }
+        { headers: { "Content-Type": "application/json" } }
       );
-      if (!response.ok) throw new Error('Không thể tải lịch bác sĩ');
+      if (!response.ok) throw new Error("Không thể tải lịch bác sĩ");
       const data = await response.json();
       setSchedule(data || []);
+
+      // Lấy thông tin bác sĩ từ schedule response
+      if (data && data.length > 0) {
+        const firstSchedule = data[0];
+        setDoctorInfo({
+          doctorName: firstSchedule.doctorName,
+          doctorEmail: firstSchedule.doctorEmail,
+          doctorPhone: firstSchedule.doctorPhone,
+          doctorSpecialization: firstSchedule.doctorSpecialization,
+        });
+      } else {
+        setDoctorInfo(null);
+      }
     } catch (err) {
-      console.error('Lỗi khi tải lịch bác sĩ:', err);
+      console.error("Lỗi khi tải lịch bác sĩ:", err);
       setSchedule([]);
+      setDoctorInfo(null);
     }
   };
 
@@ -117,10 +141,16 @@ export default function DoctorsPage() {
       initial="hidden"
       animate="visible"
     >
-      <motion.h1 className="text-3xl font-extrabold text-red-700 text-center" variants={itemVariants}>
+      <motion.h1
+        className="text-3xl font-extrabold text-red-700 text-center"
+        variants={itemVariants}
+      >
         Chuyên gia - Bác sĩ
       </motion.h1>
-      <motion.p className="text-center text-gray-600 mt-2" variants={itemVariants}>
+      <motion.p
+        className="text-center text-gray-600 mt-2"
+        variants={itemVariants}
+      >
         Đội ngũ bác sĩ hàng đầu trong lĩnh vực HIV/AIDS và bệnh truyền nhiễm
       </motion.p>
 
@@ -153,15 +183,23 @@ export default function DoctorsPage() {
             >
               <div className="flex items-center gap-6">
                 <img
-                  src={doctor.imageUrl || 'https://via.placeholder.com/96'}
+                  src={doctor.imageUrl || "https://via.placeholder.com/96"}
                   alt={doctor.fullName}
                   className="w-24 h-24 rounded-full border-4 border-red-100 object-cover"
                 />
                 <div className="flex-1 space-y-2">
-                  <h2 className="text-xl font-bold text-gray-800">{doctor.fullName}</h2>
-                  <p className="text-red-600 font-medium">{doctor.specialization}</p>
-                  <p className="text-gray-600">Trình độ: {doctor.qualification || 'Không có thông tin'}</p>
-                  <p className="text-gray-600">Lịch làm việc: {doctor.workingSchedule}</p>
+                  <h2 className="text-xl font-bold text-gray-800">
+                    {doctor.fullName}
+                  </h2>
+                  <p className="text-red-600 font-medium">
+                    {doctor.specialization}
+                  </p>
+                  <p className="text-gray-600">
+                    Trình độ: {doctor.qualification || "Không có thông tin"}
+                  </p>
+                  <p className="text-gray-600">
+                    Lịch làm việc: {doctor.workingSchedule}
+                  </p>
                   <div className="flex justify-end gap-2">
                     <Button
                       label="Xem chi tiết"
@@ -185,7 +223,9 @@ export default function DoctorsPage() {
             </motion.div>
           ))
         ) : (
-          <p className="text-center text-gray-500">Không tìm thấy bác sĩ phù hợp.</p>
+          <p className="text-center text-gray-500">
+            Không tìm thấy bác sĩ phù hợp.
+          </p>
         )}
       </motion.div>
 
@@ -221,34 +261,61 @@ export default function DoctorsPage() {
 
             <div className="flex items-center gap-4 mb-4">
               <img
-                src={selectedDoctor.imageUrl || 'https://via.placeholder.com/100'}
+                src={
+                  selectedDoctor.imageUrl || "https://via.placeholder.com/100"
+                }
                 alt={selectedDoctor.fullName}
                 className="w-24 h-24 rounded-full border-4 border-red-200 object-cover"
               />
               <div>
-                <h2 className="text-2xl font-bold text-red-700">{selectedDoctor.fullName}</h2>
-                <p className="text-gray-600">{selectedDoctor.specialization}</p>
+                <h2 className="text-2xl font-bold text-red-700">
+                  {doctorInfo?.doctorName || selectedDoctor.fullName}
+                </h2>
+                <p className="text-gray-600">
+                  {doctorInfo?.doctorSpecialization ||
+                    selectedDoctor.specialization}
+                </p>
               </div>
             </div>
 
-            <p><strong>Trình độ:</strong> {selectedDoctor.qualification || 'Không rõ'}</p>
-            <p><strong>Điện thoại:</strong> {selectedDoctor.phoneNumber || 'Không có'}</p>
-            <p><strong>Email:</strong> {selectedDoctor.email || 'Không có'}</p>
-            <p><strong>Lịch làm việc:</strong> {selectedDoctor.workingSchedule || 'Không có thông tin'}</p>
-
-            
+            <p>
+              <strong>Trình độ:</strong>{" "}
+              {selectedDoctor.qualification || "Không rõ"}
+            </p>
+            <p>
+              <strong>Điện thoại:</strong>{" "}
+              {doctorInfo?.doctorPhone ||
+                selectedDoctor.phoneNumber ||
+                "Không có"}
+            </p>
+            <p>
+              <strong>Email:</strong>{" "}
+              {doctorInfo?.doctorEmail || selectedDoctor.email || "Không có"}
+            </p>
+            <p>
+              <strong>Lịch làm việc:</strong>{" "}
+              {selectedDoctor.workingSchedule || "Không có thông tin"}
+            </p>
 
             <div className="text-right mt-4">
               <Button
                 label="Đặt lịch"
                 onClick={() => {
                   setShowModal(false);
-                  const token = JSON.parse(localStorage.getItem('user'))?.token;
+                  const token = JSON.parse(localStorage.getItem("user"))?.token;
                   if (!token) {
-                    sessionStorage.setItem('pendingAppointment', JSON.stringify({ doctor: selectedDoctor, from: '/doctors' }));
-                    navigate('/login');
+                    sessionStorage.setItem(
+                      "pendingAppointment",
+                      JSON.stringify({
+                        doctor: selectedDoctor,
+                        from: "/doctors",
+                      })
+                    );
+                    navigate("/login");
                   } else {
-                    navigate('/appointments', { state: { doctor: selectedDoctor } });
+                    navigate("/appointments", {
+                      state: { doctor: selectedDoctor },
+                    });
                   }
                 }}
                 icon={<Calendar className="w-4 h-4" />}
