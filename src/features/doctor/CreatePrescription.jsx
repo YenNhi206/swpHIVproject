@@ -91,7 +91,7 @@ export default function CreatePrescription() {
       }
 
       alert("Tạo đơn thuốc thành công!");
-      navigate("/prescriptions");
+      navigate("/patientappointments");
     } catch (err) {
       setError(err.message || "Đã có lỗi xảy ra");
     } finally {

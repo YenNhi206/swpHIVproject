@@ -42,6 +42,7 @@ export default function SidebarVertical({ user, handleLogout }) {
         sidebarLinks.push(
             { path: "/patientappointments", label: "Lịch hẹn bệnh nhân", icon: Calendar },
             { path: "/treatment", label: "Phác đồ điều trị", icon: FileText },
+            { path: "/test-results", label: "Kết quả bệnh nhân", icon: FileText },
         );
     }
 

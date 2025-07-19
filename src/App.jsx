@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import DoctorTestResults from "./features/doctor/DoctorTestResults";
+
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 
@@ -24,8 +26,7 @@ import CreateTreatment from "./features/treatments/CreateTreatment";
 import EditTreatment from "./features/treatments/EditTreatment";
 
 import AppointmentForm from "./features/appointment/AppointmentForm";
-import DoctorAppointmentList from "./features/appointment/DoctorAppointments";
-import UserAppointmentList from "./features/appointment/UserAppointments";
+
 import PatientProfile from "./features/users/PatientProfile";
 import AnonymousAppointmentForm from "./features/appointment/AnonymousAppointmentForm";
 import PaymentPage from "./features/payment/PaymentPage";
@@ -38,8 +39,8 @@ import DoctorsPage from "./pages/DoctorsPage";
 import ServicesPage from "./pages/ServicesPage";
 
 import PatientAppointments from "./features/doctor/PatientAppointments";
-import DoctorAlertsPage from "./features/doctor/DoctorAlertsPage";
-import PatientDetailForDoctor from "./features/doctor/PatientDetailForDoctor";
+
+
 import CreatePrescription from "./features/doctor/CreatePrescription";
 
 import AdminAccountsPage from "./features/admin/AdminAccountsPage";
@@ -69,6 +70,15 @@ export default function App() {
   return (
     <Router>
       <Routes>
+<Route
+  path="/test-results"
+  element={
+    <MainLayout user={user} setUser={setUser}>
+      <DoctorTestResults />
+    </MainLayout>
+  }
+/>
+
         <Route
           path="/"
           element={
@@ -271,39 +281,11 @@ export default function App() {
             </MainLayout>
           }
         />
-        <Route
-          path="/doctorappointments"
-          element={
-            <AuthLayout>
-              <DoctorAppointmentList />
-            </AuthLayout>
-          }
-        />
-        <Route
-          path="/userappointments"
-          element={
-            <AuthLayout>
-              <UserAppointmentList />
-            </AuthLayout>
-          }
-        />
-        <Route
-          path="/alerts"
-          element={
-            <MainLayout user={user} setUser={setUser}>
-              <DoctorAlertsPage />
-            </MainLayout>
-          }
-        />
+       
+        
+       
 
-        <Route
-          path="/patientappointments/:patientId"
-          element={
-            <MainLayout user={user} setUser={setUser}>
-              <PatientDetailForDoctor />
-            </MainLayout>
-          }
-        />
+       
         <Route
           path="/admin/accounts"
           element={

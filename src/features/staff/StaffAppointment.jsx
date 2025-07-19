@@ -21,6 +21,7 @@ const statusOptions = [
   { value: "COMPLETED", label: "Hoàn tất" },
   { value: "ABSENT", label: "Vắng" },
 ];
+
 const bookingModeOptions = [{ value: "NORMAL", label: "Lịch thường" }];
 
 // Columns cho lịch thường
