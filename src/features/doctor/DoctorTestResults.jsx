@@ -1,15 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion'; // Thêm framer-motion cho hiệu ứng
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { FileText } from 'lucide-react'; // Thêm biểu tượng nếu cần (tùy chọn)
+import { FileText } from 'lucide-react';
 
 export default function DoctorTestResults() {
   const [results, setResults] = useState([]);
+  const [patientProfiles, setPatientProfiles] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const doctorId = localStorage.getItem('doctorId');
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
+
+  const fetchPatientProfiles = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/api/patients', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) throw new Error('Không thể lấy thông tin bệnh nhân');
+      const data = await res.json();
+
+      const map = {};
+      data.forEach((p) => {
+        map[p.id] = p.fullName;
+      });
+      setPatientProfiles(map);
+    } catch (err) {
+      console.error('Lỗi lấy profile bệnh nhân:', err.message);
+    }
+  };
 
   useEffect(() => {
     if (!doctorId) {
@@ -17,6 +37,9 @@ export default function DoctorTestResults() {
       setLoading(false);
       return;
     }
+
+    fetchPatientProfiles();
+
     fetch(`http://localhost:8080/api/test-results/doctor/${doctorId}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -87,8 +110,7 @@ export default function DoctorTestResults() {
                   <th className="px-6 py-3 border-b border-red-100">STT</th>
                   <th className="px-6 py-3 border-b border-red-100">Bệnh nhân</th>
                   <th className="px-6 py-3 border-b border-red-100">Loại xét nghiệm</th>
-                  <th className="px-6 py-3 border-b border-red-100">Ngày</th>
-                  <th className="px-6 py-3 border-b border-red-100">Giá trị</th>
+                  <th className="px-6 py-3 border-b border-red-100">Kết quả</th>
                   <th className="px-6 py-3 border-b border-red-100">Ghi chú</th>
                   <th className="px-6 py-3 border-b border-red-100">Trạng thái</th>
                 </tr>
@@ -97,29 +119,23 @@ export default function DoctorTestResults() {
                 {results.map((r, idx) => (
                   <motion.tr
                     key={r.id}
-                    className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50 hover:bg-red-50 transition-colors duration-200'}
+                    className={
+                      idx % 2 === 0
+                        ? 'bg-white'
+                        : 'bg-gray-50 hover:bg-red-50 transition-colors duration-200'
+                    }
                     variants={itemVariants}
                     initial="hidden"
                     animate="visible"
                   >
                     <td className="px-6 py-3 border-b border-red-100">{idx + 1}</td>
                     <td className="px-6 py-3 border-b border-red-100">
-                      {r.patientName || r.patientId}
+                      {patientProfiles[r.patientId] || r.patientName || r.patientId}
                     </td>
                     <td className="px-6 py-3 border-b border-red-100">
                       {r.testCategoryName || r.testCategoryId}
                     </td>
-                    <td className="px-6 py-3 border-b border-red-100">
-                      {r.createdAt ? (
-                        new Date(r.createdAt).toLocaleDateString('vi-VN', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                        })
-                      ) : (
-                        <span className="text-gray-400 italic">Chưa có</span>
-                      )}
-                    </td>
+
                     <td className="px-6 py-3 border-b border-red-100 text-gray-700">
                       {r.resultValue || <span className="text-gray-400 italic">Chưa có</span>}
                     </td>
@@ -128,13 +144,12 @@ export default function DoctorTestResults() {
                     </td>
                     <td className="px-6 py-3 border-b border-red-100">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          r.status === 'REQUESTED'
-                            ? 'bg-yellow-100 text-yellow-700'
-                            : r.status === 'COMPLETED'
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${r.status === 'REQUESTED'
+                          ? 'bg-yellow-100 text-yellow-700'
+                          : r.status === 'COMPLETED'
                             ? 'bg-green-100 text-green-700'
                             : 'bg-gray-100 text-gray-700'
-                        }`}
+                          }`}
                       >
                         {r.status}
                       </span>
