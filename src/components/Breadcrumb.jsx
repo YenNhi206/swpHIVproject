@@ -50,6 +50,7 @@ export default function Breadcrumb() {
     '/knowledge': 'Kiến thức',
     '/listdoctor': 'Chuyên gia - Bác sĩ',
     '/services': 'Dịch vụ - Giá tiền',
+    '/test-results':' Kết quả xét nghiệm bệnh nhân',
     '*': 'Không tìm thấy',
   };
 

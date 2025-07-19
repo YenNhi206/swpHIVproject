@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import DoctorTestResults from "./features/doctor/DoctorTestResults";
+
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 
@@ -68,6 +70,15 @@ export default function App() {
   return (
     <Router>
       <Routes>
+<Route
+  path="/test-results"
+  element={
+    <MainLayout user={user} setUser={setUser}>
+      <DoctorTestResults />
+    </MainLayout>
+  }
+/>
+
         <Route
           path="/"
           element={
