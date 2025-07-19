@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Input,
-  Typography,
-  Select,
-  Space,
-  message,
-} from "antd";
+import { Table, Input, Typography, Select, Space, message } from "antd";
 
 const { Title } = Typography;
 const { Option } = Select;
 
 export default function StaffTestManagement() {
   const [tests, setTests] = useState([]);
+  const [patientProfiles, setPatientProfiles] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(null);
@@ -26,35 +20,55 @@ export default function StaffTestManagement() {
     { label: "Đã hủy", value: "CANCELLED" },
   ];
 
+  const fetchPatientProfiles = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = user?.token;
+      if (!token) throw new Error("Vui lòng đăng nhập");
+      const response = await fetch("http://localhost:8080/api/patients", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.ok) {
+        const profiles = await response.json();
+        const profileMap = {};
+        profiles.forEach((profile) => {
+          profileMap[profile.id] = profile.fullName;
+        });
+        setPatientProfiles(profileMap);
+      }
+    } catch (error) {
+      console.error("Error fetching patient profiles:", error);
+    }
+  };
+
   const fetchTestResults = async () => {
     setLoading(true);
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      if (!user || !user.token) {
-        throw new Error("Vui lòng đăng nhập với vai trò STAFF hoặc ADMIN");
-      }
-      const token = user.token;
-      const response = await fetch("http://localhost:8080/api/test-results", {
+      const token = user?.token;
+      if (!token) throw new Error("Vui lòng đăng nhập");
+      const resp = await fetch("http://localhost:8080/api/test-results", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to fetch test results: ${response.status} - ${errorText}`);
+      if (!resp.ok) {
+        const errorText = await resp.text();
+        throw new Error(`Failed: ${resp.status} - ${errorText}`);
       }
-      const data = await response.json();
+      const data = await resp.json();
       setTests(data);
     } catch (error) {
-      console.error("Error fetching test results:", error);
-      message.error(`Không thể tải danh sách xét nghiệm: ${error.message}`);
+      console.error(error);
+      message.error(`Không tải được danh sách: ${error.message}`);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    fetchPatientProfiles();
     fetchTestResults();
   }, []);
 
@@ -65,25 +79,20 @@ export default function StaffTestManagement() {
   const handleStatusChange = async (id, newStatus) => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      if (!user || !user.token) throw new Error("Vui lòng đăng nhập");
-
-      const response = await fetch(
+      const token = user?.token;
+      if (!token) throw new Error("Vui lòng đăng nhập");
+      const res = await fetch(
         `http://localhost:8080/api/test-results/${id}/status?status=${newStatus}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
+        { method: "PATCH", headers: { Authorization: `Bearer ${token}` } }
       );
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Update failed: ${response.status} - ${errorText}`);
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Update failed: ${res.status} - ${errorText}`);
       }
-      message.success("Đã cập nhật trạng thái");
+      message.success("Cập nhật trạng thái thành công");
       fetchTestResults();
     } catch (error) {
-      console.error("Error updating status:", error);
+      console.error(error);
       message.error("Cập nhật trạng thái thất bại: " + error.message);
     }
   };
@@ -92,64 +101,66 @@ export default function StaffTestManagement() {
     setUpdating(id);
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      if (!user || !user.token) throw new Error("Vui lòng đăng nhập");
-
-      const url = `http://localhost:8080/api/test-results/${id}/result?resultValue=${encodeURIComponent(result)}&resultNote=${encodeURIComponent(resultNote)}`;
-
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Update failed: ${response.status} - ${errorText}`);
+      const token = user?.token;
+      if (!token) throw new Error("Vui lòng đăng nhập");
+      const params = new URLSearchParams();
+      params.append("resultValue", result);
+      if (resultNote.trim()) params.append("resultNote", resultNote.trim());
+      const res = await fetch(
+        `http://localhost:8080/api/test-results/${id}/result?${params.toString()}`,
+        { method: "PATCH", headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Update failed: ${res.status} - ${errorText}`);
       }
-
       message.success("Đã lưu kết quả");
       fetchTestResults();
     } catch (error) {
-      console.error("Error updating result:", error);
+      console.error(error);
       message.error("Lưu kết quả thất bại: " + error.message);
     } finally {
       setUpdating(null);
     }
   };
 
-  const filteredTests = tests.filter(
-    (test) =>
-      test.patientName?.toLowerCase().includes(searchTerm) ||
-      test.status?.toLowerCase().includes(searchTerm)
-  );
+  const filteredTests = tests.filter((test) => {
+    const patientName = patientProfiles[test.patientId] || test.patientName || "";
+    const status = test.status || "";
+    return (
+      patientName.toLowerCase().includes(searchTerm) ||
+      status.toLowerCase().includes(searchTerm) ||
+      (test.resultDate || "").toLowerCase().includes(searchTerm)
+    );
+  });
 
   const columns = [
     {
       title: "Bệnh nhân",
       dataIndex: "patientName",
       key: "patientName",
-      render: (text) => text || "Chưa có",
+      render: (text, rec) => patientProfiles[rec.patientId] || text || "Chưa có",
     },
     {
       title: "Xét nghiệm",
       dataIndex: "testCategoryName",
       key: "testCategoryName",
-      render: (text) => text || "Chưa có",
+      render: (t) => t || "Chưa có",
     },
     {
       title: "Bác sĩ",
       dataIndex: "doctorName",
       key: "doctorName",
-      render: (text) => text || "Chưa chỉ định",
+      render: (t) => t || "Chưa chỉ định",
     },
+
     {
       title: "Trạng thái",
       key: "status",
-      render: (text, record) => (
+      render: (_, rec) => (
         <Select
-          value={record.status}
-          onChange={(value) => handleStatusChange(record.id, value)}
+          value={rec.status}
+          onChange={(v) => handleStatusChange(rec.id, v)}
           style={{ width: 180 }}
         >
           {statusOptions.map((opt) => (
@@ -163,57 +174,57 @@ export default function StaffTestManagement() {
     {
       title: "Kết quả & Ghi chú",
       key: "result",
-      render: (text, record) => {
-        const editing = editingResults[record.id] || {};
+      render: (_, rec) => {
+        const edit = editingResults[rec.id] || {};
         return (
           <Space direction="vertical">
             <Input
-              value={editing.value ?? record.resultValue ?? ""}
+              value={edit.value ?? rec.resultValue ?? ""}
               onChange={(e) =>
-                setEditingResults((prev) => ({
-                  ...prev,
-                  [record.id]: {
-                    ...prev[record.id],
+                setEditingResults((p) => ({
+                  ...p,
+                  [rec.id]: {
+                    ...p[rec.id],
                     value: e.target.value,
-                    note: prev[record.id]?.note ?? record.resultNote ?? "",
+                    note: p[rec.id]?.note ?? rec.resultNote ?? "",
                   },
                 }))
               }
               onBlur={() =>
                 handleResultChange(
-                  record.id,
-                  editingResults[record.id]?.value || "",
-                  editingResults[record.id]?.note || ""
+                  rec.id,
+                  editingResults[rec.id]?.value || "",
+                  editingResults[rec.id]?.note || ""
                 )
               }
-              placeholder="Nhập kết quả"
-              disabled={updating === record.id}
+              placeholder="Kết quả"
+              disabled={updating === rec.id}
               style={{ width: 250 }}
             />
             <Input
-              value={editing.note ?? record.resultNote ?? ""}
+              value={edit.note ?? rec.resultNote ?? ""}
               onChange={(e) =>
-                setEditingResults((prev) => ({
-                  ...prev,
-                  [record.id]: {
-                    ...prev[record.id],
+                setEditingResults((p) => ({
+                  ...p,
+                  [rec.id]: {
+                    ...p[rec.id],
                     note: e.target.value,
-                    value: prev[record.id]?.value ?? record.resultValue ?? "",
+                    value: p[rec.id]?.value ?? rec.resultValue ?? "",
                   },
                 }))
               }
               onBlur={() =>
                 handleResultChange(
-                  record.id,
-                  editingResults[record.id]?.value || "",
-                  editingResults[record.id]?.note || ""
+                  rec.id,
+                  editingResults[rec.id]?.value || "",
+                  editingResults[rec.id]?.note || ""
                 )
               }
-              placeholder="Ghi chú (nếu có)"
-              disabled={updating === record.id}
+              placeholder="Ghi chú"
+              disabled={updating === rec.id}
               style={{ width: 250 }}
             />
-            {updating === record.id && <span>Đang lưu...</span>}
+            {updating === rec.id && <span>Đang lưu...</span>}
           </Space>
         );
       },
@@ -223,15 +234,13 @@ export default function StaffTestManagement() {
   return (
     <div className="p-6">
       <Title level={3}>Quản lý xét nghiệm</Title>
-
       <Input.Search
-        placeholder="Tìm kiếm theo tên bệnh nhân hoặc trạng thái"
+        placeholder="Tìm kiếm tên bệnh nhân"
         value={searchTerm}
         onChange={handleSearch}
         className="mb-4"
         allowClear
       />
-
       <Table
         loading={loading}
         dataSource={filteredTests}
@@ -241,5 +250,5 @@ export default function StaffTestManagement() {
         bordered
       />
     </div>
-  );
-}
+  )
+};
