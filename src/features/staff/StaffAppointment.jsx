@@ -20,6 +20,7 @@ const statusOptions = [
   { value: "IN_PROGRESS", label: "Đang khám" },
   { value: "COMPLETED", label: "Hoàn tất" },
   { value: "ABSENT", label: "Vắng" },
+]
 
 
 const bookingModeOptions = [{ value: "NORMAL", label: "Lịch thường" }];
