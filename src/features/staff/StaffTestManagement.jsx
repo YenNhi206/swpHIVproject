@@ -13,6 +13,7 @@ const { Option } = Select;
 
 export default function StaffTestManagement() {
   const [tests, setTests] = useState([]);
+  const [patientProfiles, setPatientProfiles] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(null);
@@ -25,6 +26,33 @@ export default function StaffTestManagement() {
     { label: "Hoàn tất", value: "COMPLETED" },
     { label: "Đã hủy", value: "CANCELLED" },
   ];
+
+  const fetchPatientProfiles = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user || !user.token) {
+        throw new Error("Vui lòng đăng nhập với vai trò STAFF hoặc ADMIN");
+      }
+      const token = user.token;
+      
+      const response = await fetch("http://localhost:8080/api/patients", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      if (response.ok) {
+        const profiles = await response.json();
+        const profileMap = {};
+        profiles.forEach(profile => {
+          profileMap[profile.id] = profile.fullName;
+        });
+        setPatientProfiles(profileMap);
+      }
+    } catch (error) {
+      console.error("Error fetching patient profiles:", error);
+    }
+  };
 
   const fetchTestResults = async () => {
     setLoading(true);
@@ -55,6 +83,7 @@ export default function StaffTestManagement() {
   };
 
   useEffect(() => {
+    fetchPatientProfiles();
     fetchTestResults();
   }, []);
 
@@ -94,14 +123,21 @@ export default function StaffTestManagement() {
       const user = JSON.parse(localStorage.getItem("user"));
       if (!user || !user.token) throw new Error("Vui lòng đăng nhập");
 
-      const url = `http://localhost:8080/api/test-results/${id}/result?resultValue=${encodeURIComponent(result)}&resultNote=${encodeURIComponent(resultNote)}`;
+      const params = new URLSearchParams();
+      params.append("resultValue", result);
+      if (resultNote && resultNote.trim() !== "") {
+        params.append("resultNote", resultNote.trim());
+      }
 
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:8080/api/test-results/${id}/result?${params.toString()}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -119,9 +155,14 @@ export default function StaffTestManagement() {
   };
 
   const filteredTests = tests.filter(
-    (test) =>
-      test.patientName?.toLowerCase().includes(searchTerm) ||
-      test.status?.toLowerCase().includes(searchTerm)
+    (test) => {
+      const patientName = patientProfiles[test.patientId] || test.patientName || "";
+      const status = test.status || "";
+      return (
+        patientName.toLowerCase().includes(searchTerm) ||
+        status.toLowerCase().includes(searchTerm)
+      );
+    }
   );
 
   const columns = [
@@ -129,7 +170,11 @@ export default function StaffTestManagement() {
       title: "Bệnh nhân",
       dataIndex: "patientName",
       key: "patientName",
-      render: (text) => text || "Chưa có",
+      render: (text, record) => {
+        // Ưu tiên hiển thị tên thật từ patientProfiles
+        const realName = patientProfiles[record.patientId];
+        return realName || text || "Chưa có";
+      },
     },
     {
       title: "Xét nghiệm",
