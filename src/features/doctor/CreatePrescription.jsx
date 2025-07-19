@@ -11,6 +11,8 @@ export default function CreatePrescription() {
   const appointmentId = location.state?.appointmentId;
   const token = localStorage.getItem("token");
 
+  const [patientPrescriptions, setPatientPrescriptions] = useState([]);
+
   function decodeToken(token) {
     try {
       return JSON.parse(atob(token.split(".")[1]));
@@ -96,6 +98,71 @@ export default function CreatePrescription() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log("===> patientId FE:", patientId);
+  }, [patientId]);
+
+  useEffect(() => {
+    if (patientId) {
+      console.log("Fetching prescriptions for patientId:", patientId);
+      fetch(`http://localhost:8080/api/prescriptions/patient/${patientId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          console.log("Prescriptions data:", data);
+          setPatientPrescriptions(data);
+        })
+        .catch((err) => {
+          console.error("Không thể tải danh sách đơn thuốc bệnh nhân:", err);
+          setPatientPrescriptions([]);
+        });
+    }
+  }, [patientId, token]);
+
+  // Thêm useEffect để lấy đơn thuốc theo appointment
+  useEffect(() => {
+    if (appointmentId) {
+      console.log("Fetching prescriptions for appointmentId:", appointmentId);
+      fetch(
+        `http://localhost:8080/api/prescriptions/appointment/${appointmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          console.log("Appointment prescriptions data:", data);
+          // Nếu có đơn thuốc theo appointment, ưu tiên hiển thị
+          if (data && data.length > 0) {
+            setPatientPrescriptions(data);
+          }
+        })
+        .catch((err) => {
+          console.error(
+            "Không thể tải danh sách đơn thuốc theo appointment:",
+            err
+          );
+        });
+    }
+  }, [appointmentId, token]);
 
   return (
     <div className="max-w-3xl mx-auto mt-8 p-6 bg-white rounded-2xl shadow-md border">
@@ -218,6 +285,195 @@ export default function CreatePrescription() {
           </button>
         </div>
       </form>
+
+      <div className="mt-10">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-semibold text-gray-800">
+            Đơn thuốc đã kê cho bệnh nhân
+          </h3>
+          <div className="text-sm text-gray-500">
+            Tổng cộng: {patientPrescriptions.length} đơn thuốc
+          </div>
+        </div>
+        {patientPrescriptions.length === 0 ? (
+          <p className="text-gray-500">Chưa có đơn thuốc nào.</p>
+        ) : (
+          <>
+            {/* Thống kê đơn thuốc */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <div className="bg-blue-50 p-4 rounded-lg border">
+                <div className="text-blue-600 font-semibold">
+                  {
+                    patientPrescriptions.filter((p) => p.status === "ACTIVE")
+                      .length
+                  }
+                </div>
+                <div className="text-sm text-gray-600">Đang hoạt động</div>
+              </div>
+              <div className="bg-green-50 p-4 rounded-lg border">
+                <div className="text-green-600 font-semibold">
+                  {
+                    patientPrescriptions.filter((p) => p.status === "SUSPENDED")
+                      .length
+                  }
+                </div>
+                <div className="text-sm text-gray-600">Tạm ngưng</div>
+              </div>
+              <div className="bg-red-50 p-4 rounded-lg border">
+                <div className="text-red-600 font-semibold">
+                  {
+                    patientPrescriptions.filter(
+                      (p) => p.status === "DISCONTINUED"
+                    ).length
+                  }
+                </div>
+                <div className="text-sm text-gray-600">Đã dừng</div>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg border">
+                <div className="text-gray-600 font-semibold">
+                  {patientPrescriptions.length}
+                </div>
+                <div className="text-sm text-gray-600">Tổng cộng</div>
+              </div>
+            </div>
+
+            {/* Bảng đơn thuốc */}
+            <div className="overflow-x-auto">
+              <table className="min-w-full border text-sm">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-4 py-2 text-left border">#</th>
+                    <th className="px-4 py-2 text-left border">Phác đồ</th>
+                    <th className="px-4 py-2 text-left border">Ngày kê</th>
+                    <th className="px-4 py-2 text-left border">Từ ngày</th>
+                    <th className="px-4 py-2 text-left border">Đến ngày</th>
+                    <th className="px-4 py-2 text-left border">Trạng thái</th>
+                    <th className="px-4 py-2 text-left border">
+                      Hướng dẫn sử dụng
+                    </th>
+                    <th className="px-4 py-2 text-left border">
+                      Điều chỉnh liều lượng
+                    </th>
+                    <th className="px-4 py-2 text-left border">Ghi chú</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {patientPrescriptions.map((pres, index) => (
+                    <tr key={pres.id} className="border-t hover:bg-gray-50">
+                      <td className="px-4 py-2 border font-medium">
+                        {index + 1}
+                      </td>
+                      <td className="px-4 py-2 border">
+                        <div className="font-medium text-blue-600">
+                          {pres.protocolName || pres.protocolId || "Không rõ"}
+                        </div>
+                        {pres.protocolId && (
+                          <div className="text-xs text-gray-500">
+                            ID: {pres.protocolId}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-4 py-2 border">
+                        {pres.prescribedDate ? (
+                          <span className="text-purple-600 font-medium text-sm">
+                            {new Date(pres.prescribedDate).toLocaleDateString(
+                              "vi-VN"
+                            )}
+                          </span>
+                        ) : (
+                          <span className="text-gray-400 italic text-xs">
+                            Không có
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2 border">
+                        {pres.startDate || pres.startDateLocal ? (
+                          <span className="text-green-600 font-medium text-sm">
+                            {new Date(
+                              pres.startDate || pres.startDateLocal
+                            ).toLocaleDateString("vi-VN")}
+                          </span>
+                        ) : (
+                          <span className="text-gray-400 italic text-xs">
+                            Chưa có
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2 border">
+                        {pres.endDate || pres.endDateLocal ? (
+                          <span className="text-orange-600 font-medium text-sm">
+                            {new Date(
+                              pres.endDate || pres.endDateLocal
+                            ).toLocaleDateString("vi-VN")}
+                          </span>
+                        ) : (
+                          <span className="text-gray-400 italic text-xs">
+                            Chưa kết thúc
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2 border">
+                        <span
+                          className={`px-2 py-1 rounded text-xs font-medium ${
+                            pres.status === "ACTIVE"
+                              ? "bg-green-100 text-green-800"
+                              : pres.status === "DISCONTINUED"
+                              ? "bg-red-100 text-red-800"
+                              : pres.status === "SUSPENDED"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          {pres.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 border">
+                        <div className="max-w-xs">
+                          {pres.customInstructions ? (
+                            <span className="text-sm text-gray-700">
+                              {pres.customInstructions}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400 italic text-xs">
+                              Không có
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-2 border">
+                        <div className="max-w-xs">
+                          {pres.dosageAdjustments ? (
+                            <span className="text-sm text-gray-700">
+                              {pres.dosageAdjustments}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400 italic text-xs">
+                              Không có
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-2 border">
+                        <div className="max-w-xs">
+                          {pres.notes ? (
+                            <span className="text-sm text-gray-700">
+                              {pres.notes}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400 italic text-xs">
+                              Không có
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
