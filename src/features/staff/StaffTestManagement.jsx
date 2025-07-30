@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Table, Input, Typography, Select, Space, message } from "antd";
+import { Button } from "antd";
+
 
 const { Title } = Typography;
 const { Option } = Select;
+
 
 export default function StaffTestManagement() {
   const [tests, setTests] = useState([]);
@@ -12,6 +15,7 @@ export default function StaffTestManagement() {
   const [updating, setUpdating] = useState(null);
   const [editingResults, setEditingResults] = useState({});
 
+
   const statusOptions = [
     { label: "Đã yêu cầu", value: "REQUESTED" },
     { label: "Đã nhận mẫu", value: "SAMPLE_RECEIVED" },
@@ -19,6 +23,7 @@ export default function StaffTestManagement() {
     { label: "Hoàn tất", value: "COMPLETED" },
     { label: "Đã hủy", value: "CANCELLED" },
   ];
+
 
   const fetchPatientProfiles = async () => {
     try {
@@ -35,11 +40,13 @@ export default function StaffTestManagement() {
           profileMap[profile.id] = profile.fullName;
         });
         setPatientProfiles(profileMap);
+        console.log("Patient profiles loaded:", profileMap);
       }
     } catch (error) {
       console.error("Error fetching patient profiles:", error);
     }
   };
+
 
   const fetchTestResults = async () => {
     setLoading(true);
@@ -58,6 +65,16 @@ export default function StaffTestManagement() {
         throw new Error(`Failed: ${resp.status} - ${errorText}`);
       }
       const data = await resp.json();
+      console.log("Test results loaded:", data);
+
+
+      data.forEach((test) => {
+        console.log(
+          `Test ID: ${test.id}, Patient ID: ${test.patientId}, Patient Name: ${test.patientName}`
+        );
+      });
+
+
       setTests(data);
     } catch (error) {
       console.error(error);
@@ -67,14 +84,17 @@ export default function StaffTestManagement() {
     }
   };
 
+
   useEffect(() => {
     fetchPatientProfiles();
     fetchTestResults();
   }, []);
 
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
   };
+
 
   const handleStatusChange = async (id, newStatus) => {
     try {
@@ -97,15 +117,33 @@ export default function StaffTestManagement() {
     }
   };
 
+
   const handleResultChange = async (id, result, resultNote = "") => {
     setUpdating(id);
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       const token = user?.token;
       if (!token) throw new Error("Vui lòng đăng nhập");
+
+
+      console.log(`Updating test result ID: ${id}`);
+      console.log(`Result value: ${result}`);
+      console.log(`Result note: ${resultNote}`);
+
+
       const params = new URLSearchParams();
-      params.append("resultValue", result);
-      if (resultNote.trim()) params.append("resultNote", resultNote.trim());
+      if (result !== undefined && result !== null) {
+        params.append("resultValue", result);
+      }
+      if (
+        resultNote !== undefined &&
+        resultNote !== null &&
+        resultNote.trim()
+      ) {
+        params.append("resultNote", resultNote.trim());
+      }
+
+
       const res = await fetch(
         `http://localhost:8080/api/test-results/${id}/result?${params.toString()}`,
         { method: "PATCH", headers: { Authorization: `Bearer ${token}` } }
@@ -124,8 +162,10 @@ export default function StaffTestManagement() {
     }
   };
 
+
   const filteredTests = tests.filter((test) => {
-    const patientName = patientProfiles[test.patientId] || test.patientName || "";
+    const patientName =
+      patientProfiles[test.patientId] || test.patientName || "";
     const status = test.status || "";
     return (
       patientName.toLowerCase().includes(searchTerm) ||
@@ -134,12 +174,19 @@ export default function StaffTestManagement() {
     );
   });
 
+
   const columns = [
     {
       title: "Bệnh nhân",
       dataIndex: "patientName",
       key: "patientName",
-      render: (text, rec) => patientProfiles[rec.patientId] || text || "Chưa có",
+      render: (text, rec) => {
+        const displayName = patientProfiles[rec.patientId] || text || "Chưa có";
+        console.log(
+          `Rendering patient for test ${rec.id}: ${displayName} (Patient ID: ${rec.patientId})`
+        );
+        return displayName;
+      },
     },
     {
       title: "Xét nghiệm",
@@ -153,6 +200,7 @@ export default function StaffTestManagement() {
       key: "doctorName",
       render: (t) => t || "Chưa chỉ định",
     },
+
 
     {
       title: "Trạng thái",
@@ -178,58 +226,60 @@ export default function StaffTestManagement() {
         const edit = editingResults[rec.id] || {};
         return (
           <Space direction="vertical">
-            <Input
-              value={edit.value ?? rec.resultValue ?? ""}
-              onChange={(e) =>
-                setEditingResults((p) => ({
-                  ...p,
-                  [rec.id]: {
-                    ...p[rec.id],
-                    value: e.target.value,
-                    note: p[rec.id]?.note ?? rec.resultNote ?? "",
-                  },
-                }))
-              }
-              onBlur={() =>
-                handleResultChange(
-                  rec.id,
-                  editingResults[rec.id]?.value || "",
-                  editingResults[rec.id]?.note || ""
-                )
-              }
-              placeholder="Kết quả"
-              disabled={updating === rec.id}
-              style={{ width: 250 }}
-            />
-            <Input
-              value={edit.note ?? rec.resultNote ?? ""}
-              onChange={(e) =>
-                setEditingResults((p) => ({
-                  ...p,
-                  [rec.id]: {
-                    ...p[rec.id],
-                    note: e.target.value,
-                    value: p[rec.id]?.value ?? rec.resultValue ?? "",
-                  },
-                }))
-              }
-              onBlur={() =>
-                handleResultChange(
-                  rec.id,
-                  editingResults[rec.id]?.value || "",
-                  editingResults[rec.id]?.note || ""
-                )
-              }
-              placeholder="Ghi chú"
-              disabled={updating === rec.id}
-              style={{ width: 250 }}
-            />
+            <Space direction="horizontal">
+              <Input
+                value={edit.value ?? rec.resultValue ?? ""}
+                onChange={(e) =>
+                  setEditingResults((p) => ({
+                    ...p,
+                    [rec.id]: {
+                      ...p[rec.id],
+                      value: e.target.value,
+                      note: p[rec.id]?.note ?? rec.resultNote ?? "",
+                    },
+                  }))
+                }
+                placeholder="Kết quả"
+                disabled={updating === rec.id}
+                style={{ width: 250 }}
+              />
+              <Input
+                value={edit.note ?? rec.resultNote ?? ""}
+                onChange={(e) =>
+                  setEditingResults((p) => ({
+                    ...p,
+                    [rec.id]: {
+                      ...p[rec.id],
+                      note: e.target.value,
+                      value: p[rec.id]?.value ?? rec.resultValue ?? "",
+                    },
+                  }))
+                }
+                placeholder="Ghi chú"
+                disabled={updating === rec.id}
+                style={{ width: 250 }}
+              />
+              <Button
+                danger
+                onClick={() =>
+                  handleResultChange(
+                    rec.id,
+                    editingResults[rec.id]?.value || "",
+                    editingResults[rec.id]?.note || ""
+                  )
+                }
+                loading={updating === rec.id}
+              >
+                Confirm
+              </Button>
+            </Space>
             {updating === rec.id && <span>Đang lưu...</span>}
           </Space>
         );
       },
     },
   ];
+
 
   return (
     <div className="p-6">
@@ -250,5 +300,8 @@ export default function StaffTestManagement() {
         bordered
       />
     </div>
-  )
-};
+  );
+}
+
+
+
