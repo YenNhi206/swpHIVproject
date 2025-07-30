@@ -10,10 +10,7 @@ import {
     Users,
     BarChart,
     FileText,
-    AlertTriangle,
-    DollarSign,
     BookOpen,
-    PlusCircle,
 } from "lucide-react";
 
 export default function SidebarVertical({ user, handleLogout }) {
@@ -21,12 +18,12 @@ export default function SidebarVertical({ user, handleLogout }) {
     const [showLogout, setShowLogout] = useState(false);
 
     if (!user || user.role === "PATIENT") {
-        return null; // Ẩn sidebar cho patient hoặc chưa đăng nhập
+        return null;
     }
 
     const isActive = (path) => location.pathname === path;
 
-    // Menu sidebar theo role
+
     const sidebarLinks = [];
 
     if (user.role === "ADMIN") {
@@ -79,7 +76,7 @@ export default function SidebarVertical({ user, handleLogout }) {
                 ))}
             </div>
 
-            {/* User info + nút đăng xuất */}
+
             <div
                 className="flex items-center gap-2 cursor-pointer select-none"
                 onClick={toggleLogout}

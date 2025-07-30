@@ -150,7 +150,6 @@ export default function SignupPage() {
 
           {!isOtpStep ? (
             <form onSubmit={handleRegisterSubmit} className="space-y-6">
-              {/* Họ tên */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Họ tên</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -167,7 +166,6 @@ export default function SignupPage() {
                 {errors.fullName && <p className="text-red-600 text-sm mt-1">{errors.fullName}</p>}
               </div>
 
-              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -184,7 +182,6 @@ export default function SignupPage() {
                 {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
               </div>
 
-              {/* Mật khẩu + Xác nhận mật khẩu ngang hàng */}
               <div className="flex gap-4">
                 <div className="w-1/2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
@@ -228,7 +225,6 @@ export default function SignupPage() {
             </form>
           ) : (
             <form onSubmit={handleOtpSubmit} className="space-y-6">
-              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <div className="flex items-center border border-gray-300 rounded-lg bg-gray-100">
@@ -244,7 +240,6 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              {/* OTP */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Mã OTP</label>
                 <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">

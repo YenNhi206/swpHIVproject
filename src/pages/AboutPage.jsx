@@ -1,18 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import healthcareImage from '../assets/healthcare.jpg';
 import {
   Users,
   MapPin,
   Mail,
   Phone,
   Clock,
-  MessageCircle,
-  Calendar,
-  FileText
 } from 'lucide-react';
-import Button from '../components/Button';
 
 export default function AboutPage() {
   const navigate = useNavigate();
@@ -41,20 +36,16 @@ export default function AboutPage() {
   return (
     <motion.div className="w-full px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 font-sans" variants={containerVariants} initial="hidden" animate="visible">
 
-      {/* Logo trang web */}
       <section className="flex flex-col items-center text-center pt-12 pb-16 px-6 bg-gradient-to-b from-white via-red-50 to-white shadow-inner rounded-2xl mx-4">
-        {/* Logo / Tên thương hiệu */}
         <h1 className="text-5xl md:text-6xl font-extrabold text-gray-800 mb-4">
           <span className="text-red-700">HIV Care</span>
           <span className="text-red-500">+</span>
         </h1>
 
-        {/* Slogan (tuỳ chọn) */}
         <p className="text-gray-600 text-lg italic mb-8">
           Đồng hành cùng sức khoẻ cộng đồng
         </p>
 
-        {/* Thông tin liên hệ */}
         <div className="text-gray-700 text-base md:text-lg space-y-4 w-full max-w-xl">
           <div className="flex items-center justify-center gap-3">
             <MapPin className="w-5 h-5 text-red-500" />
@@ -76,7 +67,6 @@ export default function AboutPage() {
       </section>
 
 
-      {/* Lịch sử thành lập & Cơ sở hoạt động */}
       <section className="mt-16">
         <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
           Lịch sử thành lập & Cơ sở hoạt động
@@ -85,7 +75,7 @@ export default function AboutPage() {
         <div className="px-4 sm:px-6 lg:px-12 py-12 text-gray-800 space-y-12">
 
           <div>
-            <h3 className="text-xl font-bold text-red-600 mb-4">🏥 Lịch sử thành lập</h3>
+            <h3 className="text-xl font-bold text-red-600 mb-4">Lịch sử thành lập</h3>
             <p>
               HIV Care+ được thành lập với sứ mệnh cung cấp nền tảng y tế trực tuyến chuyên sâu, đáng tin cậy và toàn diện trong điều trị HIV/AIDS tại Việt Nam.
             </p>
@@ -95,7 +85,7 @@ export default function AboutPage() {
           </div>
 
           <div>
-            <h3 className="text-xl font-bold text-red-600 mb-4">📍 Cơ sở hoạt động</h3>
+            <h3 className="text-xl font-bold text-red-600 mb-4">Cơ sở hoạt động</h3>
             <p>
               Chúng tôi hoạt động dưới sự cấp phép của Bộ Y tế, với <strong>trụ sở chính tại 123 Đường Sức Khoẻ, Quận 3, TP. Hồ Chí Minh</strong>. Cơ sở bao gồm:
             </p>
@@ -108,7 +98,7 @@ export default function AboutPage() {
           </div>
 
           <div>
-            <h3 className="text-xl font-bold text-red-600 mb-4">💡 Tầm nhìn & Giá trị</h3>
+            <h3 className="text-xl font-bold text-red-600 mb-4">Tầm nhìn & Giá trị</h3>
             <p>
               HIV Care+ không chỉ là một trang web — mà là một <strong>hệ sinh thái chăm sóc sức khoẻ toàn diện</strong>, nơi bệnh nhân được hỗ trợ bằng:
             </p>
@@ -129,7 +119,7 @@ export default function AboutPage() {
         <div className="px-4 sm:px-6 lg:px-12 py-12 text-gray-800 space-y-12">
           {/* Phạm vi hoạt động & Dịch vụ */}
           <div>
-            <h3 className="text-xl font-bold text-red-600 mb-4">📍 Phạm vi hoạt động & Dịch vụ</h3>
+            <h3 className="text-xl font-bold text-red-600 mb-4">Phạm vi hoạt động & Dịch vụ</h3>
             <p className="mb-4 leading-relaxed">
               HIVCare+ phục vụ cộng đồng trên toàn quốc qua nền tảng trực tuyến và các cơ sở đối tác tại các thành phố lớn.
             </p>
@@ -142,9 +132,8 @@ export default function AboutPage() {
             </ul>
           </div>
 
-          {/* Kỹ thuật cao */}
           <div>
-            <h3 className="text-xl font-bold text-red-600 mb-4">🧪 Các kỹ thuật cao đã thực hiện</h3>
+            <h3 className="text-xl font-bold text-red-600 mb-4">Các kỹ thuật cao đã thực hiện</h3>
             <ul className="list-disc list-inside space-y-2 leading-relaxed">
               <li>Xét nghiệm tải lượng HIV RNA (PCR Real-time)</li>
               <li>Đo tế bào miễn dịch CD4/CD8 bằng kỹ thuật FACS</li>
@@ -154,9 +143,8 @@ export default function AboutPage() {
             </ul>
           </div>
 
-          {/* Thành tích */}
           <div>
-            <h3 className="text-xl font-bold text-red-600 mb-4">🏆 Thành tích đã đạt được</h3>
+            <h3 className="text-xl font-bold text-red-600 mb-4">Thành tích đã đạt được</h3>
             <ul className="list-disc list-inside space-y-2 leading-relaxed">
               <li>Hơn <strong>50.000 lượt tư vấn & điều trị</strong> toàn quốc</li>
               <li>Hợp tác với hơn <strong>30 cơ sở y tế</strong> và tổ chức cộng đồng</li>
@@ -168,12 +156,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Chúng tôi khác biệt */}
       <section className="space-y-16 mt-16">
         <motion.h1 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4" variants={itemVariants}>Chúng tôi khác biệt</motion.h1>
         <div className="space-y-12">
 
-          {/* Tâm đức */}
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
             <img src="https://phongkhamdakhoaphuduc.com/wp-content/uploads/2022/07/kham-benh-online.jpg" alt="Tâm đức" className="w-full h-auto rounded-xl shadow" />
             <div>
@@ -194,7 +180,6 @@ export default function AboutPage() {
 
           </div>
 
-          {/* Chuyên nghiệp */}
           <div className="bg-red-100 py-8 px-4 rounded-xl">
             <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
               <div>
@@ -220,7 +205,6 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Ân cần */}
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
             <img src="http://image.congan.com.vn/thumbnail/CATP-2048-2022-12-17/hp76886.jpg" alt="Ân cần" className="w-full h-80 rounded-xl shadow object-cover" />
             <div>
@@ -243,7 +227,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Đội ngũ */}
       <section className="mt-16">
         <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
           Đội ngũ
@@ -251,7 +234,6 @@ export default function AboutPage() {
         <p className="text-gray-700 leading-relaxed">Gồm các bác sĩ HIV/AIDS giàu kinh nghiệm và chuyên gia công nghệ y tế, tận tâm, chuyên nghiệp, ân cần với sứ mệnh chăm sóc sức khỏe cộng đồng.</p>
       </section>
 
-      {/* Đối tượng phục vụ */}
       <section className="mt-16">
         <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
           Đối tượng phục vụ
@@ -275,7 +257,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Tầm nhìn, Sứ mệnh, Gía trị cốt lỗi */}
       <section className="bg-red-100 p-6 rounded-xl shadow-sm border border-gray-100 mt-16" variants={itemVariants} whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-800">
           <div>
@@ -303,7 +284,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Liên hệ */}
       <section className="mt-16">
         <h2 className="text-3xl font-extrabold text-red-700 mb-6 border-l-4 border-red-600 pl-4">
           Liên hệ

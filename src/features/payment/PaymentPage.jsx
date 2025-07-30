@@ -22,9 +22,8 @@ export default function PaymentPage() {
           Math.random() * 100000
         )}`;
         const amount = appointmentData.price.toString();
-        const orderInfo = `Thanh toán lịch hẹn với ${
-          appointmentData.doctorName || "bác sĩ"
-        }`;
+        const orderInfo = `Thanh toán lịch hẹn với ${appointmentData.doctorName || "bác sĩ"
+          }`;
 
         const redirectUrl = "http://localhost:5173/payment/result";
         const ipnUrl = "http://localhost:8080/api/payment/momo-ipn";
@@ -86,7 +85,7 @@ export default function PaymentPage() {
 
   const body = {
     ...appointmentData,
-    price: price.toString(), // nếu BE yêu cầu chuỗi số
+    price: price.toString(),
   };
 
   return (

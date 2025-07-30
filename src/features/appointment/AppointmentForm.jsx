@@ -12,7 +12,6 @@ export default function AppointmentForm() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Nếu có truyền doctor và lịch trống, ngày mặc định từ trang trước
   const { doctor: doctorFromState, defaultDate = "" } = location.state || {};
 
   const [formData, setFormData] = useState({
@@ -30,12 +29,11 @@ export default function AppointmentForm() {
   });
 
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
-  const [services, setServices] = useState([]); // services = [{id, name}, ...]
-  const [doctors, setDoctors] = useState([]); // doctors = [{id, fullName, ...}, ...]
+  const [services, setServices] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState("");
 
-  // Fetch danh sách bác sĩ 1 lần khi load form
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -57,7 +55,6 @@ export default function AppointmentForm() {
     fetchDoctors();
   }, []);
 
-  // Fetch dịch vụ theo loại khám (visitType)
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -76,7 +73,7 @@ export default function AppointmentForm() {
         if (!res.ok)
           throw new Error(`Lỗi tải danh sách dịch vụ: ${res.status}`);
         const data = await res.json();
-        setServices(data); // data là mảng {id, name, ...}
+        setServices(data);
       } catch (error) {
         console.error("Lỗi khi tải dịch vụ:", error);
         setServices([]);
@@ -85,7 +82,6 @@ export default function AppointmentForm() {
     fetchServices();
   }, [formData.visitType]);
 
-  // Fetch lịch trống khi date hoặc bác sĩ thay đổi
   useEffect(() => {
     const fetchAvailableTimeSlots = async () => {
       if (!formData.date || !formData.doctor) {
@@ -100,7 +96,6 @@ export default function AppointmentForm() {
           return;
         }
 
-        // Lấy id bác sĩ theo tên fullName
         const doctorObj = doctors.find((d) => d.fullName === formData.doctor);
         if (!doctorObj) {
           setAvailableTimeSlots([]);
@@ -119,7 +114,6 @@ export default function AppointmentForm() {
         if (!res.ok) throw new Error("Lỗi tải lịch trống");
         const data = await res.json();
         setAvailableTimeSlots(data || []);
-        // Nếu time hiện tại không còn trong slot, reset time
         if (!data.some((slot) => slot.startTime === formData.time)) {
           setFormData((prev) => ({ ...prev, time: "" }));
         }
@@ -166,7 +160,6 @@ export default function AppointmentForm() {
     e.preventDefault();
     if (!validateForm()) return;
 
-    // Lấy token từ localStorage
     const userData = localStorage.getItem("user");
     let token = null;
     try {
@@ -183,7 +176,6 @@ export default function AppointmentForm() {
     }
 
     try {
-      // Lấy object thay vì chỉ tên
       const selectedDoctor = doctors.find(
         (d) => d.fullName === formData.doctor
       );
@@ -197,8 +189,7 @@ export default function AppointmentForm() {
         return;
       }
 
-      // Lấy đúng ISO string cho appointmentDate
-      const appointmentDate = formData.time; // slot.startTime đã là ISO string
+      const appointmentDate = formData.time;
 
       const body = {
         doctorId: Number(selectedDoctor.id),
@@ -212,7 +203,6 @@ export default function AppointmentForm() {
         description: formData.description || "",
         birthDate: formData.dob,
       };
-      // KHÔNG gửi email nếu backend không yêu cầu
 
       console.log("Body gửi lên:", JSON.stringify(body, null, 2));
 
@@ -236,7 +226,6 @@ export default function AppointmentForm() {
       console.log("Response data2222222:", data);
       if (data) {
         console.log("Response data:", data);
-        // Lưu appointmentId vào localStorage để FE có thể xác nhận thanh toán sau này
         if (data && data.appointment.id) {
           localStorage.setItem("appointmentId", data.appointment.id);
         }
@@ -246,7 +235,7 @@ export default function AppointmentForm() {
               doctorName: selectedDoctor.fullName,
               appointmentDate: appointmentDate,
               price: selectedService.price,
-              anonymous: false, // hoặc true nếu có hỗ trợ đặt lịch ẩn danh
+              anonymous: false,
             },
           },
         });
@@ -288,7 +277,6 @@ export default function AppointmentForm() {
               )}
             </div>
 
-            {/* Ngày sinh */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Ngày sinh
@@ -301,12 +289,11 @@ export default function AppointmentForm() {
                   value={formData.dob}
                   onChange={handleChange}
                   className="w-full p-3 border-none rounded-lg focus:outline-none"
-                  max={new Date().toISOString().split("T")[0]} // Chỉ cho phép chọn đến hôm nay
+                  max={new Date().toISOString().split("T")[0]}
                 />
               </div>
             </div>
 
-            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email
@@ -326,7 +313,6 @@ export default function AppointmentForm() {
               )}
             </div>
 
-            {/* Số điện thoại */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Số điện thoại
@@ -346,7 +332,6 @@ export default function AppointmentForm() {
               )}
             </div>
 
-            {/* Giới tính */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Giới tính
@@ -371,7 +356,6 @@ export default function AppointmentForm() {
               )}
             </div>
 
-            {/* Loại khám */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Loại khám
@@ -396,7 +380,6 @@ export default function AppointmentForm() {
               )}
             </div>
 
-            {/* Dịch vụ */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Dịch vụ
@@ -419,7 +402,6 @@ export default function AppointmentForm() {
               )}
             </div>
 
-            {/* Bác sĩ */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Bác sĩ
@@ -442,7 +424,6 @@ export default function AppointmentForm() {
               )}
             </div>
 
-            {/* Ngày hẹn */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Ngày hẹn
@@ -462,7 +443,6 @@ export default function AppointmentForm() {
               )}
             </div>
 
-            {/* Giờ hẹn */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Giờ hẹn
@@ -493,7 +473,6 @@ export default function AppointmentForm() {
               )}
             </div>
 
-            {/* Mô tả */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Mô tả (tuỳ chọn)

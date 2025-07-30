@@ -102,7 +102,6 @@ export default function DoctorsPage() {
       const data = await response.json();
       setSchedule(data || []);
 
-      // Lấy thông tin bác sĩ từ schedule response
       if (data && data.length > 0) {
         const firstSchedule = data[0];
         setDoctorInfo({

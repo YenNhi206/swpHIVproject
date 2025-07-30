@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { LoaderCircle, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// Câu hỏi thường gặp (FAQ)
 const faqItems = [
   {
     question: "HIV là gì và lây truyền qua những con đường nào?",
@@ -63,7 +62,6 @@ const faqItems = [
   },
 ];
 
-// Animation cho item
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
@@ -155,7 +153,6 @@ export default function KnowledgePage() {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      {/* Header Section */}
       <div className="p-6 md:p-10 rounded-2xl mb-12 text-center">
         <h1 className="text-4xl md:text-5xl font-extrabold text-red-700 leading-tight mb-3">
           Kiến Thức Toàn Diện Về HIV/AIDS
@@ -181,10 +178,8 @@ export default function KnowledgePage() {
         <div className="h-px bg-gray-300 flex-grow" />
       </div>
 
-      {/* Kiến Thức Nền Tảng */}
       <Section title="Kiến thức nền tảng về HIV/AIDS" blogs={blogs.slice(0, 2)} />
 
-      {/* FAQ */}
       <div className="mt-16 mb-20">
         <SectionTitle>Câu Hỏi Thường Gặp</SectionTitle>
         <div className="space-y-4 px-4">
@@ -223,13 +218,10 @@ export default function KnowledgePage() {
         </div>
       </div>
 
-      {/* Hướng Dẫn Điều Trị */}
       <Section title="Hướng Dẫn Điều Trị" blogs={blogs.slice(2, 4)} />
 
-      {/* Thư Viện Tài Liệu Giáo Dục */}
       <Section title="Thư Viện Tài Liệu Giáo Dục" blogs={blogs.slice(4, 6)} />
 
-      {/* Blog Chia Sẻ Và Kinh Nghiệm */}
       <Section title="Blog Chia Sẻ Và Kinh Nghiệm" blogs={blogs.slice(6, 9)} />
     </div>
   );

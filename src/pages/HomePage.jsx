@@ -4,7 +4,6 @@ import { LoaderCircle } from 'lucide-react';
 import { CheckCircle, ShieldCheck, ChevronRight } from 'lucide-react';
 import Button from '../components/Button';
 import hivCareImg from "../assets/hiv-care.png";
-import educationImg from "../assets/education.png";
 
 
 
@@ -111,7 +110,6 @@ const HomePage = () => {
 
   return (
     <div className="p-4">
-      {/* Header */}
       <motion.header
         className="text-center mb-10"
         variants={itemVariants}
@@ -123,7 +121,6 @@ const HomePage = () => {
         </h1>
       </motion.header>
 
-      {/* giới thiệu cơ sở y tế */}
       <motion.section
         className="grid md:grid-cols-2 gap-8 items-center py-12"
         variants={containerVariants}
@@ -171,24 +168,20 @@ const HomePage = () => {
         </motion.div>
       </motion.section>
 
-      {/* Tài liệu giáo dục và giảm kỳ thị */}
       <Section
         title="Tài Liệu Giáo Dục Và Giảm Kỳ Thị"
         blogs={blogs.slice(10, 14)}
       />
 
-      {/* Tin Tức & Bài Báo Về HIV */}
       <Section
         title="Tin Tức & Bài Báo Về HIV"
         blogs={blogs.slice(14, 17)}
       />
 
-      {/* Tin tức & tiến bộ y học mới */}
-            <Section
+      <Section
         title="Tin Tức & Tiến Bộ Y Học Mới"
         blogs={blogs.slice(17, 24)}
       />
-      {/* Tài nguyên hỗ trợ cộng đồng */}
       <motion.section
         variants={containerVariants} className="mt-16">
         <motion.div className="mb-12" variants={itemVariants}>

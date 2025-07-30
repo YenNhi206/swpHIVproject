@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, Users, AlertCircle, Plus, X } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { User, Mail, Phone, Calendar as CalendarIcon } from "lucide-react";
 
@@ -155,13 +155,11 @@ export default function StaffDashboard() {
         </button>
       </div>
 
-      {/* Form thêm lịch hẹn - Popup đẹp */}
       {showForm && (
         <div className="mt-8">
           <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-4xl mx-auto">
             <h2 className="text-xl font-bold mb-4">Thêm lịch hẹn</h2>
 
-            {/* Nút đóng */}
             <button
               onClick={() => setShowForm(false)}
               className="absolute top-3 right-4 text-gray-500 hover:text-red-500 text-2xl"
@@ -172,7 +170,6 @@ export default function StaffDashboard() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Họ tên */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Họ tên</label>
                   <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -187,7 +184,6 @@ export default function StaffDashboard() {
                   </div>
                 </div>
 
-                {/* Ngày sinh */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
                   <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -198,13 +194,12 @@ export default function StaffDashboard() {
                       value={formData.dob}
                       onChange={handleChange}
                       className="w-full p-3 border-none rounded-lg focus:outline-none"
-                      max={new Date().toISOString().split("T")[0]} // Chỉ cho phép chọn đến hôm nay
+                      max={new Date().toISOString().split("T")[0]}
                     />
                   </div>
                 </div>
 
 
-                {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                   <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -219,7 +214,6 @@ export default function StaffDashboard() {
                   </div>
                 </div>
 
-                {/* Số điện thoại */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
                   <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -234,7 +228,6 @@ export default function StaffDashboard() {
                   </div>
                 </div>
 
-                {/* Giới tính */}
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
                   <div className="flex space-x-6 mt-1">
@@ -254,7 +247,6 @@ export default function StaffDashboard() {
                   </div>
                 </div>
 
-                {/* Loại khám */}
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Loại khám</label>
                   <div className="flex space-x-6 mt-1">
@@ -274,7 +266,6 @@ export default function StaffDashboard() {
                   </div>
                 </div>
 
-                {/* Dịch vụ */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Dịch vụ</label>
                   <select
@@ -292,7 +283,6 @@ export default function StaffDashboard() {
                   </select>
                 </div>
 
-                {/* Bác sĩ */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Bác sĩ</label>
                   <select
@@ -310,7 +300,6 @@ export default function StaffDashboard() {
                   </select>
                 </div>
 
-                {/* Ngày hẹn */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Ngày hẹn</label>
                   <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
@@ -327,7 +316,6 @@ export default function StaffDashboard() {
                 </div>
 
 
-                {/* Giờ hẹn */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Giờ hẹn</label>
                   <select
@@ -345,7 +333,6 @@ export default function StaffDashboard() {
                   </select>
                 </div>
 
-                {/* Ghi chú */}
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Ghi chú</label>
                   <textarea
@@ -358,7 +345,6 @@ export default function StaffDashboard() {
                 </div>
               </div>
 
-              {/* Nút submit */}
               <div className="flex justify-end mt-6 gap-2">
                 <button type="submit" className="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700">
                   Lưu

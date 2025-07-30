@@ -11,10 +11,10 @@ export default function Support() {
     phone: '',
     gender: 'FEMALE',
     date: '',
-    time: '', // Thêm trường này để chọn giờ
+    time: '',
     problem: '',
-    doctor: '', // Lưu tên bác sĩ
-    service: '', // Lưu tên dịch vụ
+    doctor: '',
+    service: '',
     birthDate: '',
   });
 
@@ -24,7 +24,6 @@ export default function Support() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Lấy danh sách bác sĩ
   useEffect(() => {
     fetch('http://localhost:8080/api/doctors')
       .then(res => res.json())
@@ -34,7 +33,6 @@ export default function Support() {
       .catch(() => setError('Không thể tải danh sách bác sĩ.'));
   }, []);
 
-  // Lấy danh sách dịch vụ
   useEffect(() => {
     fetch('http://localhost:8080/api/services')
       .then(res => res.json())
@@ -42,11 +40,10 @@ export default function Support() {
       .catch(() => setError('Không thể tải danh sách dịch vụ.'));
   }, []);
 
-  // Lấy giờ trống khi chọn bác sĩ và ngày
   useEffect(() => {
     const fetchAvailableTimeSlots = async () => {
       setAvailableTimeSlots([]);
-      setFormData(prev => ({ ...prev, time: '' })); // reset time khi đổi bác sĩ/ngày
+      setFormData(prev => ({ ...prev, time: '' }));
       if (!formData.doctor || !formData.date) return;
       const selectedDoctor = doctors.find(d => d.fullName === formData.doctor);
       if (!selectedDoctor) return;
@@ -61,7 +58,6 @@ export default function Support() {
       }
     };
     fetchAvailableTimeSlots();
-    // eslint-disable-next-line
   }, [formData.doctor, formData.date, doctors]);
 
   const handleChange = (e) => {
@@ -88,7 +84,6 @@ export default function Support() {
       return;
     }
 
-    // appointmentDate là ISO string từ slot đã chọn
     const appointmentDate = formData.time;
 
     const payload = {
@@ -115,13 +110,16 @@ export default function Support() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || data?.error || 'Đặt lịch thất bại');
 
-      // Lấy giờ từ appointmentDate trả về
       const appointmentDateObj = new Date(data.appointmentDate || appointmentDate);
       const timeString = appointmentDateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
+      const appointmentId = data.appointmentId || data.id;
+      if (appointmentId) {
+        localStorage.setItem("appointmentId", appointmentId);
+      }
       navigate('/payment', {
         state: {
           appointmentData: {
+            appointmentId,
             doctorName: selectedDoctor.fullName,
             appointmentDate: appointmentDate,
             date: formData.date,
@@ -139,7 +137,6 @@ export default function Support() {
     }
   };
 
-  // Lấy giá dịch vụ đã chọn để hiển thị
   const selectedService = services.find(s => s.name === formData.service);
 
   return (
@@ -152,7 +149,6 @@ export default function Support() {
 
           {error && <p className="text-red-600 text-center font-semibold">{error}</p>}
 
-          {/* Họ tên & Email */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label>Họ tên</label>
@@ -164,7 +160,6 @@ export default function Support() {
             </div>
           </div>
 
-          {/* Giới tính */}
           <div>
             <label>Giới tính</label>
             <div className="flex gap-4">
@@ -177,7 +172,6 @@ export default function Support() {
             </div>
           </div>
 
-          {/* Số điện thoại & Ngày */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label>Số điện thoại</label>
@@ -266,13 +260,11 @@ export default function Support() {
               </select>
             </div>
           </div>
-          {/* Vấn đề cần tư vấn */}
           <div>
             <label>Vấn đề cần tư vấn</label>
             <textarea name="problem" value={formData.problem} onChange={handleChange} rows="4" required className="w-full p-3 border border-gray-300 rounded-lg" />
           </div>
 
-          {/* Buttons */}
           <div className="flex gap-4">
             <button
               type="button"

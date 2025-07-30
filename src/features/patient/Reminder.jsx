@@ -1,4 +1,3 @@
-// File: src/features/reminder/Reminder.jsx
 import React, { useState } from "react";
 
 export default function Reminder() {

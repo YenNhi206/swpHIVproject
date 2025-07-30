@@ -122,7 +122,6 @@ export default function EditTreatment() {
             />
           </div>
 
-          {/* Đối tượng áp dụng */}
           <div className="col-span-full">
             <label className="block mb-1 text-sm font-medium text-gray-700">Đối tượng áp dụng</label>
             <select
@@ -139,7 +138,6 @@ export default function EditTreatment() {
             </select>
           </div>
 
-          {/* Các field còn lại chia 2 cột */}
           {[
             { key: "ingredients", label: "Danh sách thuốc (cách nhau dấu phẩy)" },
             { key: "dosage", label: "Liều dùng" },
@@ -161,7 +159,6 @@ export default function EditTreatment() {
             </div>
           ))}
 
-          {/* Nút hành động */}
           <div className="col-span-full flex justify-end gap-3 mt-4">
             <Button
               label="Quay lại"
