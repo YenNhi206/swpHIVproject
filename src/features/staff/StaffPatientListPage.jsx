@@ -6,7 +6,6 @@ import {
   MapPin,
   Venus,
   Mars,
-  Activity,
   CalendarDays,
   Mail,
 } from "lucide-react";
@@ -48,14 +47,13 @@ export default function StaffPatientListPage() {
 
   const handleAddPatient = async (values) => {
     try {
-      // Sửa payload để khớp với backend
       const payload = {
         fullName: values.fullName,
         gender: values.gender,
-        dateOfBirth: values.dateOfBirth, // Đổi từ birthDate thành dateOfBirth
-        phoneNumber: values.phoneNumber, // Đổi từ phone thành phoneNumber
+        dateOfBirth: values.dateOfBirth,
+        phoneNumber: values.phoneNumber,
         address: values.address,
-        email: values.email, // Thêm trường email
+        email: values.email,
       };
 
       const res = await fetch("http://localhost:8080/api/staff/patients", {

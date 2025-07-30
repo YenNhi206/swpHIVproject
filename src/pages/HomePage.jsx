@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { LoaderCircle } from 'lucide-react';
-import { CheckCircle, ShieldCheck, ChevronRight } from 'lucide-react';
+import { CheckCircle, ChevronRight } from 'lucide-react';
 import Button from '../components/Button';
 import hivCareImg from "../assets/hiv-care.png";
 

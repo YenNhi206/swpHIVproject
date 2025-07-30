@@ -83,7 +83,6 @@ export default function StaffDashboard() {
         Trang Chủ Nhân Viên
       </h1>
 
-      {/* Thống kê nhanh */}
       <div className="grid grid-cols-1 gap-6 mb-8">
         <div className="bg-white shadow rounded-xl p-6 flex items-center gap-4 border-l-4 border-red-500">
           <Calendar size={32} className="text-red-500" />
