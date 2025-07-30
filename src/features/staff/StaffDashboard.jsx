@@ -38,6 +38,7 @@ export default function StaffDashboard() {
       <h1 className="text-3xl font-bold text-center text-red-700 mb-8">
         Trang Chủ Nhân Viên
       </h1>
+
       <div className="grid grid-cols-1 gap-6 mb-8">
         <div className="bg-white shadow rounded-xl p-6 flex items-center gap-4 border-l-4 border-red-500">
           <Calendar size={32} className="text-red-500" />
