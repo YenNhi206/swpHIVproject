@@ -283,7 +283,8 @@ export default function StaffTestManagement() {
 
   return (
     <div className="p-6">
-      <Title level={3}>Quản lý xét nghiệm</Title>
+      <h1 className="text-3xl font-bold text-center text-red-700 mb-6">
+        Quản lý kết quả xét nghiệm</h1>
       <Input.Search
         placeholder="Tìm kiếm tên bệnh nhân"
         value={searchTerm}
