@@ -14,7 +14,6 @@ export default function DoctorsPage() {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [schedule, setSchedule] = useState([]);
   const [doctorInfo, setDoctorInfo] = useState(null);
 
   const navigate = useNavigate();

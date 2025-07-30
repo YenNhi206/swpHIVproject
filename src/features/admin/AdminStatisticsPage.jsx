@@ -42,7 +42,6 @@ export default function AdminStatisticsPage() {
     }
   };
 
-  // Hàm fetch lịch hẹn
   const fetchAppointments = async () => {
     try {
       const response = await fetch('http://localhost:8080/api/appointments', {
@@ -153,6 +152,6 @@ export default function AdminStatisticsPage() {
         </div>
       )}
     </div>
-    
+
   );
 }

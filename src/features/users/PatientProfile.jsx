@@ -4,37 +4,17 @@ import {
 } from 'lucide-react';
 import { message } from 'antd';
 
+// Đơn giản hóa ánh xạ giới tính
 const genderDisplayMap = {
   MALE: 'Nam',
   FEMALE: 'Nữ',
   OTHER: 'Khác',
-  Nam: 'Nam',
-  Nữ: 'Nữ',
-  Khác: 'Khác',
-};
-
-const genderValueMap = {
-  Nam: 'MALE',
-  Nữ: 'FEMALE',
-  Khác: 'OTHER',
 };
 
 function normalizeGender(gender) {
   if (!gender) return 'Khác';
-  const g = gender.trim().toUpperCase();
-  switch (g) {
-    case 'MALE':
-    case 'NAM':
-      return 'Nam';
-    case 'FEMALE':
-    case 'NỮ':
-      return 'Nữ';
-    case 'OTHER':
-    case 'KHÁC':
-      return 'Khác';
-    default:
-      return genderDisplayMap[gender.trim()] || 'Khác';
-  }
+  const normalized = gender.trim().toUpperCase();
+  return genderDisplayMap[normalized] || 'Khác';
 }
 
 export default function PatientProfile() {
@@ -60,21 +40,24 @@ export default function PatientProfile() {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
-        if (!res.ok) throw new Error('Lỗi khi lấy hồ sơ');
+        if (!res.ok) {
+          throw new Error('Lỗi khi lấy hồ sơ: ' + (await res.text()));
+        }
         const data = await res.json();
+        console.log('API Response:', data); // Debug: Kiểm tra dữ liệu từ API
 
         setUserInfo({
           fullName: data.fullName || '',
           gender: normalizeGender(data.gender),
-          birthDate: data.birthDate ? data.birthDate.slice(0, 10) : '',
+          birthDate: data.birthDate ? data.birthDate.slice(0, 10) : '', // Khôi phục xử lý ngày
           phone: data.phone || '',
           address: data.address || '',
           hivStatus: data.hivStatus || '',
-          treatmentStartDate: data.treatmentStartDate ? data.treatmentStartDate.slice(0, 10) : '',
+          treatmentStartDate: data.treatmentStartDate ? data.treatmentStartDate.slice(0, 10) : '', // Khôi phục xử lý ngày
         });
       } catch (error) {
-        message.error('Không thể tải hồ sơ bệnh nhân');
-        console.error(error);
+        message.error('Không thể tải hồ sơ bệnh nhân: ' + error.message);
+        console.error('Fetch error:', error);
       } finally {
         setIsLoading(false);
       }
@@ -91,7 +74,7 @@ export default function PatientProfile() {
   const handleSave = async () => {
     const payload = {
       ...userInfo,
-      gender: genderValueMap[userInfo.gender] || 'OTHER',
+      gender: userInfo.gender === 'Nam' ? 'MALE' : userInfo.gender === 'Nữ' ? 'FEMALE' : 'OTHER',
     };
     try {
       const res = await fetch('http://localhost:8080/api/patients/profile', {
@@ -102,8 +85,11 @@ export default function PatientProfile() {
         },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error('Lỗi khi cập nhật hồ sơ');
+      if (!res.ok) {
+        throw new Error('Lỗi khi cập nhật hồ sơ: ' + (await res.text()));
+      }
       const data = await res.json();
+      console.log('Save Response:', data); // Debug: Kiểm tra dữ liệu trả về
 
       setUserInfo({
         fullName: data.fullName || '',
@@ -117,18 +103,18 @@ export default function PatientProfile() {
       message.success('Hồ sơ đã được lưu thành công!');
       setIsEditing(false);
     } catch (error) {
-      message.error('Không thể cập nhật hồ sơ');
-      console.error(error);
+      message.error('Không thể cập nhật hồ sơ: ' + error.message);
+      console.error('Save error:', error);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-red-600 mb-8 text-center animate-fade-in">
+        <h2 className="text-3xl font-bold text-red-600 mb-8 text-center">
           Hồ sơ cá nhân
         </h2>
-        <div className="bg-white rounded-2xl shadow-lg p-8 opacity-0 translate-y-4 animate-fade-in [animation-delay:0.2s]">
+        <div className="bg-white rounded-2xl shadow-lg p-8">
           {isLoading ? (
             <div className="grid md:grid-cols-2 gap-6">
               {[...Array(7)].map((_, index) => (
@@ -189,9 +175,11 @@ export default function PatientProfile() {
               />
               <ProfileField
                 label="Tình trạng HIV"
+                name="hivStatus"
                 value={userInfo.hivStatus}
                 icon={<Biohazard className="w-5 h-5 text-red-500" />}
-                isEditing={false}
+                isEditing={isEditing}
+                onChange={handleChange}
               />
               <ProfileField
                 label="Bắt đầu điều trị"
@@ -263,7 +251,7 @@ function ProfileField({ label, name, value, icon, isEditing, onChange, type = 't
           )
         ) : (
           <span className="text-lg text-gray-800">
-            {type === 'date' && value ? value.slice(0, 10) : value}
+            {type === 'date' && value ? value : value}
           </span>
         )}
       </div>

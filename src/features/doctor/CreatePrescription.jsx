@@ -13,14 +13,6 @@ export default function CreatePrescription() {
 
   const [patientPrescriptions, setPatientPrescriptions] = useState([]);
 
-  function decodeToken(token) {
-    try {
-      return JSON.parse(atob(token.split(".")[1]));
-    } catch {
-      return null;
-    }
-  }
-
   const [protocols, setProtocols] = useState([]);
   const [form, setForm] = useState({
     protocolId: "",

@@ -24,7 +24,7 @@ export default function SignupPage() {
   const validateRegisterForm = () => {
     const newErrors = {};
     if (!formData.fullName) newErrors.fullName = 'Họ tên là bắt buộc';
-    else if (!formData.fullName.match(/^[a-zA-ZÀ-ỹ\s]+$/i)) // Kiểm tra nếu không khớp với regex tiếng Việt
+    else if (!formData.fullName.match(/^[a-zA-ZÀ-ỹ\s]+$/i))
       newErrors.fullName = 'Họ tên chỉ được chứa chữ cái và dấu tiếng Việt';
     if (!formData.email) newErrors.email = 'Email là bắt buộc';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Email không hợp lệ';

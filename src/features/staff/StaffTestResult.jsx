@@ -45,6 +45,7 @@ const StaffTestResult = () => {
       .catch(console.error);
   }, [token]);
 
+
   useEffect(() => {
     if (showUpdateForm) {
       fetch("http://localhost:8080/api/test-results", {
@@ -52,6 +53,7 @@ const StaffTestResult = () => {
       })
         .then((res) => res.json())
         .then((data) => {
+
           if (Array.isArray(data)) setTestResults(data);
           else if (Array.isArray(data.content)) setTestResults(data.content);
           else setTestResults([]);
@@ -126,6 +128,7 @@ const StaffTestResult = () => {
       <h1 className="text-2xl font-bold mb-6 text-center text-red-600">
         Thêm/ Cập Nhật Xét Nghiệm
       </h1>
+
 
       <div className="flex justify-center gap-4 mb-8">
         <button
