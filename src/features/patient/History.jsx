@@ -189,7 +189,7 @@ export default function History() {
             onClick={() => setActiveTab(tab.key)}
             className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-md border-2 text-sm
               ${activeTab === tab.key
-                ? "bg-gradient-to-r from-red-500 to-orange-400 text-white border-transparent"
+                ? "bg-gradient-to-r from-red-500 to-purple-600 text-white border-transparent"
                 : "bg-white text-red-600 border-red-300 hover:border-red-400 hover:bg-red-100"}`}
           >
             {tab.label}

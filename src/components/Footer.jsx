@@ -1,4 +1,12 @@
 import { motion } from 'framer-motion';
+import {
+  Home,
+  Info,
+  Stethoscope,
+  Smartphone,
+  CreditCard,
+  MapPin,
+} from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -8,6 +16,7 @@ export default function Footer() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Đối tác */}
       <div className="max-w-7xl mx-auto px-4 py-6">
         <h2 className="text-2xl font-bold text-red-600 mb-6 flex items-center justify-center gap-2">
           Đối tác hỗ trợ
@@ -41,8 +50,7 @@ export default function Footer() {
               image: "https://keangnamkorea.com/wp-content/uploads/2025/02/Logo-So-Y-Te-TPHCM-Department-of-Healt-of-HCM-City.webp",
               description: "Đơn vị trực thuộc Sở Y tế địa phương, cung cấp dịch vụ tư vấn & điều trị.",
               link: "#",
-              linkLabel: "medinet.hochiminhcity.gov.vn"
-
+              linkLabel: "medinet.hochiminhcity.gov.vn",
             },
           ].map((partner, index) => (
             <motion.div
@@ -77,6 +85,7 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Thông tin hệ thống */}
       <div className="bg-red-600 text-white py-5 mt-6 shadow-inner text-sm">
         <div className="max-w-5xl mx-auto px-4 text-center space-y-2">
           <p>
@@ -96,6 +105,27 @@ export default function Footer() {
           <p className="text-gray-300 text-sm">
             Giấy phép số 123/GP-BC ngày 01/01/2025 của Cục Báo chí, Bộ Văn hoá, Thông tin
           </p>
+        </div>
+      </div>
+
+      {/* Links có icon */}
+      <div className="bg-red-800 text-white py-4">
+        <div className="max-w-6xl mx-auto px-4 flex flex-wrap justify-center gap-6 items-center text-sm">
+          <a href="/" className="flex items-center gap-1 hover:text-gray-300 transition">
+            <Home className="w-4 h-4" /> Trang chủ
+          </a>
+          <a href="/about" className="flex items-center gap-1 hover:text-gray-300 transition">
+            <Info className="w-4 h-4" /> Giới thiệu
+          </a>
+          <a href="/listdoctor" className="flex items-center gap-1 hover:text-gray-300 transition">
+            <Stethoscope className="w-4 h-4" /> Bác sĩ
+          </a>
+          <a href="/services" className="flex items-center gap-1 hover:text-gray-300 transition">
+            <CreditCard className="w-4 h-4" /> Dịch vụ
+          </a>
+          <a href="/support" className="flex items-center gap-1 hover:text-gray-300 transition">
+            <Smartphone className="w-4 h-4" /> Hỗ trợ
+          </a>
         </div>
       </div>
     </motion.footer>
