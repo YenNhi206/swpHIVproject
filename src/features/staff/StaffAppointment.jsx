@@ -22,9 +22,7 @@ const statusOptions = [
   { value: "ABSENT", label: "Vắng" },
 ];
 
-const bookingModeOptions = [{ value: "NORMAL", label: "Lịch thường" }];
 
-// Columns cho lịch thường
 const columnsNormal = [
   {
     title: "Họ tên / Bí danh",
@@ -60,8 +58,8 @@ const columnsNormal = [
       text === "FIRST_VISIT"
         ? "Khám lần đầu"
         : text === "FOLLOW_UP"
-        ? "Tái khám"
-        : text,
+          ? "Tái khám"
+          : text,
     width: 120,
   },
   {

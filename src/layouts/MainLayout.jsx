@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SidebarVertical from '../components/SidebarVertical';
 import Breadcrumb from '../components/Breadcrumb';
-import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 
 export default function MainLayout({ children }) {

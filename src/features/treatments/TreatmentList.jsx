@@ -32,7 +32,7 @@ export default function TreatmentList() {
     };
 
     fetchTreatments();
-  }, [location.state?.refresh]); // chạy lại khi location.state.refresh thay đổi
+  }, [location.state?.refresh]);
 
   return (
     <motion.div className="p-6 min-h-screen bg-gradient-to-b from-red-50 to-white font-sans">

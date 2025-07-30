@@ -1,5 +1,3 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
 import Button from '../components/Button';

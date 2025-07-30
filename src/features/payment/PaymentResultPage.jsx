@@ -5,7 +5,7 @@ import { CheckCircle, XCircle, Loader } from "lucide-react";
 export default function PaymentResultPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [isSuccess, setIsSuccess] = useState(null); // null = loading, true/false = kết quả
+  const [isSuccess, setIsSuccess] = useState(null);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -20,12 +20,11 @@ export default function PaymentResultPage() {
     }
 
     if (resultCode === "0") {
-      // Chỉ xác nhận khi thanh toán thành công
       setIsSuccess(true);
       setMessage("Thanh toán thành công! Đang xác nhận lịch hẹn...");
       if (appointmentId) {
         const token = localStorage.getItem("token") || "";
-        console.log("appointmentId:", appointmentId, "token:", token); // Log giá trị
+        console.log("appointmentId:", appointmentId, "token:", token);
         fetch(
           `http://localhost:8080/api/appointments/confirm-payment/${appointmentId}`,
           {
@@ -37,7 +36,7 @@ export default function PaymentResultPage() {
         )
           .then(async (res) => {
             const data = await res.json();
-            console.log("Confirm-payment response:", res.status, data); // Log response
+            console.log("Confirm-payment response:", res.status, data);
             if (!res.ok) {
               if (data && data.message) {
                 setMessage(
@@ -51,7 +50,7 @@ export default function PaymentResultPage() {
             setMessage("Thanh toán & xác nhận lịch hẹn thành công!");
           })
           .catch((err) => {
-            console.error("Lỗi xác nhận:", err); // Log lỗi chi tiết
+            console.error("Lỗi xác nhận:", err);
             setMessage(
               "Thanh toán thành công, nhưng xác nhận thất bại (lỗi hệ thống)."
             );

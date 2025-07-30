@@ -6,7 +6,6 @@ import { ChevronRight } from 'lucide-react';
 export default function Breadcrumb() {
   const location = useLocation();
 
-  // Lấy thông tin user từ localStorage
   const user = JSON.parse(localStorage.getItem('user'));
 
   const pathMap = {
