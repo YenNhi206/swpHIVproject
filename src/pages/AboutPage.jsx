@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -31,11 +31,6 @@ export default function AboutPage() {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
-
-  const imageVariants = {
-    initial: { scale: 1 },
-    hover: { scale: 1.05, transition: { duration: 0.3 } },
-  };
 
 
   return (

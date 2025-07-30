@@ -47,6 +47,7 @@ export default function StaffPatientListPage() {
 
   const handleAddPatient = async (values) => {
     try {
+
       const payload = {
         fullName: values.fullName,
         gender: values.gender,

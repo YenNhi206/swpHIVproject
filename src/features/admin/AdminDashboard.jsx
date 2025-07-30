@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Users, Calendar, DollarSign } from 'lucide-react';
+
+import { Users } from 'lucide-react';
 
 import {
   Chart as ChartJS,

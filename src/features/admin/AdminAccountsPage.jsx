@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Modal, Input, Tabs, message } from "antd";
+import { Table, Button, Modal, Input, message } from "antd";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 
 const emptyForm = {
@@ -21,7 +21,7 @@ export default function AdminAccountsPage() {
     const [editingDoctor, setEditingDoctor] = useState(null);
     const [form, setForm] = useState(emptyForm);
 
-    // Fetch doctors from your backend
+
     const fetchDoctors = async () => {
         setLoading(true);
         try {
@@ -41,7 +41,7 @@ export default function AdminAccountsPage() {
             );
             if (!res.ok) throw new Error("Không thể tải danh sách bác sĩ");
             const data = await res.json();
-            // data.content chứa danh sách doctor DTO
+
             setDoctors(data.content);
         } catch (error) {
             message.error(error.message);
@@ -216,7 +216,7 @@ export default function AdminAccountsPage() {
                     <Input
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        disabled={!!editingDoctor} // Email không sửa khi edit
+                        disabled={!!editingDoctor}
                     />
                     {!editingDoctor && (
                         <>

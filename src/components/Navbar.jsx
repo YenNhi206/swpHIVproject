@@ -48,6 +48,7 @@ export default function Navbar() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
+
       <div className="max-w-7xl mx-auto px-4 py-3 text-white">
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -73,6 +74,7 @@ export default function Navbar() {
                 <Link
                   to="/support"
                   className="relative inline-flex items-center gap-1 bg-white text-red-600 font-semibold text-sm px-3 py-1.5 rounded-lg hover:bg-red-100 transition"
+
                 >
                   <span className="absolute -top-2 -right-2 bg-yellow-400 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md">
                     HOT
@@ -80,6 +82,8 @@ export default function Navbar() {
                   <Smartphone className="w-4 h-4" />
                   Online
                 </Link>
+
+
                 <Link
                   to="/appointments"
                   className="bg-white text-red-600 font-semibold text-sm px-3 py-1.5 rounded-lg hover:bg-red-100 transition flex items-center gap-1"
@@ -87,6 +91,7 @@ export default function Navbar() {
                   <Calendar className="w-4 h-4" />
                   Đặt khám
                 </Link>
+
               </>
             )}
             {user && (

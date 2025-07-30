@@ -78,9 +78,9 @@ const HomePage = () => {
                 {blog.description || blog.content?.slice(0, 100) + '...'}
               </p>
               <div className="text-sm text-gray-400 mb-3 mt-auto">
-                <span>🖊 {blog.author}</span> •{' '}
+                <span> {blog.author}</span> •{' '}
                 <span>
-                  🗓 {new Date(blog.createdAt).toLocaleDateString('vi-VN')}
+                  {new Date(blog.createdAt).toLocaleDateString('vi-VN')}
                 </span>
               </div>
               {blog.link && (
