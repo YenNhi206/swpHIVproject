@@ -110,6 +110,11 @@ export default function AnonymousAppointmentForm() {
 
       if (!res.ok) throw new Error(data?.error || 'Đặt lịch thất bại');
 
+      const appointmentId = data.appointmentId || data.id;
+      if (appointmentId) {
+        localStorage.setItem("appointmentId", appointmentId);
+      }
+
       const selectedDoctor = doctors.find(d => d.id === Number(formData.doctorId));
       const selectedService = services.find(s => s.id === Number(formData.serviceId));
       const appointmentDate = data.appointmentDate || formData.time;

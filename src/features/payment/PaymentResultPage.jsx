@@ -80,8 +80,8 @@ export default function PaymentResultPage() {
           {isSuccess === null
             ? "Đang xác minh kết quả..."
             : isSuccess
-            ? "Thanh toán thành công"
-            : "Thanh toán thất bại"}
+              ? "Thanh toán thành công"
+              : "Thanh toán thất bại"}
         </h1>
         <p className="text-center text-gray-600 mb-6">{message}</p>
 

@@ -38,7 +38,7 @@ export default function Breadcrumb() {
     '/treatment/create': 'Tạo phác đồ',
     '/treatment/:id/edit': 'Sửa phác đồ',
     '/admin/accounts': 'Quản lý tài khoản',
-    '/patients': 'Hồ sơ bệnh nhân',
+    '/patient': 'Hồ sơ bệnh nhân',
     '/admin/appointments': 'Quản lý lịch hẹn',
     '/support': 'Kết nối cùng HIVCare+',
     '/reminder': 'Nhắc nhở',
@@ -50,7 +50,7 @@ export default function Breadcrumb() {
     '/knowledge': 'Kiến thức',
     '/listdoctor': 'Chuyên gia - Bác sĩ',
     '/services': 'Dịch vụ - Giá tiền',
-    '/test-results':' Kết quả xét nghiệm bệnh nhân',
+    '/test-results': ' Kết quả xét nghiệm bệnh nhân',
     '*': 'Không tìm thấy',
   };
 

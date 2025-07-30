@@ -24,14 +24,19 @@ export default function HistoryPage() {
         if (!res.ok) {
           const errorBody = await res.json().catch(() => ({}));
           throw new Error(
-            `Lỗi khi tải dữ liệu lịch sử: ${res.status} - ${
-              errorBody.error || res.statusText
-            }`
+            `Lỗi khi tải dữ liệu lịch sử: ${res.status} - ${errorBody.error || res.statusText}`
           );
         }
 
         const data = await res.json();
+
+
+        if (data.appointments && data.appointments.length > 0) {
+          data.appointments.sort((a, b) => b.id - a.id);
+        }
+
         setHistory(data);
+        console.log("Dữ liệu đã sắp xếp theo ID:", data.appointments);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -42,24 +47,26 @@ export default function HistoryPage() {
     fetchHistory();
   }, []);
 
-  // Hàm format date
+
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     try {
       const date = new Date(dateString);
+      if (isNaN(date.getTime())) throw new Error("Invalid date");
       return date.toLocaleDateString("vi-VN", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
         hour: "2-digit",
         minute: "2-digit",
+        timeZone: "Asia/Ho_Chi_Minh",
       });
     } catch {
       return dateString;
     }
   };
 
-  // Hàm format status
+
   const formatStatus = (status) => {
     const statusMap = {
       BOOKED: { text: "Đã đặt", color: "text-green-600 bg-green-100" },
@@ -87,15 +94,15 @@ export default function HistoryPage() {
     );
   };
 
-  // Hàm format booking mode
+
   const formatBookingMode = (mode) => {
     const modeMap = {
-      NORMAL: { text: "Khám trực tiếp", icon: "🏥" },
-      ONLINE: { text: "Tư vấn online", icon: "💻" },
-      ANONYMOUS_ONLINE: { text: "Tư vấn ẩn danh", icon: "👤" },
+      NORMAL: { text: "Khám trực tiếp" },
+      ONLINE: { text: "Tư vấn online" },
+      ANONYMOUS_ONLINE: { text: "Tư vấn ẩn danh" },
     };
 
-    const modeInfo = modeMap[mode] || { text: mode, icon: "❓" };
+    const modeInfo = modeMap[mode] || { text: mode };
     return (
       <span className="flex items-center gap-1">
         <span>{modeInfo.icon}</span>
@@ -127,7 +134,7 @@ export default function HistoryPage() {
         Lịch sử khám &amp; điều trị
       </h2>
 
-      {/* Cuộc hẹn */}
+
       <section className="mb-12">
         <h3 className="text-2xl font-semibold text-red-600 mb-4 border-l-4 border-red-500 pl-3">
           Cuộc hẹn ({history.appointments?.length || 0})
@@ -139,13 +146,13 @@ export default function HistoryPage() {
                 key={appt.id}
                 className="p-6 bg-white border border-red-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
               >
-                {/* Header với status */}
+
                 <div className="flex justify-between items-start mb-4">
                   <h4 className="font-bold text-lg text-red-700">#{appt.id}</h4>
                   {formatStatus(appt.status)}
                 </div>
 
-                {/* Thông tin cơ bản */}
+
                 <div className="space-y-3">
                   <div>
                     <span className="font-semibold text-gray-700">
@@ -197,7 +204,7 @@ export default function HistoryPage() {
                     </p>
                   </div>
 
-                  {/* Thông tin bệnh nhân */}
+
                   {(appt.fullName || appt.phone || appt.gender) && (
                     <div className="border-t pt-3">
                       <span className="font-semibold text-gray-700">
@@ -215,14 +222,14 @@ export default function HistoryPage() {
                           {appt.gender === "MALE"
                             ? "Nam"
                             : appt.gender === "FEMALE"
-                            ? "Nữ"
-                            : appt.gender}
+                              ? "Nữ"
+                              : appt.gender}
                         </p>
                       )}
                     </div>
                   )}
 
-                  {/* Mô tả */}
+
                   {appt.description && (
                     <div>
                       <span className="font-semibold text-gray-700">
@@ -234,7 +241,7 @@ export default function HistoryPage() {
                     </div>
                   )}
 
-                  {/* Google Meet Link */}
+
                   {appt.googleMeetLink && (
                     <div>
                       <span className="font-semibold text-gray-700">
@@ -251,7 +258,7 @@ export default function HistoryPage() {
                     </div>
                   )}
 
-                  {/* Đơn thuốc */}
+
                   {appt.prescriptions && appt.prescriptions.length > 0 && (
                     <div className="border-t pt-3">
                       <span className="font-semibold text-gray-700">
@@ -288,7 +295,7 @@ export default function HistoryPage() {
         )}
       </section>
 
-      {/* Kết quả xét nghiệm */}
+
       <section className="mb-12">
         <h3 className="text-2xl font-semibold text-red-600 mb-4 border-l-4 border-red-500 pl-3">
           Kết quả xét nghiệm ({history.testResults?.length || 0})
@@ -363,7 +370,7 @@ export default function HistoryPage() {
         )}
       </section>
 
-      {/* Đơn thuốc */}
+
       <section>
         <h3 className="text-2xl font-semibold text-red-600 mb-4 border-l-4 border-red-500 pl-3">
           Đơn thuốc ({history.prescriptions?.length || 0})
