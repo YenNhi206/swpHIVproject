@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '../components/Navbar'; // Hoặc NewNavbar
+import Navbar from '../components/Navbar';
 import Breadcrumb from '../components/Breadcrumb';
 
 export default function AuthLayout({ children }) {

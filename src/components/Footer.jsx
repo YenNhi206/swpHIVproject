@@ -8,7 +8,6 @@ export default function Footer() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Đối Tác Hỗ Trợ */}
       <div className="max-w-7xl mx-auto px-4 py-6">
         <h2 className="text-2xl font-bold text-red-600 mb-6 flex items-center justify-center gap-2">
           Đối tác hỗ trợ
@@ -78,7 +77,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Main Footer */}
       <div className="bg-red-600 text-white py-5 mt-6 shadow-inner text-sm">
         <div className="max-w-5xl mx-auto px-4 text-center space-y-2">
           <p>

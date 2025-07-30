@@ -106,13 +106,11 @@ export default function AdminAccountsPage() {
             const token = JSON.parse(localStorage.getItem("user"))?.token;
             if (!token) throw new Error("Vui lòng đăng nhập");
 
-            // Validate password confirm only khi thêm mới
             if (!editingDoctor && form.password !== form.confirmPassword) {
                 message.error("Mật khẩu và xác nhận mật khẩu không khớp");
                 return;
             }
 
-            // Prepare payload matching RegisterDoctorRequest
             const payload = {
                 email: form.email,
                 password: form.password,
@@ -127,7 +125,6 @@ export default function AdminAccountsPage() {
 
             let res;
             if (editingDoctor) {
-                // Update bác sĩ: backend bạn có PUT /api/doctors/{id}
                 res = await fetch(`http://localhost:8080/api/doctors/${editingDoctor.id}`, {
                     method: "PUT",
                     headers: {
@@ -139,7 +136,6 @@ export default function AdminAccountsPage() {
                 if (!res.ok) throw new Error("Cập nhật thất bại");
                 message.success("Cập nhật bác sĩ thành công");
             } else {
-                // Thêm mới bác sĩ: gọi API bạn có là POST /api/admin/register-doctor
                 res = await fetch(`http://localhost:8080/api/admin/register-doctor`, {
                     method: "POST",
                     headers: {
