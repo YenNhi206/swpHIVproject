@@ -14,7 +14,6 @@ export default function AdminStatisticsPage() {
 
   const token = localStorage.getItem('token');
 
-  // Hàm fetch bác sĩ
   const fetchDoctors = async () => {
     try {
       const response = await fetch('http://localhost:8080/api/doctors', {
@@ -29,7 +28,6 @@ export default function AdminStatisticsPage() {
     }
   };
 
-  // Hàm fetch bệnh nhân
   const fetchPatients = async () => {
     try {
       const response = await fetch('http://localhost:8080/api/patients', {
@@ -72,7 +70,7 @@ export default function AdminStatisticsPage() {
   ];
 
   const handleCardClick = (type) => {
-    setSelectedType(prev => prev === type ? "" : type); // toggle
+    setSelectedType(prev => prev === type ? "" : type);
   };
 
   const getTableProps = () => {

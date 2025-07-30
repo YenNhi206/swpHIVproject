@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { PlusCircle } from "lucide-react";
 
 const StaffTestResult = () => {
   const [patients, setPatients] = useState([]);

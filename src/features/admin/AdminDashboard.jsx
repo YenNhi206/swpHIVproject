@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Users, Calendar, DollarSign } from 'lucide-react';
 
-import { Line, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -66,7 +65,6 @@ export default function AdminDashboard() {
           <p className="mt-2 text-lg text-gray-600">Quản lý bệnh nhân và theo dõi hoạt động</p>
         </div>
 
-        {/* Thống kê tổng quan */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 animate-fade-in [animation-delay:0.2s]">
           <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
             <Users className="w-8 h-8 text-red-500 mx-auto mb-2" />

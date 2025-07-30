@@ -69,7 +69,7 @@ export default function TreatmentDetail() {
   }
 
   if (!treatment) {
-    return null; // hoặc bạn có thể hiển thị "Không tìm thấy"
+    return null;
   }
 
   return (

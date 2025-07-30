@@ -26,10 +26,9 @@ export default function AdminBlogManagement() {
     status: 'draft',
     summary: '',
     content: '',
-    link: '', // ➡️ NEW
+    link: '',
   });
 
-  /*------------- API helpers -------------*/
   const API = 'http://localhost:8080/api/blogs';
   const token = localStorage.getItem('token');
 
@@ -47,7 +46,6 @@ export default function AdminBlogManagement() {
     fetchPosts();
   }, []);
 
-  /*------------- CRUD handlers -------------*/
   const openAddModal = () => {
     setEditingPost(null);
     setForm({
@@ -66,7 +64,7 @@ export default function AdminBlogManagement() {
     setEditingPost(post);
     setForm({
       ...post,
-      summary: post.description, // map từ API
+      summary: post.description,
       link: post.link || '',
     });
     setIsModalOpen(true);
@@ -101,7 +99,7 @@ export default function AdminBlogManagement() {
       status: form.status,
       description: form.summary,
       content: form.content,
-      link: form.link, // ➡️ NEW
+      link: form.link,
     };
 
     try {
@@ -127,7 +125,6 @@ export default function AdminBlogManagement() {
     }
   };
 
-  /*------------- Table columns -------------*/
   const columns = [
     {
       title: 'Tiêu đề',
@@ -181,7 +178,6 @@ export default function AdminBlogManagement() {
     },
   ];
 
-  /*------------- JSX -------------*/
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
       <h1 className="text-3xl font-bold text-red-700">Quản lý bài viết blog</h1>

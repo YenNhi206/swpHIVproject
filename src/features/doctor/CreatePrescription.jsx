@@ -33,7 +33,6 @@ export default function CreatePrescription() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Fetch phác đồ ARV
   useEffect(() => {
     fetch("http://localhost:8080/api/arv-protocols/active")
       .then((res) => res.json())
@@ -48,13 +47,11 @@ export default function CreatePrescription() {
     }
   }, [patientId, navigate]);
 
-  // Xử lý thay đổi input
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -63,7 +60,7 @@ export default function CreatePrescription() {
     const payload = {
       patientId: Number(patientId),
       appointmentId: Number(appointmentId),
-      doctorId: doctorId, // <-- Đã chắc chắn là số
+      doctorId: doctorId,
       protocolId: Number(form.protocolId),
       startDate: form.startDate,
       endDate: form.endDate,
@@ -129,7 +126,6 @@ export default function CreatePrescription() {
     }
   }, [patientId, token]);
 
-  // Thêm useEffect để lấy đơn thuốc theo appointment
   useEffect(() => {
     if (appointmentId) {
       console.log("Fetching prescriptions for appointmentId:", appointmentId);
@@ -150,7 +146,6 @@ export default function CreatePrescription() {
         })
         .then((data) => {
           console.log("Appointment prescriptions data:", data);
-          // Nếu có đơn thuốc theo appointment, ưu tiên hiển thị
           if (data && data.length > 0) {
             setPatientPrescriptions(data);
           }
@@ -173,7 +168,6 @@ export default function CreatePrescription() {
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Chọn phác đồ */}
         <div>
           <label className="block font-medium text-gray-700 mb-1">
             Phác đồ ARV
@@ -194,7 +188,6 @@ export default function CreatePrescription() {
           </select>
         </div>
 
-        {/* Ngày bắt đầu */}
         <div>
           <label className="block font-medium text-gray-700 mb-1">
             Ngày bắt đầu
@@ -212,7 +205,6 @@ export default function CreatePrescription() {
           </div>
         </div>
 
-        {/* Ngày kết thúc */}
         <div>
           <label className="block font-medium text-gray-700 mb-1">
             Ngày kết thúc
@@ -229,7 +221,6 @@ export default function CreatePrescription() {
           </div>
         </div>
 
-        {/* Ghi chú */}
         <div>
           <label className="block font-medium text-gray-700 mb-1">
             Ghi chú
@@ -244,7 +235,6 @@ export default function CreatePrescription() {
           ></textarea>
         </div>
 
-        {/* Hướng dẫn sử dụng */}
         <div>
           <label className="block font-medium text-gray-700 mb-1">
             Hướng dẫn sử dụng
@@ -259,7 +249,6 @@ export default function CreatePrescription() {
           ></textarea>
         </div>
 
-        {/* Điều chỉnh liều lượng */}
         <div>
           <label className="block font-medium text-gray-700 mb-1">
             Điều chỉnh liều lượng
@@ -274,7 +263,6 @@ export default function CreatePrescription() {
           ></textarea>
         </div>
 
-        {/* Nút gửi */}
         <div className="pt-4">
           <button
             type="submit"
@@ -299,7 +287,6 @@ export default function CreatePrescription() {
           <p className="text-gray-500">Chưa có đơn thuốc nào.</p>
         ) : (
           <>
-            {/* Thống kê đơn thuốc */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               <div className="bg-blue-50 p-4 rounded-lg border">
                 <div className="text-blue-600 font-semibold">
@@ -337,7 +324,6 @@ export default function CreatePrescription() {
               </div>
             </div>
 
-            {/* Bảng đơn thuốc */}
             <div className="overflow-x-auto">
               <table className="min-w-full border text-sm">
                 <thead className="bg-gray-100">
@@ -414,15 +400,14 @@ export default function CreatePrescription() {
                       </td>
                       <td className="px-4 py-2 border">
                         <span
-                          className={`px-2 py-1 rounded text-xs font-medium ${
-                            pres.status === "ACTIVE"
-                              ? "bg-green-100 text-green-800"
-                              : pres.status === "DISCONTINUED"
+                          className={`px-2 py-1 rounded text-xs font-medium ${pres.status === "ACTIVE"
+                            ? "bg-green-100 text-green-800"
+                            : pres.status === "DISCONTINUED"
                               ? "bg-red-100 text-red-800"
                               : pres.status === "SUSPENDED"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-gray-100 text-gray-800"
+                            }`}
                         >
                           {pres.status}
                         </span>
