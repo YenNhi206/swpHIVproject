@@ -70,14 +70,14 @@ export default function App() {
   return (
     <Router>
       <Routes>
-<Route
-  path="/test-results"
-  element={
-    <MainLayout user={user} setUser={setUser}>
-      <DoctorTestResults />
-    </MainLayout>
-  }
-/>
+        <Route
+          path="/test-results"
+          element={
+            <MainLayout user={user} setUser={setUser}>
+              <DoctorTestResults />
+            </MainLayout>
+          }
+        />
 
         <Route
           path="/"
@@ -161,7 +161,7 @@ export default function App() {
           }
         />
         <Route
-          path="/patient/result/:patientId"
+          path="/patient/result"
           element={
             <MainLayout user={user} setUser={setUser}>
               <ResultPage />
@@ -217,7 +217,7 @@ export default function App() {
           }
         />
         <Route
-          path="/history/:patientId"
+          path="/history"
           element={
             <MainLayout user={user} setUser={setUser}>
               <History />
@@ -281,11 +281,11 @@ export default function App() {
             </MainLayout>
           }
         />
-       
-        
-       
 
-       
+
+
+
+
         <Route
           path="/admin/accounts"
           element={

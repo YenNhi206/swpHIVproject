@@ -37,7 +37,7 @@ export default function Breadcrumb() {
     '/treatment/create': 'Tạo phác đồ',
     '/treatment/:id/edit': 'Sửa phác đồ',
     '/admin/accounts': 'Quản lý tài khoản',
-    '/patients': 'Hồ sơ bệnh nhân',
+    '/patient': 'Hồ sơ bệnh nhân',
     '/admin/appointments': 'Quản lý lịch hẹn',
     '/support': 'Kết nối cùng HIVCare+',
     '/reminder': 'Nhắc nhở',

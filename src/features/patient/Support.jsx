@@ -112,10 +112,14 @@ export default function Support() {
 
       const appointmentDateObj = new Date(data.appointmentDate || appointmentDate);
       const timeString = appointmentDateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
+      const appointmentId = data.appointmentId || data.id;
+      if (appointmentId) {
+        localStorage.setItem("appointmentId", appointmentId);
+      }
       navigate('/payment', {
         state: {
           appointmentData: {
+            appointmentId,
             doctorName: selectedDoctor.fullName,
             appointmentDate: appointmentDate,
             date: formData.date,
