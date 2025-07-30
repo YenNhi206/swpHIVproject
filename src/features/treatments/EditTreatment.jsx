@@ -109,7 +109,6 @@ export default function EditTreatment() {
         <h2 className="text-3xl font-bold text-red-600 mb-6">Chỉnh sửa Phác đồ ARV</h2>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Tên phác đồ */}
           <div className="col-span-full">
             <label className="block mb-1 text-sm font-medium text-gray-700">Tên phác đồ</label>
             <input
