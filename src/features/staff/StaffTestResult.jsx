@@ -22,7 +22,6 @@ const StaffTestResult = () => {
 
   const token = localStorage.getItem("token") || "";
 
-  // Fetch patients, doctors, test categories
   useEffect(() => {
     fetch("http://localhost:8080/api/patients", {
       headers: { Authorization: `Bearer ${token}` },
@@ -46,7 +45,7 @@ const StaffTestResult = () => {
       .catch(console.error);
   }, [token]);
 
-  // Fetch test results when switching to update form
+
   useEffect(() => {
     if (showUpdateForm) {
       fetch("http://localhost:8080/api/test-results", {
@@ -54,7 +53,7 @@ const StaffTestResult = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          // Nếu API trả về dạng { content: [...] }
+
           if (Array.isArray(data)) setTestResults(data);
           else if (Array.isArray(data.content)) setTestResults(data.content);
           else setTestResults([]);
@@ -130,7 +129,7 @@ const StaffTestResult = () => {
         Thêm/ Cập Nhật Xét Nghiệm
       </h1>
 
-      {/* 2 NÚT CHỌN FORM */}
+
       <div className="flex justify-center gap-4 mb-8">
         <button
           onClick={() => setShowUpdateForm(false)}
@@ -155,7 +154,6 @@ const StaffTestResult = () => {
         </button>
       </div>
 
-      {/* FORM TẠO MỚI */}
       {!showUpdateForm && (
         <form
           onSubmit={handleCreateSubmit}
@@ -234,7 +232,6 @@ const StaffTestResult = () => {
         </form>
       )}
 
-      {/* FORM CẬP NHẬT */}
       {showUpdateForm && (
         <form
           onSubmit={handleUpdateSubmit}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { LoaderCircle } from 'lucide-react';
-import { CheckCircle, ShieldCheck, ChevronRight } from 'lucide-react';
+import { CheckCircle, ChevronRight } from 'lucide-react';
 import Button from '../components/Button';
 import hivCareImg from "../assets/hiv-care.png";
 
@@ -78,9 +78,9 @@ const HomePage = () => {
                 {blog.description || blog.content?.slice(0, 100) + '...'}
               </p>
               <div className="text-sm text-gray-400 mb-3 mt-auto">
-                <span>🖊 {blog.author}</span> •{' '}
+                <span> {blog.author}</span> •{' '}
                 <span>
-                  🗓 {new Date(blog.createdAt).toLocaleDateString('vi-VN')}
+                  {new Date(blog.createdAt).toLocaleDateString('vi-VN')}
                 </span>
               </div>
               {blog.link && (

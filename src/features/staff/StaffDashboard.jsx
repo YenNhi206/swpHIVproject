@@ -5,23 +5,7 @@ import { useNavigate } from "react-router-dom";
 export default function StaffDashboard() {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
-  const [doctors, setDoctors] = useState([]);
-  const [services, setServices] = useState([]);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    dob: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+  const [todayAppointments, setTodayAppointments] = useState([]);
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -33,57 +17,27 @@ export default function StaffDashboard() {
         if (!res.ok) throw new Error("Không thể tải lịch hẹn từ máy chủ");
         const data = await res.json();
         setAppointments(data);
+
+        const today = new Date().toISOString().split("T")[0];
+        const filteredAppointments = data.filter((a) =>
+          a.appointmentDate?.startsWith(today)
+        );
+        setTodayAppointments(filteredAppointments);
       } catch (error) {
         console.error("Lỗi khi tải lịch hẹn:", error.message);
         setAppointments([]);
-      }
-    };
-
-    const fetchDoctorsAndServices = async () => {
-      const token = localStorage.getItem("token");
-      try {
-        const [docRes, serRes] = await Promise.all([
-          fetch("http://localhost:8080/api/doctors", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          fetch("http://localhost:8080/api/services", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-        ]);
-
-        const doctorData = await docRes.json();
-        const serviceData = await serRes.json();
-
-        setDoctors(Array.isArray(doctorData.content) ? doctorData.content : []);
-        setServices(Array.isArray(serviceData.content) ? serviceData.content : []);
-      } catch (err) {
-        console.error("Lỗi khi tải dữ liệu bác sĩ/dịch vụ:", err);
-        setDoctors([]);
-        setServices([]);
+        setTodayAppointments([]);
       }
     };
 
     fetchAppointments();
-    fetchDoctorsAndServices();
   }, []);
-
-  const today = new Date().toISOString().split("T")[0];
-  const todayAppointments = appointments.filter((a) =>
-    a.appointmentDate?.startsWith(today)
-  );
-  const arrived = todayAppointments.filter((a) => a.status === "CHECKED_IN")
-    .length;
-  const notArrived = todayAppointments.filter((a) => a.status === "PENDING")
-    .length;
-  const absent = todayAppointments.filter((a) => a.status === "ABSENT").length;
 
   return (
     <div className="p-6 bg-red-50 min-h-screen">
       <h1 className="text-3xl font-bold text-center text-red-700 mb-8">
         Trang Chủ Nhân Viên
       </h1>
-
-      {/* Thống kê nhanh */}
       <div className="grid grid-cols-1 gap-6 mb-8">
         <div className="bg-white shadow rounded-xl p-6 flex items-center gap-4 border-l-4 border-red-500">
           <Calendar size={32} className="text-red-500" />

@@ -25,7 +25,6 @@ export default function AnonymousAppointmentForm() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Lấy danh sách bác sĩ
   useEffect(() => {
     fetch('http://localhost:8080/api/doctors')
       .then(res => res.json())
@@ -36,7 +35,6 @@ export default function AnonymousAppointmentForm() {
       .catch(() => setError('Không thể tải danh sách bác sĩ'));
   }, []);
 
-  // Lấy danh sách dịch vụ
   useEffect(() => {
     fetch('http://localhost:8080/api/services')
       .then(res => res.json())
@@ -44,11 +42,11 @@ export default function AnonymousAppointmentForm() {
       .catch(() => setError('Không thể tải danh sách dịch vụ'));
   }, []);
 
-  // Lấy giờ trống khi chọn bác sĩ và ngày
+
   useEffect(() => {
     const fetchAvailableTimeSlots = async () => {
       setAvailableTimeSlots([]);
-      setFormData(prev => ({ ...prev, time: '' })); // reset time khi đổi bác sĩ/ngày
+      setFormData(prev => ({ ...prev, time: '' }));
       if (!formData.doctorId || !formData.date) return;
       try {
         const res = await fetch(
@@ -61,7 +59,6 @@ export default function AnonymousAppointmentForm() {
       }
     };
     fetchAvailableTimeSlots();
-    // eslint-disable-next-line
   }, [formData.doctorId, formData.date]);
 
   const handleChange = (e) => {
@@ -94,7 +91,7 @@ export default function AnonymousAppointmentForm() {
       birthDate: formData.birthDate?.trim() ? formData.birthDate : null,
       doctorId: formData.doctorId ? Number(formData.doctorId) : null,
       phone: formData.phone.trim(),
-      appointmentDate: formData.time, // ISO string từ slot đã chọn
+      appointmentDate: formData.time,
       serviceId: formData.serviceId ? Number(formData.serviceId) : null,
     };
 

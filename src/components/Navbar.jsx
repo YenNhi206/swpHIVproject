@@ -62,7 +62,7 @@ export default function Navbar() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Top section with logo + hotline */}
+
       <div className="max-w-7xl mx-auto px-4 pt-4 pb-2 flex justify-between items-start">
         <Link to="/" className="text-red-700 text-3xl font-bold no-underline">
           HIV Care+
@@ -80,7 +80,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Chỉ hiện các nút hỗ trợ nếu không phải ADMIN, DOCTOR, STAFF */}
+
           {(!user || user.role === 'PATIENT') && (
             <div className="flex gap-3 mt-2">
               <div className="relative inline-block">
@@ -107,12 +107,12 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Main navbar */}
+
       <nav className="bg-gradient-to-b from-red-100 to-white border-t border-red-100">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-center items-center py-3 space-x-6">
 
-            {/* Role ADMIN chỉ hiện link admin */}
+
             {user?.role === 'ADMIN' && (
               <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
                 <Link
@@ -127,7 +127,7 @@ export default function Navbar() {
               </motion.div>
             )}
 
-            {/* Role DOCTOR chỉ hiện link bác sĩ */}
+
             {user?.role === 'DOCTOR' && (
               <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
                 <Link
@@ -142,7 +142,7 @@ export default function Navbar() {
               </motion.div>
             )}
 
-            {/* Role STAFF chỉ hiện link nhân viên */}
+
             {user?.role === 'STAFF' && (
               <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
                 <Link
@@ -157,7 +157,7 @@ export default function Navbar() {
               </motion.div>
             )}
 
-            {/* Nếu là PATIENT hoặc chưa đăng nhập thì hiện đầy đủ menu thường */}
+
             {(!user || user.role === 'PATIENT') && navLinks.map((link) => (
               <motion.div key={link.path} whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
                 <Link
@@ -173,7 +173,7 @@ export default function Navbar() {
               </motion.div>
             ))}
 
-            {/* Góc phải thông tin user hoặc login/signup */}
+
             {user ? (
               <div className="flex items-center gap-4 ml-4 cursor-pointer" onClick={handleUserClick}>
                 <UserIcon className="w-6 h-6 text-red-700" />

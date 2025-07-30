@@ -22,6 +22,11 @@ const statusOptions = [
   { value: "ABSENT", label: "Vắng" },
 ];
 
+const genderMap = {
+  MALE: "Nam",
+  FEMALE: "Nữ",
+  OTHER: "Khác", // Có thể thêm các giá trị khác nếu cần
+};
 
 const columnsNormal = [
   {
@@ -39,6 +44,7 @@ const columnsNormal = [
     title: "Giới tính",
     dataIndex: "gender",
     width: 80,
+    render: (text) => genderMap[text] || text || "Chưa cung cấp",
   },
   {
     title: "Ngày hẹn",
