@@ -1,288 +1,308 @@
-import React, { useState, useEffect } from "react";
-
-const StaffTestResult = () => {
-  const [patients, setPatients] = useState([]);
-  const [doctors, setDoctors] = useState([]);
-  const [testCategories, setTestCategories] = useState([]);
-  const [testResults, setTestResults] = useState([]);
-  const [showUpdateForm, setShowUpdateForm] = useState(false);
-
-  const [createData, setCreateData] = useState({
-    patientId: "",
-    testCategoryId: "",
-    doctorId: "",
-    note: "",
-  });
-
-  const [updateData, setUpdateData] = useState({
-    testResultId: "",
-    resultValue: "",
-    resultNote: "",
-  });
-
-  const token = localStorage.getItem("token") || "";
-
-  useEffect(() => {
-    fetch("http://localhost:8080/api/patients", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then(setPatients)
-      .catch(console.error);
-
-    fetch("http://localhost:8080/api/doctors?page=0&size=100", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => setDoctors(data.content))
-      .catch(console.error);
-
-    fetch("http://localhost:8080/api/test-results/categories", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then(setTestCategories)
-      .catch(console.error);
-  }, [token]);
+import React, { useEffect, useState } from "react";
+import { Table, Input, Typography, Select, Space, message } from "antd";
+import { Button } from "antd";
 
 
-  useEffect(() => {
-    if (showUpdateForm) {
-      fetch("http://localhost:8080/api/test-results", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((res) => res.json())
-        .then((data) => {
+const { Title } = Typography;
+const { Option } = Select;
 
-          if (Array.isArray(data)) setTestResults(data);
-          else if (Array.isArray(data.content)) setTestResults(data.content);
-          else setTestResults([]);
-        })
-        .catch(console.error);
-    }
-  }, [showUpdateForm, token]);
 
-  const handleCreateSubmit = async (e) => {
-    e.preventDefault();
-    const { patientId, testCategoryId, doctorId, note } = createData;
+export default function StaffTestManagement() {
+  const [tests, setTests] = useState([]);
+  const [patientProfiles, setPatientProfiles] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [updating, setUpdating] = useState(null);
+  const [editingResults, setEditingResults] = useState({});
 
+
+  const statusOptions = [
+    { label: "Đã yêu cầu", value: "REQUESTED" },
+    { label: "Đã nhận mẫu", value: "SAMPLE_RECEIVED" },
+    { label: "Đang xét nghiệm", value: "IN_PROGRESS" },
+    { label: "Hoàn tất", value: "COMPLETED" },
+    { label: "Đã hủy", value: "CANCELLED" },
+  ];
+
+
+  const fetchPatientProfiles = async () => {
     try {
-      const params = new URLSearchParams();
-      params.append("patientId", patientId);
-      params.append("testCategoryId", testCategoryId);
-      if (doctorId) params.append("doctorId", doctorId);
-      if (note) params.append("note", note);
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = user?.token;
+      if (!token) throw new Error("Vui lòng đăng nhập");
+      const response = await fetch("http://localhost:8080/api/patients", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.ok) {
+        const profiles = await response.json();
+        const profileMap = {};
+        profiles.forEach((profile) => {
+          profileMap[profile.id] = profile.fullName;
+        });
+        setPatientProfiles(profileMap);
+        console.log("Patient profiles loaded:", profileMap);
+      }
+    } catch (error) {
+      console.error("Error fetching patient profiles:", error);
+    }
+  };
 
-      const res = await fetch(`http://localhost:8080/api/test-results?${params.toString()}`, {
-        method: "POST",
+
+  const fetchTestResults = async () => {
+    setLoading(true);
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = user?.token;
+      if (!token) throw new Error("Vui lòng đăng nhập");
+      const resp = await fetch("http://localhost:8080/api/test-results", {
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
+      if (!resp.ok) {
+        const errorText = await resp.text();
+        throw new Error(`Failed: ${resp.status} - ${errorText}`);
+      }
+      const data = await resp.json();
+      console.log("Test results loaded:", data);
 
-      if (!res.ok) throw new Error("Lỗi tạo xét nghiệm");
 
-      alert("Tạo xét nghiệm thành công!");
-      setCreateData({ patientId: "", testCategoryId: "", doctorId: "", note: "" });
-    } catch (err) {
-      alert("Lỗi khi tạo xét nghiệm.");
-      console.error(err);
+      data.forEach((test) => {
+        console.log(
+          `Test ID: ${test.id}, Patient ID: ${test.patientId}, Patient Name: ${test.patientName}`
+        );
+      });
+
+
+      setTests(data);
+    } catch (error) {
+      console.error(error);
+      message.error(`Không tải được danh sách: ${error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleUpdateSubmit = async (e) => {
-    e.preventDefault();
-    const { testResultId, resultValue, resultNote } = updateData;
 
-    if (!testResultId || !resultValue) {
-      alert("Vui lòng chọn xét nghiệm và nhập kết quả!");
-      return;
-    }
+  useEffect(() => {
+    fetchPatientProfiles();
+    fetchTestResults();
+  }, []);
 
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
+
+
+  const handleStatusChange = async (id, newStatus) => {
     try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = user?.token;
+      if (!token) throw new Error("Vui lòng đăng nhập");
+      const res = await fetch(
+        `http://localhost:8080/api/test-results/${id}/status?status=${newStatus}`,
+        { method: "PATCH", headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Update failed: ${res.status} - ${errorText}`);
+      }
+      message.success("Cập nhật trạng thái thành công");
+      fetchTestResults();
+    } catch (error) {
+      console.error(error);
+      message.error("Cập nhật trạng thái thất bại: " + error.message);
+    }
+  };
+
+
+  const handleResultChange = async (id, result, resultNote = "") => {
+    setUpdating(id);
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = user?.token;
+      if (!token) throw new Error("Vui lòng đăng nhập");
+
+
+      console.log(`Updating test result ID: ${id}`);
+      console.log(`Result value: ${result}`);
+      console.log(`Result note: ${resultNote}`);
+
+
       const params = new URLSearchParams();
-      params.append("resultValue", resultValue);
-      if (resultNote) params.append("resultNote", resultNote);
+      if (result !== undefined && result !== null) {
+        params.append("resultValue", result);
+      }
+      if (
+        resultNote !== undefined &&
+        resultNote !== null &&
+        resultNote.trim()
+      ) {
+        params.append("resultNote", resultNote.trim());
+      }
+
 
       const res = await fetch(
-        `http://localhost:8080/api/test-results/${testResultId}/result?${params.toString()}`,
-        {
-          method: "PATCH",
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        `http://localhost:8080/api/test-results/${id}/result?${params.toString()}`,
+        { method: "PATCH", headers: { Authorization: `Bearer ${token}` } }
       );
-
-      if (!res.ok) throw new Error("Lỗi cập nhật kết quả");
-
-      alert("Cập nhật thành công!");
-      setUpdateData({ testResultId: "", resultValue: "", resultNote: "" });
-      setShowUpdateForm(false);
-    } catch (err) {
-      alert("Lỗi khi cập nhật kết quả.");
-      console.error(err);
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Update failed: ${res.status} - ${errorText}`);
+      }
+      message.success("Đã lưu kết quả");
+      fetchTestResults();
+    } catch (error) {
+      console.error(error);
+      message.error("Lưu kết quả thất bại: " + error.message);
+    } finally {
+      setUpdating(null);
     }
   };
 
+
+  const filteredTests = tests.filter((test) => {
+    const patientName =
+      patientProfiles[test.patientId] || test.patientName || "";
+    const status = test.status || "";
+    return (
+      patientName.toLowerCase().includes(searchTerm) ||
+      status.toLowerCase().includes(searchTerm) ||
+      (test.resultDate || "").toLowerCase().includes(searchTerm)
+    );
+  });
+
+
+  const columns = [
+    {
+      title: "Bệnh nhân",
+      dataIndex: "patientName",
+      key: "patientName",
+      render: (text, rec) => {
+        const displayName = patientProfiles[rec.patientId] || text || "Chưa có";
+        console.log(
+          `Rendering patient for test ${rec.id}: ${displayName} (Patient ID: ${rec.patientId})`
+        );
+        return displayName;
+      },
+    },
+    {
+      title: "Xét nghiệm",
+      dataIndex: "testCategoryName",
+      key: "testCategoryName",
+      render: (t) => t || "Chưa có",
+    },
+    {
+      title: "Bác sĩ",
+      dataIndex: "doctorName",
+      key: "doctorName",
+      render: (t) => t || "Chưa chỉ định",
+    },
+
+
+    {
+      title: "Trạng thái",
+      key: "status",
+      render: (_, rec) => (
+        <Select
+          value={rec.status}
+          onChange={(v) => handleStatusChange(rec.id, v)}
+          style={{ width: 180 }}
+        >
+          {statusOptions.map((opt) => (
+            <Option key={opt.value} value={opt.value}>
+              {opt.label}
+            </Option>
+          ))}
+        </Select>
+      ),
+    },
+    {
+      title: "Kết quả & Ghi chú",
+      key: "result",
+      render: (_, rec) => {
+        const edit = editingResults[rec.id] || {};
+        return (
+          <Space direction="vertical">
+            <Space direction="horizontal">
+              <Input
+                value={edit.value ?? rec.resultValue ?? ""}
+                onChange={(e) =>
+                  setEditingResults((p) => ({
+                    ...p,
+                    [rec.id]: {
+                      ...p[rec.id],
+                      value: e.target.value,
+                      note: p[rec.id]?.note ?? rec.resultNote ?? "",
+                    },
+                  }))
+                }
+                placeholder="Kết quả"
+                disabled={updating === rec.id}
+                style={{ width: 250 }}
+              />
+              <Input
+                value={edit.note ?? rec.resultNote ?? ""}
+                onChange={(e) =>
+                  setEditingResults((p) => ({
+                    ...p,
+                    [rec.id]: {
+                      ...p[rec.id],
+                      note: e.target.value,
+                      value: p[rec.id]?.value ?? rec.resultValue ?? "",
+                    },
+                  }))
+                }
+                placeholder="Ghi chú"
+                disabled={updating === rec.id}
+                style={{ width: 250 }}
+              />
+              <Button
+                danger
+                onClick={() =>
+                  handleResultChange(
+                    rec.id,
+                    editingResults[rec.id]?.value || "",
+                    editingResults[rec.id]?.note || ""
+                  )
+                }
+                loading={updating === rec.id}
+              >
+                Confirm
+              </Button>
+            </Space>
+            {updating === rec.id && <span>Đang lưu...</span>}
+          </Space>
+        );
+      },
+    },
+  ];
+
+
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6 text-center text-red-600">
-        Thêm/ Cập Nhật Xét Nghiệm
-      </h1>
-
-
-      <div className="flex justify-center gap-4 mb-8">
-        <button
-          onClick={() => setShowUpdateForm(false)}
-          className={`flex items-center gap-2 px-4 py-2 rounded font-semibold border transition 
-            ${!showUpdateForm
-              ? "bg-red-600 text-white hover:bg-red-700"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
-          `}
-        >
-          <span className="text-lg"></span> Tạo Mới Xét Nghiệm
-        </button>
-
-        <button
-          onClick={() => setShowUpdateForm(true)}
-          className={`flex items-center gap-2 px-4 py-2 rounded font-semibold border transition 
-            ${showUpdateForm
-              ? "bg-red-600 text-white hover:bg-red-700"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"}
-          `}
-        >
-          <span className="text-lg"></span> Cập Nhật Kết Quả
-        </button>
-      </div>
-
-      {!showUpdateForm && (
-        <form
-          onSubmit={handleCreateSubmit}
-          className="space-y-4 bg-white p-6 rounded-xl shadow-lg"
-        >
-          <select
-            required
-            value={createData.patientId}
-            onChange={(e) => setCreateData({ ...createData, patientId: e.target.value })}
-            className="w-full p-2 border rounded"
-          >
-            <option value="">-- Chọn bệnh nhân --</option>
-            {patients.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.fullName}
-              </option>
-            ))}
-          </select>
-
-          <select
-            required
-            value={createData.testCategoryId}
-            onChange={(e) => setCreateData({ ...createData, testCategoryId: e.target.value })}
-            className="w-full p-2 border rounded"
-          >
-            <option value="">-- Chọn loại xét nghiệm --</option>
-            {testCategories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={createData.doctorId}
-            onChange={(e) => setCreateData({ ...createData, doctorId: e.target.value })}
-            className="w-full p-2 border rounded"
-          >
-            <option value="">-- Chọn bác sĩ (tuỳ chọn) --</option>
-            {doctors.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.fullName}
-              </option>
-            ))}
-          </select>
-
-          <textarea
-            placeholder="Ghi chú thêm (nếu có)"
-            value={createData.note}
-            onChange={(e) => setCreateData({ ...createData, note: e.target.value })}
-            className="w-full p-2 border rounded"
-          ></textarea>
-
-          <div className="flex gap-4">
-            <button
-              type="submit"
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-            >
-              Tạo mới
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                setCreateData({
-                  patientId: "",
-                  testCategoryId: "",
-                  doctorId: "",
-                  note: "",
-                })
-              }
-              className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
-            >
-              Huỷ
-            </button>
-          </div>
-        </form>
-      )}
-
-      {showUpdateForm && (
-        <form
-          onSubmit={handleUpdateSubmit}
-          className="space-y-4 bg-white p-6 rounded-xl shadow-lg"
-        >
-          <h2 className="text-xl font-bold text-red-600 mb-2">
-            Cập nhật kết quả xét nghiệm
-          </h2>
-          <select
-            value={updateData.testResultId}
-            onChange={(e) =>
-              setUpdateData({ ...updateData, testResultId: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-            required
-          >
-            <option value="">-- Chọn xét nghiệm cần cập nhật --</option>
-            {testResults.map((tr) => (
-              <option key={tr.id} value={tr.id}>
-                {`ID: ${tr.id}`}
-              </option>
-            ))}
-          </select>
-          <input
-            type="text"
-            placeholder="Giá trị kết quả"
-            value={updateData.resultValue}
-            onChange={(e) =>
-              setUpdateData({ ...updateData, resultValue: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-            required
-          />
-          <textarea
-            placeholder="Ghi chú kết quả (tuỳ chọn)"
-            value={updateData.resultNote}
-            onChange={(e) =>
-              setUpdateData({ ...updateData, resultNote: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-          />
-          <button
-            type="submit"
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-          >
-            Cập nhật kết quả
-          </button>
-        </form>
-      )}
+    <div className="p-6">
+      <h1 className="text-3xl font-bold text-center text-red-700 mb-6">
+        Quản lý kết quả xét nghiệm</h1>
+      <Input.Search
+        placeholder="Tìm kiếm tên bệnh nhân"
+        value={searchTerm}
+        onChange={handleSearch}
+        className="mb-4"
+        allowClear
+      />
+      <Table
+        loading={loading}
+        dataSource={filteredTests}
+        columns={columns}
+        rowKey="id"
+        pagination={{ pageSize: 8 }}
+        bordered
+      />
     </div>
   );
-};
+}
 
-export default StaffTestResult;
+
+

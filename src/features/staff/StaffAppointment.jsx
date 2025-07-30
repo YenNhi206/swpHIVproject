@@ -22,12 +22,6 @@ const statusOptions = [
   { value: "ABSENT", label: "Vắng" },
 ];
 
-const genderMap = {
-  MALE: "Nam",
-  FEMALE: "Nữ",
-  OTHER: "Khác", // Có thể thêm các giá trị khác nếu cần
-};
-
 const columnsNormal = [
   {
     title: "Họ tên / Bí danh",
@@ -44,7 +38,6 @@ const columnsNormal = [
     title: "Giới tính",
     dataIndex: "gender",
     width: 80,
-    render: (text) => genderMap[text] || text || "Chưa cung cấp",
   },
   {
     title: "Ngày hẹn",
@@ -64,8 +57,8 @@ const columnsNormal = [
       text === "FIRST_VISIT"
         ? "Khám lần đầu"
         : text === "FOLLOW_UP"
-          ? "Tái khám"
-          : text,
+        ? "Tái khám"
+        : text,
     width: 120,
   },
   {
@@ -151,7 +144,13 @@ export default function StaffAppointment() {
       if (!res.ok) throw new Error("Lỗi khi gọi API lịch hẹn");
 
       const data = await res.json();
-      setAppointments(Array.isArray(data) ? data : data.content || []);
+      const list = Array.isArray(data) ? data : data.content || [];
+
+      list.sort(
+        (a, b) => new Date(b.appointmentDate) - new Date(a.appointmentDate)
+      );
+
+      setAppointments(list);
     } catch (err) {
       message.error("Lỗi khi tải lịch hẹn: " + err.message);
       setAppointments([]);
@@ -199,8 +198,6 @@ export default function StaffAppointment() {
     updating: updatingId === item.id,
   }));
 
-  const getColumns = () => columnsNormal;
-
   return (
     <div
       className="p-6"
@@ -212,11 +209,13 @@ export default function StaffAppointment() {
         borderRadius: 8,
       }}
     >
-      <h2 className="text-xl font-semibold mb-4">Quản lý lịch hẹn</h2>
+      <h1 className="text-3xl font-bold text-center text-red-700 mb-6">
+        Quản lý lịch hẹn
+      </h1>
 
       <div
         style={{
-          marginBottom: 12,
+          marginBottom: 16,
           display: "flex",
           alignItems: "center",
           gap: 16,
@@ -227,7 +226,13 @@ export default function StaffAppointment() {
             activeKey={activeTab}
             onChange={setActiveTab}
             type="line"
-            size="small"
+            size="large"
+            tabBarGutter={24}
+            tabBarStyle={{
+              fontSize: "16px",
+              fontWeight: "600",
+              color: "#d32f2f",
+            }}
           >
             {Object.keys(tabStatusMap).map((key) => (
               <TabPane tab={key} key={key} />
@@ -237,7 +242,7 @@ export default function StaffAppointment() {
       </div>
 
       <Table
-        columns={getColumns()}
+        columns={columnsNormal}
         dataSource={appointmentsWithHandlers}
         rowKey="id"
         loading={loading}
