@@ -156,156 +156,155 @@ export default function History() {
   if (isLoading) return <p className="text-center mt-10 text-gray-500">Đang tải dữ liệu...</p>;
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
 
-return (
-  <div className="max-w-6xl mx-auto p-6 min-h-screen rounded-3xl shadow-sm bg-gradient-to-tr from-white via-red-50 to-white">
-    <h2 className="text-4xl font-extrabold text-red-700 mb-8 border-b-4 border-red-500 pb-3 text-center">
-      Lịch sử khám bệnh
-    </h2>
+  return (
+    <div className="max-w-6xl mx-auto p-6 min-h-screen rounded-3xl shadow-sm bg-gradient-to-tr from-white via-red-50 to-white">
+      <h2 className="text-4xl font-extrabold text-red-700 mb-8 border-b-4 border-red-500 pb-3 text-center">
+        Lịch sử khám bệnh
+      </h2>
 
-    <div className="flex flex-wrap justify-center gap-4 mb-6">
-      <input
-        type="text"
-        placeholder="Tìm theo ID..."
-        value={searchId}
-        onChange={(e) => setSearchId(e.target.value)}
-        className="px-4 py-2 text-sm rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-red-400 focus:outline-none"
-      />
-      <input
-        type="date"
-        value={searchDate}
-        onChange={(e) => setSearchDate(e.target.value)}
-        className="px-4 py-2 text-sm rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-red-400 focus:outline-none"
-      />
+      <div className="flex flex-wrap justify-center gap-4 mb-6">
+        <input
+          type="text"
+          placeholder="Tìm theo ID..."
+          value={searchId}
+          onChange={(e) => setSearchId(e.target.value)}
+          className="px-4 py-2 text-sm rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-red-400 focus:outline-none"
+        />
+        <input
+          type="date"
+          value={searchDate}
+          onChange={(e) => setSearchDate(e.target.value)}
+          className="px-4 py-2 text-sm rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-red-400 focus:outline-none"
+        />
+      </div>
+
+      <div className="flex justify-center gap-4 mb-10">
+        {[
+          { key: "appointments", label: "Cuộc hẹn" },
+          { key: "testResults", label: "Xét nghiệm" },
+          { key: "prescriptions", label: "Đơn thuốc" },
+        ].map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-md border-2 text-sm
+              ${activeTab === tab.key
+                ? "bg-gradient-to-r from-red-500 to-orange-400 text-white border-transparent"
+                : "bg-white text-red-600 border-red-300 hover:border-red-400 hover:bg-red-100"}`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === "appointments" && (
+        <Section
+          title="Cuộc hẹn"
+          icon={<i className="fa-solid fa-calendar-check text-xl"></i>}
+          data={filteredAppointments}
+          filter={
+            <div className="flex gap-2 flex-wrap">
+              {["ALL", "BOOKED", "CANCELLED"].map((status) => (
+                <button
+                  key={status}
+                  onClick={() => setFilterAppointmentStatus(status)}
+                  className={`px-3 py-1 text-sm rounded-full border font-medium transition
+                    ${filterAppointmentStatus === status
+                      ? "bg-red-500 text-white border-red-500"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-red-50"}`}
+                >
+                  {{ ALL: "Tất cả", BOOKED: "Đã đặt", CANCELLED: "Đã hủy" }[status]}
+                </button>
+              ))}
+            </div>
+          }
+          renderItem={(item) => (
+            <div className="text-sm space-y-1 text-gray-800">
+              <p><strong>Ngày hẹn:</strong> {formatDate(item.appointmentDate)}</p>
+              <p><strong>Loại:</strong> {item.appointmentType === "FIRST_VISIT" ? "Khám lần đầu" : "Tái khám"}</p>
+              <p><strong>Bác sĩ:</strong> {item.doctorName || "Không rõ"}</p>
+              <p><strong>Dịch vụ:</strong> {item.serviceName || "Không rõ"}</p>
+            </div>
+          )}
+        />
+      )}
+
+      {activeTab === "testResults" && (
+        <Section
+          title="Xét nghiệm"
+          icon={<i className="fa-solid fa-vial text-xl"></i>}
+          data={filteredTestResults}
+          filter={
+            <div className="flex gap-2 flex-wrap">
+              {["ALL", "COMPLETED", "IN_PROGRESS", "PENDING"].map((status) => (
+                <button
+                  key={status}
+                  onClick={() => setFilterTestResultStatus(status)}
+                  className={`px-3 py-1 text-sm rounded-full border font-medium transition
+                    ${filterTestResultStatus === status
+                      ? "bg-red-500 text-white border-red-500"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-red-50"}`}
+                >
+                  {{
+                    ALL: "Tất cả",
+                    COMPLETED: "Hoàn thành",
+                    IN_PROGRESS: "Đang tiến hành",
+                    PENDING: "Chờ xử lý",
+                  }[status]}
+                </button>
+              ))}
+            </div>
+          }
+          renderItem={(item) => (
+            <div className="text-sm space-y-1 text-gray-800">
+              <p><strong>Ngày:</strong> {formatDate(item.createdAt)}</p>
+              <p><strong>Loại:</strong> {item.testCategoryName || item.testCategoryId}</p>
+              <p><strong>Kết quả:</strong> {item.resultValue || "Chưa có"}</p>
+              {item.resultNote && <p><strong>Ghi chú:</strong> {item.resultNote}</p>}
+              {item.doctorName && <p><strong>Bác sĩ:</strong> {item.doctorName}</p>}
+            </div>
+          )}
+        />
+      )}
+
+      {activeTab === "prescriptions" && (
+        <Section
+          title="Đơn thuốc"
+          icon={<i className="fa-solid fa-prescription-bottle-medical text-xl"></i>}
+          data={filteredPrescriptions}
+          filter={
+            <div className="flex gap-2 flex-wrap">
+              {["ALL", "ACTIVE", "INACTIVE", "DISCONTINUED"].map((status) => (
+                <button
+                  key={status}
+                  onClick={() => setFilterPrescriptionStatus(status)}
+                  className={`px-3 py-1 text-sm rounded-full border font-medium transition
+                    ${filterPrescriptionStatus === status
+                      ? "bg-red-500 text-white border-red-500"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-red-50"}`}
+                >
+                  {{
+                    ALL: "Tất cả",
+                    ACTIVE: "Đang hoạt động",
+                    INACTIVE: "Không hoạt động",
+                    DISCONTINUED: "Đã ngưng",
+                  }[status]}
+                </button>
+              ))}
+            </div>
+          }
+          renderItem={(item) => (
+            <div className="text-sm space-y-1 text-gray-800">
+              <p><strong>Ngày kê:</strong> {formatDate(item.prescribedDate)}</p>
+              <p><strong>Bác sĩ:</strong> {item.doctorName || `#${item.doctorId}`}</p>
+              <p><strong>Phác đồ:</strong> {item.protocolName || `#${item.protocolId}`}</p>
+              {item.customInstructions && (
+                <p><strong>Hướng dẫn:</strong> {item.customInstructions}</p>
+              )}
+            </div>
+          )}
+        />
+      )}
     </div>
-
-    <div className="flex justify-center gap-4 mb-10">
-      {[
-        { key: "appointments", label: "Cuộc hẹn" },
-        { key: "testResults", label: "Xét nghiệm" },
-        { key: "prescriptions", label: "Đơn thuốc" },
-      ].map((tab) => (
-        <button
-          key={tab.key}
-          onClick={() => setActiveTab(tab.key)}
-          className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-md border-2 text-sm
-            ${activeTab === tab.key
-              ? "bg-gradient-to-r from-red-500 to-purple-600 text-white border-transparent"
-              : "bg-white text-red-600 border-red-300 hover:border-red-400 hover:bg-red-100"}`}
-        >
-          {tab.label}
-        </button>
-      ))}
-    </div>
-
-    {activeTab === "appointments" && (
-      <Section
-        title="Cuộc hẹn"
-        icon={<i className="fa-solid fa-calendar-check text-xl"></i>}
-        data={filteredAppointments}
-        filter={
-          <div className="flex gap-2 flex-wrap">
-            {["ALL", "BOOKED", "CANCELLED"].map((status) => (
-              <button
-                key={status}
-                onClick={() => setFilterAppointmentStatus(status)}
-                className={`px-3 py-1 text-sm rounded-full border font-medium transition
-                  ${filterAppointmentStatus === status
-                    ? "bg-red-500 text-white border-red-500"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-red-50"}`}
-              >
-                {{ ALL: "Tất cả", BOOKED: "Đã đặt", CANCELLED: "Đã hủy" }[status]}
-              </button>
-            ))}
-          </div>
-        }
-        renderItem={(item) => (
-          <div className="text-sm space-y-1 text-gray-800">
-            <p><strong>Ngày hẹn:</strong> {formatDate(item.appointmentDate)}</p>
-            <p><strong>Loại:</strong> {item.appointmentType === "FIRST_VISIT" ? "Khám lần đầu" : "Tái khám"}</p>
-            <p><strong>Bác sĩ:</strong> {item.doctorName || "Không rõ"}</p>
-            <p><strong>Dịch vụ:</strong> {item.serviceName || "Không rõ"}</p>
-          </div>
-        )}
-      />
-    )}
-
-    {activeTab === "testResults" && (
-      <Section
-        title="Xét nghiệm"
-        icon={<i className="fa-solid fa-vial text-xl"></i>}
-        data={filteredTestResults}
-        filter={
-          <div className="flex gap-2 flex-wrap">
-            {["ALL", "COMPLETED", "IN_PROGRESS", "PENDING"].map((status) => (
-              <button
-                key={status}
-                onClick={() => setFilterTestResultStatus(status)}
-                className={`px-3 py-1 text-sm rounded-full border font-medium transition
-                  ${filterTestResultStatus === status
-                    ? "bg-red-500 text-white border-red-500"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-red-50"}`}
-              >
-                {{
-                  ALL: "Tất cả",
-                  COMPLETED: "Hoàn thành",
-                  IN_PROGRESS: "Đang tiến hành",
-                  PENDING: "Chờ xử lý",
-                }[status]}
-              </button>
-            ))}
-          </div>
-        }
-        renderItem={(item) => (
-          <div className="text-sm space-y-1 text-gray-800">
-            <p><strong>Ngày:</strong> {formatDate(item.createdAt)}</p>
-            <p><strong>Loại:</strong> {item.testCategoryName || item.testCategoryId}</p>
-            <p><strong>Kết quả:</strong> {item.resultValue || "Chưa có"}</p>
-            {item.resultNote && <p><strong>Ghi chú:</strong> {item.resultNote}</p>}
-            {item.doctorName && <p><strong>Bác sĩ:</strong> {item.doctorName}</p>}
-          </div>
-        )}
-      />
-    )}
-
-    {activeTab === "prescriptions" && (
-      <Section
-        title="Đơn thuốc"
-        icon={<i className="fa-solid fa-prescription-bottle-medical text-xl"></i>}
-        data={filteredPrescriptions}
-        filter={
-          <div className="flex gap-2 flex-wrap">
-            {["ALL", "ACTIVE", "INACTIVE", "DISCONTINUED"].map((status) => (
-              <button
-                key={status}
-                onClick={() => setFilterPrescriptionStatus(status)}
-                className={`px-3 py-1 text-sm rounded-full border font-medium transition
-                  ${filterPrescriptionStatus === status
-                    ? "bg-red-500 text-white border-red-500"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-red-50"}`}
-              >
-                {{
-                  ALL: "Tất cả",
-                  ACTIVE: "Đang hoạt động",
-                  INACTIVE: "Không hoạt động",
-                  DISCONTINUED: "Đã ngưng",
-                }[status]}
-              </button>
-            ))}
-          </div>
-        }
-        renderItem={(item) => (
-          <div className="text-sm space-y-1 text-gray-800">
-            <p><strong>Ngày kê:</strong> {formatDate(item.prescribedDate)}</p>
-            <p><strong>Bác sĩ:</strong> {item.doctorName || `#${item.doctorId}`}</p>
-            <p><strong>Phác đồ:</strong> {item.protocolName || `#${item.protocolId}`}</p>
-            {item.customInstructions && (
-              <p><strong>Hướng dẫn:</strong> {item.customInstructions}</p>
-            )}
-          </div>
-        )}
-      />
-    )}
-  </div>
-);
-
+  );
 }
