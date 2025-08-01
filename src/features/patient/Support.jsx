@@ -24,6 +24,46 @@ export default function Support() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("user"))?.token;
+        if (!token) return;
+
+        const res = await fetch("http://localhost:8080/api/patients/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Lỗi hồ sơ: ${res.status} - ${errorText}`);
+        }
+
+        const data = await res.json();
+
+        setFormData(prev => ({
+          ...prev,
+          name: data.fullName || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          gender: data.gender || "FEMALE",
+          birthDate: data.birthDate
+            ? new Date(data.birthDate).toISOString().split("T")[0]
+            : "",
+        }));
+      } catch (err) {
+        console.error("Không thể lấy hồ sơ bệnh nhân:", err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+
   useEffect(() => {
     fetch('http://localhost:8080/api/doctors')
       .then(res => res.json())

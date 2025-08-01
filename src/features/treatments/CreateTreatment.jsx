@@ -65,32 +65,35 @@ export default function CreateTreatment() {
     }
   };
 
+  const inputClass = "rounded-xl border border-gray-300 p-3 w-full focus:outline-none focus:ring-2 focus:ring-red-500";
+  const labelClass = "text-sm font-medium mb-1 text-gray-700";
+
   return (
     <motion.div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-10 px-4 md:px-10 font-sans">
-      <div className="bg-white p-6 rounded-xl shadow-md border max-w-5xl mx-auto">
-        <h2 className="text-3xl font-bold text-red-600 mb-6">Tạo phác đồ điều trị ARV</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid md:grid-cols-2 gap-4">
+      <div className="bg-white p-8 rounded-2xl shadow-lg border max-w-5xl mx-auto">
+        <h2 className="text-3xl font-bold text-red-600 mb-8 text-center">Tạo phác đồ điều trị ARV</h2>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid md:grid-cols-2 gap-6">
             <div className="flex flex-col">
-              <label className="text-sm font-medium mb-1">Tên phác đồ</label>
+              <label className={labelClass}>Tên phác đồ</label>
               <input
                 name="name"
                 value={form.name}
                 onChange={handleChange}
                 required
                 placeholder="Ví dụ: TDF + 3TC + DTG"
-                className="input"
+                className={inputClass}
               />
             </div>
 
             <div className="flex flex-col">
-              <label className="text-sm font-medium mb-1">Đối tượng áp dụng</label>
+              <label className={labelClass}>Đối tượng áp dụng</label>
               <select
                 name="category"
                 value={form.category}
                 onChange={handleChange}
                 required
-                className="input"
+                className={inputClass}
               >
                 <option value="">-- Chọn đối tượng --</option>
                 <option value="Người lớn">Người lớn</option>
@@ -100,109 +103,110 @@ export default function CreateTreatment() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-6">
             <div className="flex flex-col">
-              <label className="text-sm font-medium mb-1">Danh sách thuốc</label>
+              <label className={labelClass}>Danh sách thuốc</label>
               <textarea
                 name="ingredients"
                 value={form.ingredients}
                 onChange={handleChange}
-                rows={2}
+                rows={3}
                 placeholder="TDF, 3TC, DTG"
-                className="input"
+                className={`${inputClass} resize-none`}
               />
             </div>
 
             <div className="flex flex-col">
-              <label className="text-sm font-medium mb-1">Liều dùng</label>
+              <label className={labelClass}>Liều dùng</label>
               <textarea
                 name="dosage"
                 value={form.dosage}
                 onChange={handleChange}
-                rows={2}
+                rows={3}
                 placeholder="1 viên/ngày..."
-                className="input"
+                className={`${inputClass} resize-none`}
               />
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-6">
             <div className="flex flex-col">
-              <label className="text-sm font-medium mb-1">Chỉ định</label>
+              <label className={labelClass}>Chỉ định</label>
               <textarea
                 name="indication"
                 value={form.indication}
                 onChange={handleChange}
-                rows={2}
-                className="input"
+                rows={3}
+                className={`${inputClass} resize-none`}
               />
             </div>
 
             <div className="flex flex-col">
-              <label className="text-sm font-medium mb-1">Tác dụng phụ</label>
+              <label className={labelClass}>Tác dụng phụ</label>
               <textarea
                 name="sideEffects"
                 value={form.sideEffects}
                 onChange={handleChange}
-                rows={2}
-                className="input"
+                rows={3}
+                className={`${inputClass} resize-none`}
               />
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-6">
             <div className="flex flex-col">
-              <label className="text-sm font-medium mb-1">Theo dõi</label>
+              <label className={labelClass}>Theo dõi</label>
               <textarea
                 name="monitoring"
                 value={form.monitoring}
                 onChange={handleChange}
-                rows={2}
-                className="input"
+                rows={3}
+                className={`${inputClass} resize-none`}
               />
             </div>
 
             <div className="flex flex-col">
-              <label className="text-sm font-medium mb-1">Chống chỉ định / thận trọng</label>
+              <label className={labelClass}>Chống chỉ định / thận trọng</label>
               <textarea
                 name="precautions"
                 value={form.precautions}
                 onChange={handleChange}
-                rows={2}
-                className="input"
+                rows={3}
+                className={`${inputClass} resize-none`}
               />
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-6">
             <div className="flex flex-col">
-              <label className="text-sm font-medium mb-1">Thời gian điều trị</label>
+              <label className={labelClass}>Thời gian điều trị</label>
               <textarea
                 name="duration"
                 value={form.duration}
                 onChange={handleChange}
                 rows={2}
-                className="input"
+                className={`${inputClass} resize-none`}
               />
             </div>
 
             <div className="flex flex-col">
-              <label className="text-sm font-medium mb-1">Đánh giá</label>
+              <label className={labelClass}>Đánh giá</label>
               <textarea
                 name="evaluation"
                 value={form.evaluation}
                 onChange={handleChange}
                 rows={2}
-                className="input"
+                className={`${inputClass} resize-none`}
               />
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 pt-4">
+          <div className="flex justify-end gap-3 pt-6">
             <Button label="Quay lại" onClick={() => navigate("/treatment")} disabled={loading} />
             <Button label={loading ? "Đang lưu..." : "Lưu"} type="submit" disabled={loading} />
           </div>
         </form>
+
       </div>
     </motion.div>
   );

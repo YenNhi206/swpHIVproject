@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  User,
-  Calendar as CalendarIcon,
-  Mail,
-  Phone,
-  Stethoscope,
-} from "lucide-react";
 
 export default function AppointmentForm() {
   const navigate = useNavigate();
@@ -35,6 +28,51 @@ export default function AppointmentForm() {
   const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("user"))?.token;
+        if (!token) return;
+
+        const res = await fetch("http://localhost:8080/api/patients/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Không lấy được hồ sơ: ${res.status} - ${errorText}`);
+        }
+
+        const data = await res.json();
+        console.log("Profile data:", data); // 👈 Kiểm tra structure
+
+        setFormData((prev) => ({
+          ...prev,
+          fullName: data.fullName || "",
+          phone: data.phone || "",
+          email: data.email || "",
+          dob: data.birthDate
+            ? new Date(data.birthDate).toISOString().split("T")[0]
+            : "",
+          gender:
+            data.gender === "MALE"
+              ? "Nam"
+              : data.gender === "FEMALE"
+                ? "Nữ"
+                : "Khác",
+        }));
+      } catch (err) {
+        console.error("Lỗi khi lấy hồ sơ:", err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+
+  useEffect(() => {
     const fetchDoctors = async () => {
       try {
         const token = JSON.parse(localStorage.getItem("user"))?.token;
@@ -61,17 +99,13 @@ export default function AppointmentForm() {
         const token = JSON.parse(localStorage.getItem("user"))?.token;
         const type =
           formData.visitType === "Khám lần đầu" ? "FIRST_VISIT" : "FOLLOW_UP";
-        const res = await fetch(
-          `http://localhost:8080/api/services/type/${type}`,
-          {
-            headers: {
-              Authorization: token ? `Bearer ${token}` : "",
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!res.ok)
-          throw new Error(`Lỗi tải danh sách dịch vụ: ${res.status}`);
+        const res = await fetch(`http://localhost:8080/api/services/type/${type}`, {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+            "Content-Type": "application/json",
+          },
+        });
+        if (!res.ok) throw new Error(`Lỗi tải danh sách dịch vụ: ${res.status}`);
         const data = await res.json();
         setServices(data);
       } catch (error) {
@@ -91,16 +125,10 @@ export default function AppointmentForm() {
 
       try {
         const token = JSON.parse(localStorage.getItem("user"))?.token;
-        if (!token) {
-          setAvailableTimeSlots([]);
-          return;
-        }
+        if (!token) return;
 
         const doctorObj = doctors.find((d) => d.fullName === formData.doctor);
-        if (!doctorObj) {
-          setAvailableTimeSlots([]);
-          return;
-        }
+        if (!doctorObj) return;
 
         const res = await fetch(
           `http://localhost:8080/api/doctors/${doctorObj.id}/schedules?date=${formData.date}`,
@@ -124,8 +152,6 @@ export default function AppointmentForm() {
     };
     fetchAvailableTimeSlots();
   }, [formData.date, formData.doctor, doctors]);
-
-  const genderOptions = ["Nữ", "Nam", "Khác"];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -161,13 +187,7 @@ export default function AppointmentForm() {
     if (!validateForm()) return;
 
     const userData = localStorage.getItem("user");
-    let token = null;
-    try {
-      token = JSON.parse(userData)?.token;
-    } catch {
-      token = null;
-    }
-    console.log("Token gửi lên:", token);
+    const token = JSON.parse(userData)?.token;
 
     if (!token) {
       setSubmitError("Vui lòng đăng nhập để đặt lịch.");
@@ -176,27 +196,19 @@ export default function AppointmentForm() {
     }
 
     try {
-      const selectedDoctor = doctors.find(
-        (d) => d.fullName === formData.doctor
-      );
+      const selectedDoctor = doctors.find((d) => d.fullName === formData.doctor);
       const selectedService = services.find((s) => s.name === formData.service);
-      if (!selectedDoctor) {
-        setSubmitError("Bác sĩ không hợp lệ");
+      if (!selectedDoctor || !selectedService) {
+        setSubmitError("Thông tin bác sĩ hoặc dịch vụ không hợp lệ");
         return;
       }
-      if (!selectedService) {
-        setSubmitError("Dịch vụ không hợp lệ");
-        return;
-      }
-
-      const appointmentDate = formData.time;
 
       const body = {
-        doctorId: Number(selectedDoctor.id),
-        serviceId: Number(selectedService.id),
+        doctorId: selectedDoctor.id,
+        serviceId: selectedService.id,
         appointmentType:
           formData.visitType === "Khám lần đầu" ? "FIRST_VISIT" : "FOLLOW_UP",
-        appointmentDate: appointmentDate,
+        appointmentDate: formData.time,
         fullName: formData.fullName,
         phone: formData.phone,
         gender: formData.gender,
@@ -204,36 +216,24 @@ export default function AppointmentForm() {
         birthDate: formData.dob,
       };
 
-      console.log("Body gửi lên:", JSON.stringify(body, null, 2));
-
       const response = await fetch("http://localhost:8080/api/appointments", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-
         body: JSON.stringify(body),
       });
 
-      console.log("Response status:", response.status);
-      console.log("Headers gửi lên:", {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      });
-
       const data = await response.json();
-      console.log("Response data2222222:", data);
-      if (data) {
-        console.log("Response data:", data);
-        if (data && data.appointment.id) {
-          localStorage.setItem("appointmentId", data.appointment.id);
-        }
+
+      if (data?.appointment?.id) {
+        localStorage.setItem("appointmentId", data.appointment.id);
         navigate("/payment", {
           state: {
             appointmentData: {
               doctorName: selectedDoctor.fullName,
-              appointmentDate: appointmentDate,
+              appointmentDate: formData.time,
               price: selectedService.price,
               anonymous: false,
             },
@@ -248,96 +248,38 @@ export default function AppointmentForm() {
     }
   };
 
+  const renderInput = (label, name, type = "text", required = false) => (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <input
+        type={type}
+        name={name}
+        value={formData[name]}
+        onChange={handleChange}
+        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+        max={type === "date" && name === "dob" ? new Date().toISOString().split("T")[0] : undefined}
+      />
+      {errors[name] && <p className="text-red-600 text-sm mt-1">{errors[name]}</p>}
+    </div>
+  );
+
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white p-4">
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-10 animate-fade-in">
-        <h2 className="text-2xl font-bold text-red-700 mb-6 text-center flex items-center justify-center gap-2">
-          <Stethoscope className="w-6 h-6" />
+      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-10">
+        <h2 className="text-2xl font-bold text-red-700 mb-6 text-center">
           Đặt lịch hẹn
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Họ tên */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Họ tên
-              </label>
-              <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                <User className="w-5 h-5 text-gray-400 mx-3" />
-                <input
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className="w-full p-3 border-none rounded-lg focus:outline-none"
-                />
-              </div>
-              {errors.fullName && (
-                <p className="text-red-600 text-sm mt-1">{errors.fullName}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Ngày sinh
-              </label>
-              <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                <CalendarIcon className="w-5 h-5 text-gray-400 mx-3" />
-                <input
-                  type="date"
-                  name="dob"
-                  value={formData.dob}
-                  onChange={handleChange}
-                  className="w-full p-3 border-none rounded-lg focus:outline-none"
-                  max={new Date().toISOString().split("T")[0]}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
-              <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                <Mail className="w-5 h-5 text-gray-400 mx-3" />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full p-3 border-none rounded-lg focus:outline-none"
-                />
-              </div>
-              {errors.email && (
-                <p className="text-red-600 text-sm mt-1">{errors.email}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Số điện thoại
-              </label>
-              <div className="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-red-500">
-                <Phone className="w-5 h-5 text-gray-400 mx-3" />
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full p-3 border-none rounded-lg focus:outline-none"
-                />
-              </div>
-              {errors.phone && (
-                <p className="text-red-600 text-sm mt-1">{errors.phone}</p>
-              )}
-            </div>
-
+            {renderInput("Họ tên", "fullName")}
+            {renderInput("Ngày sinh", "dob", "date")}
+            {renderInput("Email", "email", "email")}
+            {renderInput("Số điện thoại", "phone")}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Giới tính
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
               <div className="flex space-x-6 mt-1">
-                {genderOptions.map((gender) => (
+                {["Nữ", "Nam", "Khác"].map((gender) => (
                   <label key={gender} className="flex items-center">
                     <input
                       type="radio"
@@ -351,15 +293,11 @@ export default function AppointmentForm() {
                   </label>
                 ))}
               </div>
-              {errors.gender && (
-                <p className="text-red-600 text-sm mt-1">{errors.gender}</p>
-              )}
+              {errors.gender && <p className="text-red-600 text-sm mt-1">{errors.gender}</p>}
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Loại khám
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Loại khám</label>
               <div className="flex space-x-6 mt-1">
                 {["Khám lần đầu", "Tái khám"].map((type) => (
                   <label key={type} className="flex items-center">
@@ -381,9 +319,7 @@ export default function AppointmentForm() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Dịch vụ
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Dịch vụ</label>
               <select
                 name="service"
                 value={formData.service}
@@ -391,9 +327,9 @@ export default function AppointmentForm() {
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               >
                 <option value="">-- Chọn dịch vụ --</option>
-                {services.map((service) => (
-                  <option key={service.id} value={service.name}>
-                    {service.name}
+                {services.map((s) => (
+                  <option key={s.id} value={s.name}>
+                    {s.name}
                   </option>
                 ))}
               </select>
@@ -403,9 +339,7 @@ export default function AppointmentForm() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Bác sĩ
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Bác sĩ</label>
               <select
                 name="doctor"
                 value={formData.doctor}
@@ -413,9 +347,9 @@ export default function AppointmentForm() {
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               >
                 <option value="">-- Chọn bác sĩ --</option>
-                {doctors.map((doctor) => (
-                  <option key={doctor.id} value={doctor.fullName}>
-                    {doctor.fullName}
+                {doctors.map((d) => (
+                  <option key={d.id} value={d.fullName}>
+                    {d.fullName}
                   </option>
                 ))}
               </select>
@@ -425,28 +359,19 @@ export default function AppointmentForm() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Ngày hẹn
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Ngày hẹn</label>
               <input
                 type="date"
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
-                min={
-                  new Date(Date.now() + 86400000).toISOString().split("T")[0]
-                }
+                min={new Date().toISOString().split("T")[0]}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
               />
-              {errors.date && (
-                <p className="text-red-600 text-sm mt-1">{errors.date}</p>
-              )}
+              {errors.date && <p className="text-red-600 text-sm mt-1">{errors.date}</p>}
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Giờ hẹn
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Giờ hẹn</label>
               <select
                 name="time"
                 value={formData.time}
@@ -468,9 +393,7 @@ export default function AppointmentForm() {
                   </option>
                 ))}
               </select>
-              {errors.time && (
-                <p className="text-red-600 text-sm mt-1">{errors.time}</p>
-              )}
+              {errors.time && <p className="text-red-600 text-sm mt-1">{errors.time}</p>}
             </div>
 
             <div className="md:col-span-2">
@@ -479,7 +402,7 @@ export default function AppointmentForm() {
               </label>
               <textarea
                 name="description"
-                value={formData.description || ""}
+                value={formData.description}
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                 rows={3}
@@ -494,9 +417,7 @@ export default function AppointmentForm() {
             Xác nhận đặt lịch
           </button>
           {submitError && (
-            <p className="text-red-600 text-sm mt-2 text-center">
-              {submitError}
-            </p>
+            <p className="text-red-600 text-sm mt-2 text-center">{submitError}</p>
           )}
         </form>
       </div>

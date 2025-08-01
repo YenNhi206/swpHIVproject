@@ -38,7 +38,10 @@ const HomePage = () => {
     fetch('http://localhost:8080/api/blogs')
       .then((res) => res.json())
       .then((data) => {
-        setBlogs(data);
+        const sorted = [...data].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setBlogs(sorted);
         setLoading(false);
       })
       .catch((error) => {
@@ -46,6 +49,7 @@ const HomePage = () => {
         setLoading(false);
       });
   }, []);
+
 
   function Section({ title, blogs }) {
     return (
@@ -71,29 +75,42 @@ const HomePage = () => {
               transition={{ duration: 0.4 }}
               className="bg-white shadow-md p-5 rounded-2xl border border-gray-200 hover:shadow-lg transition-all flex flex-col h-full"
             >
-              <div className="text-lg font-semibold text-black mb-2">
-                {blog.title}
-              </div>
-              <p className="text-sm text-gray-600 mb-2">
-                {blog.description || blog.content?.slice(0, 100) + '...'}
-              </p>
-              <div className="text-sm text-gray-400 mb-3 mt-auto">
-                <span> {blog.author}</span> •{' '}
-                <span>
+              <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                <span className="bg-gray-100 px-2 py-0.5 rounded-full font-medium">
+                  {blog.author || "Không rõ tác giả"}
+                </span>
+                <span className="text-gray-400">
                   {new Date(blog.createdAt).toLocaleDateString('vi-VN')}
                 </span>
               </div>
+
+              <a
+                href={blog.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-2xl font-bold text-gray-900 hover:text-red-600 transition-colors mb-2 block leading-tight"
+              >
+                {blog.title}
+              </a>
+
+
+              <p className="text-sm text-gray-600 mb-3">
+                {blog.description || blog.content?.slice(0, 100) + '...'}
+              </p>
+
               {blog.link && (
                 <a
                   href={blog.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-medium text-red-600 hover:underline"
+                  className="text-sm font-medium text-red-600 hover:underline mt-auto"
                 >
                   Đọc thêm →
                 </a>
               )}
             </motion.div>
+
+
           ))}
         </div>
       </motion.section>
