@@ -48,7 +48,7 @@ export default function SidebarVertical({ user, handleLogout }) {
             { path: "/staff", label: "Trang Nhân viên", icon: Home },
             { path: "/staff/appointments", label: "Quản lý lịch hẹn", icon: Calendar },
             { path: "/staff/testsmanagement", label: "Quản lý kết quả", icon: Users },
-            { path: "/staff/testsresult", label: "Thêm/ Cập nhật xét nghiệm", icon: FlaskConical },
+            { path: "/staff/testsresult", label: "Thêm xét nghiệm", icon: FlaskConical },
             { path: "/staff/listpatients", label: "Danh sách bệnh nhân", icon: Users }
 
         );
