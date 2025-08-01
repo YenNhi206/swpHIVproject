@@ -244,24 +244,26 @@ export default function StaffPatientListPage() {
               </tr>
             </thead>
             <tbody>
-              {patients.map((p, index) => (
-                <tr key={index} className="border-t text-center hover:bg-red-50">
-                  <td className="p-3">{p.fullName || "N/A"}</td>
-                  <td className="p-3">{p.email || "N/A"}</td>
-                  <td className="p-3">{renderGender(p.gender)}</td>
-                  <td className="p-3">
-                    {p.birthDate ? new Date(p.birthDate).toLocaleDateString("vi-VN") : "N/A"}
-                  </td>
-                  <td className="p-3">{p.phone || "N/A"}</td>
-                  <td className="p-3">{p.address || "N/A"}</td>
-                  <td className="p-3">{p.hivStatus || "N/A"}</td>
-                  <td className="p-3">
-                    {p.treatmentStartDate
-                      ? new Date(p.treatmentStartDate).toLocaleDateString("vi-VN")
-                      : "N/A"}
-                  </td>
-                </tr>
-              ))}
+              {[...patients]
+                .sort((a, b) => new Date(b.treatmentStartDate || 0) - new Date(a.treatmentStartDate || 0))
+                .map((p, index) => (
+                  <tr key={index} className="border-t text-center hover:bg-red-50">
+                    <td className="p-3">{p.fullName || "N/A"}</td>
+                    <td className="p-3">{p.email || "N/A"}</td>
+                    <td className="p-3">{renderGender(p.gender)}</td>
+                    <td className="p-3">
+                      {p.birthDate ? new Date(p.birthDate).toLocaleDateString("vi-VN") : "N/A"}
+                    </td>
+                    <td className="p-3">{p.phone || "N/A"}</td>
+                    <td className="p-3">{p.address || "N/A"}</td>
+                    <td className="p-3">{p.hivStatus || "N/A"}</td>
+                    <td className="p-3">
+                      {p.treatmentStartDate
+                        ? new Date(p.treatmentStartDate).toLocaleDateString("vi-VN")
+                        : "N/A"}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
