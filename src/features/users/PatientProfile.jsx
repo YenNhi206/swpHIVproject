@@ -4,7 +4,6 @@ import {
 } from 'lucide-react';
 import { message } from 'antd';
 
-// Đơn giản hóa ánh xạ giới tính
 const genderDisplayMap = {
   MALE: 'Nam',
   FEMALE: 'Nữ',
@@ -43,15 +42,15 @@ export default function PatientProfile() {
           throw new Error('Lỗi khi lấy hồ sơ: ' + (await res.text()));
         }
         const data = await res.json();
-        console.log('API Response:', data); // Debug: Kiểm tra dữ liệu từ API
+        console.log('API Response:', data);
 
         setUserInfo({
           fullName: data.fullName || '',
           gender: normalizeGender(data.gender),
-          birthDate: data.birthDate ? data.birthDate.slice(0, 10) : '', // Khôi phục xử lý ngày
+          birthDate: data.birthDate ? data.birthDate.slice(0, 10) : '',
           phone: data.phone || '',
           address: data.address || '',
-          treatmentStartDate: data.treatmentStartDate ? data.treatmentStartDate.slice(0, 10) : '', // Khôi phục xử lý ngày
+          treatmentStartDate: data.treatmentStartDate ? data.treatmentStartDate.slice(0, 10) : '',
         });
       } catch (error) {
         message.error('Không thể tải hồ sơ bệnh nhân: ' + error.message);
@@ -63,11 +62,22 @@ export default function PatientProfile() {
 
     fetchProfile();
   }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === 'birthDate') {
+      const selected = new Date(value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (selected > today) {
+        message.warning('Ngày sinh không được lớn hơn ngày hiện tại.');
+        return;
+      }
+    }
+
     setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
+
 
   const handleSave = async () => {
     const payload = {
@@ -87,7 +97,7 @@ export default function PatientProfile() {
         throw new Error('Lỗi khi cập nhật hồ sơ: ' + (await res.text()));
       }
       const data = await res.json();
-      console.log('Save Response:', data); // Debug: Kiểm tra dữ liệu trả về
+      console.log('Save Response:', data);
 
       setUserInfo({
         fullName: data.fullName || '',
@@ -236,14 +246,38 @@ function ProfileField({ label, name, value, icon, isEditing, onChange, type = 't
               value={value}
               onChange={onChange}
               className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              max={name === 'birthDate' ? new Date().toISOString().split('T')[0] : undefined}
             />
+
           )
         ) : (
           <span className="text-lg text-gray-800">
-            {type === 'date' && value ? value : value}
+            {type === 'date' && value
+              ? new Date(value).toLocaleDateString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+              })
+              : name === 'phone'
+                ? formatPhoneNumber(value)
+                : value}
           </span>
+
+
         )}
       </div>
     </div>
   );
+}
+
+function formatPhoneNumber(phone) {
+  if (!phone) return '';
+  const cleaned = phone.replace(/\D/g, '');
+  if (cleaned.length === 10) {
+    return `${cleaned.slice(0, 4)} ${cleaned.slice(4, 7)} ${cleaned.slice(7)}`;
+  }
+  if (cleaned.length === 11) {
+    return `${cleaned.slice(0, 4)} ${cleaned.slice(4, 7)} ${cleaned.slice(7)}`;
+  }
+  return phone;
 }
