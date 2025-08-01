@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  User, Calendar, Phone, MapPin, Biohazard, Pill, Edit, Save,
+  User, Calendar, Phone, MapPin, Pill, Edit, Save,
 } from 'lucide-react';
 import { message } from 'antd';
 
@@ -26,7 +26,6 @@ export default function PatientProfile() {
     birthDate: '',
     phone: '',
     address: '',
-    hivStatus: '',
     treatmentStartDate: '',
   });
 
@@ -52,7 +51,6 @@ export default function PatientProfile() {
           birthDate: data.birthDate ? data.birthDate.slice(0, 10) : '', // Khôi phục xử lý ngày
           phone: data.phone || '',
           address: data.address || '',
-          hivStatus: data.hivStatus || '',
           treatmentStartDate: data.treatmentStartDate ? data.treatmentStartDate.slice(0, 10) : '', // Khôi phục xử lý ngày
         });
       } catch (error) {
@@ -97,7 +95,6 @@ export default function PatientProfile() {
         birthDate: data.birthDate ? data.birthDate.slice(0, 10) : '',
         phone: data.phone || '',
         address: data.address || '',
-        hivStatus: data.hivStatus || '',
         treatmentStartDate: data.treatmentStartDate ? data.treatmentStartDate.slice(0, 10) : '',
       });
       message.success('Hồ sơ đã được lưu thành công!');
@@ -170,14 +167,6 @@ export default function PatientProfile() {
                 name="address"
                 value={userInfo.address}
                 icon={<MapPin className="w-5 h-5 text-red-500" />}
-                isEditing={isEditing}
-                onChange={handleChange}
-              />
-              <ProfileField
-                label="Tình trạng HIV"
-                name="hivStatus"
-                value={userInfo.hivStatus}
-                icon={<Biohazard className="w-5 h-5 text-red-500" />}
                 isEditing={isEditing}
                 onChange={handleChange}
               />
