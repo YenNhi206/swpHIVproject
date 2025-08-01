@@ -21,7 +21,7 @@ export default function Breadcrumb() {
     '/staff/patients': 'Thêm bệnh nhân mới',
     '/staff/listpatients': 'Danh sách bệnh nhân',
     '/staff/testsmanagement': 'Quản lý kết quả xét nghiệm',
-    '/staff/testsresult': 'Thêm/ Cập nhật xét nghiệm',
+    '/staff/testsresult': 'Thêm xét nghiệm',
     '/users': 'Hồ sơ bệnh nhân',
     '/treatment': 'Phác đồ điều trị',
     '/admin/finance': 'Quản lý tài chính',
