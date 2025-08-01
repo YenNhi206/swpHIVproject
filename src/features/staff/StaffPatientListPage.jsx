@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
+
+
 import {
   PlusCircle,
   User,
@@ -117,56 +121,71 @@ export default function StaffPatientListPage() {
       </div>
 
       <Modal
-        title="Thêm Bệnh Nhân"
+        title={
+          <div className="flex items-center justify-center text-red-600 text-2xl font-semibold">
+            <PlusCircle className="mr-2" size={22} />
+            Thêm Bệnh Nhân
+          </div>
+        }
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
         destroyOnClose
-        width={650}
+        width={720}
+        centered
+        className="rounded-xl"
       >
-        <Form layout="vertical" onFinish={handleAddPatient} size="large">
-          <Row gutter={24}>
-            <Col span={12}>
+        <Form
+          layout="vertical"
+          onFinish={handleAddPatient}
+          size="large"
+          className="bg-white p-6 md:p-8 rounded-2xl space-y-4"
+        >
+          <Row gutter={[20, 12]}>
+            <Col xs={24} md={12}>
               <Form.Item
                 label="Họ tên"
                 name="fullName"
                 rules={[{ required: true, message: "Họ tên là bắt buộc" }]}
               >
                 <Input
-                  prefix={<User />}
                   placeholder="Nhập họ tên"
-                  className="rounded-md"
+                  className="rounded-md border-gray-300 focus:ring-red-500 focus:border-red-500"
                 />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <Form.Item
                 label="Email"
                 name="email"
                 rules={[
                   { required: true, message: "Email là bắt buộc" },
-                  { type: "email", message: "Email không hợp lệ" }
+                  { type: "email", message: "Email không hợp lệ" },
                 ]}
               >
                 <Input
-                  prefix={<Mail />}
                   placeholder="Nhập email"
-                  className="rounded-md"
+                  className="rounded-md border-gray-300 focus:ring-red-500 focus:border-red-500"
                 />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row gutter={24}>
-            <Col span={12}>
+          <Row gutter={[20, 12]}>
+            <Col xs={24} md={12}>
               <Form.Item
                 label="Giới tính"
                 name="gender"
                 rules={[{ required: true, message: "Vui lòng chọn giới tính" }]}
               >
-                <Select placeholder="Chọn giới tính" className="rounded-md">
+                <Select
+                  placeholder="Chọn giới tính"
+                  className="rounded-md border-gray-300 focus:ring-red-500 focus:border-red-500"
+                >
                   {genderOptions.map((g) => (
-                    <Option key={g} value={g}>{g}</Option>
+                    <Option key={g} value={g}>
+                      {g}
+                    </Option>
                   ))}
                 </Select>
               </Form.Item>
@@ -175,54 +194,71 @@ export default function StaffPatientListPage() {
               <Form.Item
                 label="Ngày sinh"
                 name="dateOfBirth"
-                rules={[{ required: true, message: "Ngày sinh là bắt buộc" }]}
+                rules={[
+                  { required: true, message: "Ngày sinh là bắt buộc" },
+                  {
+                    validator: (_, value) => {
+                      if (!value) return Promise.resolve();
+                      const selectedDate = new Date(value);
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      if (selectedDate > today) {
+                        return Promise.reject("Ngày sinh không được ở tương lai");
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
               >
-                <Input type="date" prefix={<CalendarDays />} className="rounded-md" />
+                <Input
+                  type="date"
+                  max={new Date().toISOString().split("T")[0]}
+                  className="rounded-md border-gray-300 focus:ring-red-500 focus:border-red-500"
+                />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row gutter={24}>
-            <Col span={12}>
+          <Row gutter={[20, 12]}>
+            <Col xs={24} md={12}>
               <Form.Item
-                label="SĐT"
+                label="Số điện thoại"
                 name="phoneNumber"
                 rules={[{ required: true, message: "Số điện thoại là bắt buộc" }]}
               >
                 <Input
-                  prefix={<Phone />}
                   placeholder="Nhập số điện thoại"
-                  className="rounded-md"
+                  className="rounded-md border-gray-300 focus:ring-red-500 focus:border-red-500"
                 />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <Form.Item
                 label="Địa chỉ"
                 name="address"
                 rules={[{ required: true, message: "Địa chỉ là bắt buộc" }]}
               >
                 <Input
-                  prefix={<MapPin />}
                   placeholder="Nhập địa chỉ"
-                  className="rounded-md"
+                  className="rounded-md border-gray-300 focus:ring-red-500 focus:border-red-500"
                 />
               </Form.Item>
             </Col>
           </Row>
 
-          <Form.Item>
+          <Form.Item className="text-center mt-6">
             <Button
-              type="text"
               htmlType="submit"
-              className="w-full bg-red-700 hover:bg-red-800 text-white"
-              size="large"
+              className="!bg-red-600 hover:!bg-red-700 !text-white font-semibold px-10 py-2.5 rounded-full transition-all duration-200 shadow-md"
             >
-              Lưu
+              <span className="tracking-wide">Lưu Bệnh Nhân</span>
             </Button>
           </Form.Item>
         </Form>
       </Modal>
+
+
+
 
       {loading ? (
         <p className="text-center text-red-600">Đang tải dữ liệu...</p>
